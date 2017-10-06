@@ -1,0 +1,26 @@
+<div class="col_one_fourth nobottommargin {%if loop.index  % 4 == 0 %} col_last {%endif%}">
+    <input class="typeahead sm-form-control nobottommargin inputarea" type="text" placeholder="{{search.title}}" id="{{child.childTable}}_{{search.name}}" onfocus="showLocationSearch('{{child.childTable}}_{{search.name}}',this)" onkeyup="showLocationSearch('{{child.childTable}}_{{search.name}}',this)">
+    <ul class="dropdown-menu list-group area" role="menu" style="display: none;width:500px;height: 500px;" id="ul_{{child.childTable}}_{{search.name}}">
+        <form class="form-horizontal">
+            <div class="form-group col-sm-4" style="width: 130px;padding: 0px;margin: 0;margin-top:-6px;overflow: scroll;position: relative;height: 500px;">
+                {% for location in locations %}
+                <p class="name_list sub_location" id="location_{{location._id.toString()}}" pinyin="{{location.pinyin}}" style="width:130px;padding:10px;margin:-1px 0;cursor: pointer;border-bottom: 1px solid #ddd;border-right: 1px solid #ddd;" onmouseover="showCity('{{location._id.toString()}}',this,'0')" onclick="showCity('{{location._id.toString()}}',this,'1')">{{location.province}}</p>
+                {% endfor %}
+            </div>
+            {% for location in locations %}
+            <div id="city_{{location._id.toString()}}" class="form-group col-sm-8 area" style="width: 365px;display: none;position: relative;height: 300px;border-bottom: 1px solid #ddd;margin: -5px 0px 0px 2px;padding: 10px;">
+                {% for val in location.citys %}
+                <p class="navbar-text name_list sub_city" style="border: 0px;" id="city_{{val._id.toString()}}" pinyin="{{val.pinyin}}" onmouseover="showCounty('{{val._id.toString()}}',this,'0','{{location._id.toString()}}')" onclick="showCounty('{{val._id.toString()}}',this,'1','{{location._id.toString()}}')">{{val.cityName}}</p>
+                {% endfor %}
+                {% for val in location.citys %}
+                <div id="county_{{val._id.toString()}}" class="area" style="display: none;position: relative;margin-top: 300px;">
+                    {% for sub in val.countys %}
+                        <p class="navbar-text name_list sub_county" style="border: 0px;" pinyin="{{val.pinyin}}" onclick="chooseLocation('{{sub.countyName}}','{{val._id.toString()}}',this,'{{location._id.toString()}}','1')" onmouseover="chooseLocation('{{sub.countyName}}','{{val._id.toString()}}',this,'{{location._id.toString()}}','0')">{{sub.countyName}}</p>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </form>
+    </ul>
+</div>

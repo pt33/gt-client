@@ -1,0 +1,29 @@
+
+<div class="entry clearfix nobottommargin" style="padding-bottom: 0px;">
+        <div class="entry-c">
+            {% set i = 1 %}
+            {% for refField in refFields %}
+                {% if refData[refField.value] && refData[refField.value].length > 20  %}
+                    <div class="entry-content nobottommargin col_full">
+                        <div class="nomargin col_one_sixth">
+                            <h5>{{refField.text}}:</h5>
+                        </div>
+                        <div class="nomargin col_five_sixth">
+                            <h5 style="font-weight:400; ">{% if refData[refField.value] %} {{refData[refField.value]}} {%endif%}</h5>
+                        </div>
+                    </div>
+                    {% set i = i + 2 %}
+                {% else %}
+                    <div class="entry-content nobottommargin col_half {%if i % 2 == 0 || loop.index == main.fields.length %}col_last{%endif%}">
+                        <div class="nomargin col_one_third">
+                            <h5>{{refField.text}}:</h5>
+                        </div>
+                        <div class="nomargin col_two_third col_last">
+                            <h5 style="font-weight: 400;">{% if refData[refField.value] %} {{refData[refField.value]}} {%endif%}</h5>
+                        </div>
+                    </div>
+                    {% set i = i + 1 %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>

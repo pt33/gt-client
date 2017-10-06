@@ -1,0 +1,98 @@
+<div class="postcontent norightmargin nobottommargin clearfix" style="width: 100%!important;">
+    <form id="addBlogForm">
+        <div class="form-process"></div>
+        <input type="hidden" id="blogId" value="{{blog._id.toString()}}">
+        <input type="hidden" value="{{blog.imgPaths.join(',')}}" id="imgPaths">
+        <input type="hidden" id="deletePaths">
+        <input type="hidden" id="canShare" value="{{blog.canShare}}">
+        <input type="hidden" id="viewRange" value="{{blog.viewRange}}">
+        <input type="hidden" id="pageCurrent" value="{{current}}">
+        <div id="imageDiv" hidden>
+            {% if blog.imgPaths.length > 0 %}
+                {% for imagePath in blog.imgPaths %}
+                    <img src="{{imagePath}}" width="200px" height="auto">
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="input-group bottommargin-xs">
+            <span class="input-group-addon hidden-xs">日志标题</span>
+            <input class="sm-form-control" type="text" value="{{blog.title}}" placeholder="请输入日志标题，最多100个字" maxlength="100" id="title" name="title" autocomplete="false" onchange="changeTitle()">
+            <div class="input-group-btn">
+                <a href="javascript:void(0)" onclick="updateBlog(this)" style="margin: 0 0 0 10px;" class="userModify"><i class="icon-edit" style="position: relative;top:1px;"></i><i class="icon-reload" style="display: none;"></i><span class="hidden-xs"> 修改</span></a>
+                <a href="#confirmDelete" data-lightbox="inline" class="userModify" style="margin: 0 5px;"><i class="icon-trash"></i><span class="hidden-xs"> 删除</span></a>
+                <a href="javascript:void(0)" class="userModify" style="margin: 0 5px 0 0;" onclick="viewDetail()"><i class="icon-display"></i><span class="hidden-xs"> 预览</span></a>
+                <a href="javascript:void(0)" onclick="goBack('timeline','{{current}}')" class="userModify"><i class="icon-arrow-left2" style="position: relative;top:1px;"></i><span class="hidden-xs"> 返回</span></a>
+            </div>
+        </div>
+        <div class="input-group bottommargin-xs visible-xs-inline-block">
+            <span class="input-group-addon" style="height: 40px;border-left: 1px solid #ddd;">可见范围</span>
+            <div class="input-group-btn pull-left col_full nomargin" style="border:1px solid #ddd; height: 40px;margin-bottom: 0!important;">
+                <input id="range-0" class="radio-style" name="range-group" onchange="chooseRange(this)" type="radio"  {% if blog.viewRange == 0 %} checked {%endif%}> 全网
+                <input id="range-1" class="radio-style" name="range-group" onchange="chooseRange(this)" type="radio"  {% if blog.viewRange == 1 %} checked {%endif%}> 本人
+                <input id="range-2" class="radio-style" name="range-group" onchange="chooseRange(this)" type="radio"  {% if blog.viewRange == 2 %} checked {%endif%}> 亲友
+                <input id="range-3" class="radio-style" name="range-group" onchange="chooseRange(this)" type="radio"  {% if blog.viewRange == 3 %} checked {%endif%}> 姓氏
+            </div>
+        </div>
+
+        <div class="input-group bottommargin-xs hidden-xs">
+            <span class="input-group-addon" style="height: 40px;border-left: 1px solid #ddd;">可见范围</span>
+            <div class="input-group-btn pull-left col_full nomargin" style="border:1px solid #ddd;height: 40px;">
+                <input id="range-0" class="radio-style" name="range-group1" onchange="chooseRange(this)" type="radio"  {% if blog.viewRange == 0 %} checked {%endif%}> 全网
+                <input id="range-1" class="radio-style" name="range-group1" onchange="chooseRange(this)" type="radio"  {% if blog.viewRange == 1 %} checked {%endif%}> 本人
+                <input id="range-2" class="radio-style" name="range-group1" onchange="chooseRange(this)" type="radio"  {% if blog.viewRange == 2 %} checked {%endif%}> 亲友
+                <input id="range-3" class="radio-style" name="range-group1" onchange="chooseRange(this)" type="radio"  {% if blog.viewRange == 3 %} checked {%endif%}> 姓氏
+            </div>
+
+            <span class="input-group-addon hidden-xs hidden-sm">可被分享</span>
+            <div class="input-group-btn pull-left col_full  nomargin hidden-xs hidden-sm" style="border:1px solid #ddd;height: 40px;">
+                <input id="share-0" class="radio-style" name="share-group" onchange="chooseShare(this)" type="radio" {% if blog.canShare == 0 %} checked {%endif%}>否
+                <input id="share-1" class="radio-style" name="share-group" onchange="chooseShare(this)" type="radio" {% if blog.canShare == 1 %} checked {%endif%}>是
+            </div>
+        </div>
+
+        <div class="input-group bottommargin-xs hidden-lg hidden-md hidden-xs">
+            <span class="input-group-addon">可被分享</span>
+            <div class="input-group-btn pull-left col_full col_last nomargin" style="border:1px solid #ddd;height: 40px;">
+                <input type="radio" name="canShare2" id="share-0"  onchange="chooseShare(this)" {% if blog.canShare == 0 %} checked {%endif%}>&nbsp;否&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="canShare2" id="share-1" onchange="chooseShare(this)" {% if blog.canShare == 1 %} checked {%endif%}>&nbsp;是
+            </div>
+        </div>
+
+        <div class="input-group bottommargin-xs hidden-lg hidden-md visible-xs-inline-block">
+            <span class="input-group-addon">可被分享</span>
+            <div class="input-group-btn pull-left col_full nomargin" style="border:1px solid #ddd;height: 40px;">
+                <input id="share-0" class="radio-style" name="share-group1" onchange="chooseShare(this)" type="radio" {% if blog.canShare == 0 %} checked {%endif%}>&nbsp;否&nbsp;&nbsp;&nbsp;
+                <input id="share-1" class="radio-style" name="share-group1" onchange="chooseShare(this)" type="radio" {% if blog.canShare == 1 %} checked {%endif%}>&nbsp;是
+            </div>
+        </div>
+        <div class="col_full bottommargin-xs noradius">
+            <div class="col_full file-loading" dir=rtl>
+                <input id="blogFiles" name="blogFiles[]" type="file" multiple data-show-upload="false"
+                       data-browse-icon="<i class='icon-picture'></i>"
+                       data-browse-label="请选择封面图片 (最多5张)"
+                       accept="image/*">
+            </div>
+        </div>
+    </form>
+    <div class="input-group nobottommargin col_full">
+        <div id="blogContent" style="font-size: 15px;"></div>
+    </div>
+    <div class="input-group bottommargin-sm col_full">
+        <p class="nopadding nomargin" style="font-style: italic;font-weight: 500;color: #9C721D;text-align: right;">请在文本框中输入日志详细内容，最多5000个字，还可以输入<span id="wordNumInfo">5000</span>个字。</p>
+    </div>
+    <div id="contentDiv" hidden>
+        {% autoescape false %}{{ blog.content|url_decode }}{% endautoescape %}
+    </div>
+
+    <div class="modal1 mfp-hide" id="confirmDelete">
+        <div class="block divcenter" style="background-color: #FFF; max-width: 600px;">
+            <div class="feature-box fbox-center fbox-effect nobottomborder nobottommargin" style="padding: 20px;">
+                <h4 class="nomargin">是否确认删除该日志？</h4>
+            </div>
+            <div class="section center" style="padding: 20px;background-color: #f5f5f5;margin: 0;">
+                <button class="button button-darkblue col-sm-5" type="button" style="margin: 0 0 0 20px;" onclick="confirmOP('{{blog._id.toString()}}','timeline','delete',JSON.stringify({status:-2}),'{{current}}',2)">是</button>
+                <button class="button button-leaf col-sm-5" type="button" style="margin: 0 0 0 9.5%;" onclick="$.magnificPopup.close();return false;">否</button>
+            </div>
+        </div>
+    </div>
+</div>

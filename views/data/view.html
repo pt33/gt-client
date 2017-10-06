@@ -1,0 +1,204 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+{%include '../head.html' %}
+<link rel="stylesheet" href="/js/plugins/turnjs/css/fakeLoader.css" type="text/css"/>
+<body class="stretched side-header open-header push-wrapper close-header-on-scroll" oncontextmenu=self.event.returnValue=false onselectstart="return false">
+<!--[if lt IE 8]>
+<p class="browserupgrade">您正在使用 <strong>版本过低的</strong> 浏览器. 请到 <a href="http://browsehappy.com/">更新您的浏览器</a></p>
+<![endif]-->
+<!-- Document Wrapper
+============================================= -->
+<div id="wrapper" class="clearfix">
+
+    <div id="header-trigger"><i class="icon-line-menu"></i><i class="icon-line-cross"></i></div>
+
+    <!-- Header
+    ============================================= -->
+    <header id="header" class="no-sticky">
+
+        <div id="header-wrap">
+
+            <div class="container clearfix nopadding">
+
+                <div id="primary-menu-trigger"><i class="icon-reorder"></i></div>
+
+                <!-- Logo
+                ============================================= -->
+                <div id="logo" class="nobottomborder">
+                    <a href="index.html" class="standard-logo" data-dark-logo="../img/logo-dark.png"><img src="/img/logo.png"></a>
+                    <a href="index.html" class="retina-logo" data-dark-logo="../img/logo-dark@2x.png"><img src="/img/logo@2x.png"></a>
+                </div><!-- #logo end -->
+
+                <!-- Primary Navigation
+                ============================================= -->
+                <nav id="primary-menu">
+                    <ul>
+                        {% set j = 0 %}
+                        {% for info in infos %}
+                            {% if info.children.length == 0 %}
+                                <input type="hidden" value="{{info.paths.length}}" id="{{info._id.toString()}}"/>
+                                <li><a href="javascript:void(0)" onclick="gotoFilePage('','{{info.index}}','{{info._id.toString()}}','{{loop.index}}')"><div>{% if info.field2.length > 10 %} {{info.field2.substring(0,9)}}.. {% else %} {{info.field2}} {% endif %}</div></a></li>
+                            {% else %}
+                                <li><a href="javascript:void(0)" onclick="gotoFilePage('{{info.field3}}','','{{info._id.toString()}}','{{loop.index}}')"><div>{% if info.field2.length > 10 %} {{info.field2.substring(0,9)}}.. {% else %} {{info.field2}} {% endif %}</div></a>
+                                    <ul>
+                                        <input type="hidden" value="{{info.paths.length}}" id="{{info._id.toString()}}"/>
+                                        {% for child in info.children %}
+                                            <li><a href="#" onclick="gotoFilePage('{{child.field3}}','{{info.index}}','{{info._id.toString()}}','{{j+1}}')"><div>{% if child.field2.length > 10 %} {{child.field2.substring(0,9)}}.. {% else %} {{child.field2}} {% endif %}</div></a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endif %}
+                        {% set j = j + 1 %}
+                        {% endfor %}
+                    </ul>
+                </nav><!-- #primary-menu end -->
+            </div>
+        </div>
+    </header><!-- #header end -->
+
+    <section id="slider" class="slider-parallax full-screen clearfix">
+        <div class="zoom-icon zoom-icon-in"></div>
+        <input type="hidden" value="{{w}}" id="file-w"/>
+        <input type="hidden" value="{{h}}" id="file-h"/>
+        <input type="hidden" value="{{is_Horizontal}}" id="is_Horizontal"/>
+        <input type="hidden" value="{{paths.length}}" id="file-length"/>
+        <div class="container nopadding fakeloader" id="turnContainer">
+
+            <div class="flipbook-viewport" style="opacity:0;">
+                <!--<div class="container">-->
+                    <div class="flipbook" >
+                        <div ignore="1" class="next-button"></div>
+                        {%  set i = 0 %}
+                        {% for path in paths %}
+                                {% if i == 0 %}
+                                    <div class="page hard">
+                                        <img class="page-{{i}}" src="/{{path}}" width="100%" height="100%">
+                                    </div>
+                                {% elseif i == paths.length - 1 %}
+                                    <div class="page hard">
+                                        <img class="lazyload page-{{i}}" src="../img/loader.gif" data-src="{{path}}" width="100%" height="100%">
+                                    </div>
+                                {% elseif i%2 == 0 %}
+                                    {% if i < 5 %}
+                                        <div class="page hard">
+                                            <img class="page-{{i}}" src="/{{paths[i]}}" width="100%" height="100%">
+                                        </div>
+                                        <div class="page hard">
+                                            <img class="page-{{i-1}}" src="/{{paths[i-1]}}" width="100%" height="100%">
+                                        </div>
+                                    {% else %}
+                                        <div class="page hard">
+                                            <img class="lazyload page-{{i}}" src="../img/loader.gif" data-src="/{{paths[i]}}" width="100%" height="100%">
+                                        </div>
+                                        <div class="page hard">
+                                            <img class="lazyload page-{{i-1}}" src="../img/loader.gif" data-src="/{{paths[i-1]}}" width="100%" height="100%">
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% set i = i + 1 %}
+                        {% endfor %}
+                        <div ignore="1" class="previous-button"></div>
+                    </div>
+                <!--</div>-->
+            </div>
+            <div id="pic_list" class="nomargin">
+                <ul style="opacity: 0">
+                    {%  set i = 0 %}
+                    {% for path in paths %}
+                    {% if h > w %}
+                        {% if i == 0 %}
+                            <li class="i current">
+                                <img class="page-{{i}}" src="/{{path}}" id="pic_page-{{i}}" width="76" height="100">
+                                <span>{{i+1}}</span>
+                            </li>
+                        {% elseif i == paths.length - 1 %}
+                            <li class="i">
+                                <img class="lazyload page-{{i}}" src="../img/loader.gif" id="pic_page-{{i}}" data-src="/{{path}}" width="76" height="100">
+                                <span>{{i+1}}</span>
+                            </li>
+                        {% elseif i%2 == 0 %}
+                            {% if i < 10 %}
+                                <li class="d">
+                                    <img class="page-{{i-1}}" src="/{{paths[i]}}" id="pic_page-{{i-1}}" width="76" height="100">
+                                    <img class="page-{{i}}" style="margin-left: -2px;" id="pic_page-{{i}}" src="/{{paths[i-1]}}" width="76" height="100">
+                                    <span>{{i}}-{{i+1}}</span>
+                                </li>
+                            {% else %}
+                                <li class="d">
+                                    <img class="lazyload page-{{i-1}}" src="../img/loader.gif" id="pic_page-{{i-1}}" data-src="/{{paths[i]}}" width="76" height="100">
+                                    <img class="lazyload page-{{i}}" style="margin-left: -3px;" id="pic_page-{{i}}" src="../img/loader.gif" data-src="/{{paths[i-1]}}" width="76" height="100">
+                                    <span>{{i}}-{{i+1}}</span>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        <li class="d">
+                            <img class="lazyload page-{{i}}" src="../img/loader.gif" id="pic_page-{{i}}" data-src="/{{path}}" width="152" height="100">
+                            <span>{{i+1}}</span>
+                        </li>
+                    {% endif %}
+                    {% set i = i + 1 %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Content
+    ============================================= -->
+    <section id="content">
+        <div id="page-menu" class="no-sticky">
+            <div id="page-menu-wrap">
+                <div class="container clearfix">
+                    <nav style="float: left;">
+                        <ul>
+                            <li><a href="/"><div>首页</div></a></li>
+                            {% for column in columns %}
+                                {%if column.hasChild && column.childShowMode == 'menu' %}
+                                    {%if column.url == current %}
+                                        <li class="current"><a href="#">{{column.name}}</a>
+                                            {% else %}
+                                        <li><a href="#">{{column.name}}</a>
+                                            <ul>
+                                                {% for child in column.childs %}
+                                                <li><a href="#" onclick="gotoSubView('{{child.childTable}}')"><div>{{child.childName}}</div></a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% endif %}
+                                {% else %}
+                                    {%if column.url == current %}
+                                        <li class="current"><a href="{{column.url}}">{{column.name}}</a></li>
+                                    {%else%}
+                                        <li><a href="{{column.url}}">{{column.name}}</a></li>
+                                    {%endif%}
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </nav>
+                    <div id="page-submenu-trigger"><i class="icon-reorder"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="content-wrap nopadding">
+
+        </div>
+    </section><!-- #content end -->
+    {% include '../miniFooter.html' %}
+</div><!-- #wrapper end -->
+<div id="gotoTop" class="icon-angle-up"></div>
+<!-- Go To Top
+============================================= -->
+{% include '../script.html' %}
+<script src="/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+<!--<script src="/js/plugins/turnjs/lib/modernizr.2.5.3.min.js"></script>-->
+<script src="/js/plugins/turnjs/lib/lazyload.js"></script>
+<script src="/js/plugins/turnjs/lib/jquery.scrollTo.min.js"></script>
+<script src="/js/plugins/turnjs/lib/loading.js"></script>
+<script src="/js/private/view.js"></script>
+</body>
+
+</html>

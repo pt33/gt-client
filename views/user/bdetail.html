@@ -1,0 +1,82 @@
+<!doctype html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang=""> <!--<![endif]-->
+                             {%include '../head.html' %}
+<link rel="stylesheet" href="/css/magnific-popup.css" type="text/css"/>
+<link rel="stylesheet" href="/css/nivo-slider.css" type="text/css"/>
+<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=true onselectstart="return true" data-animation-in="fadeIn"
+      data-speed-in="1500" data-animation-out="fadeOut" data-speed-out="800">
+<!--[if lt IE 8]>
+<p class="browserupgrade">您正在使用 <strong>版本过低的</strong> 浏览器. 请到 <a href="http://browsehappy.com/">更新您的浏览器</a></p>
+<![endif]-->
+<div id="wrapper" class="clearfix">
+    <section id="page-title" class="page-title-dark page-title-mini" style="background-color: #9C721D;">
+        <div class="container clearfix nopadding">
+            <h1>预览</h1>
+        </div>
+    </section>
+
+    <section id="content">
+
+        <div class="content-wrap nopadding topmargin bottommargin">
+
+            <div class="container nopadding clearfix">
+                <button id="callBackTest" style="opacity:0;"></button>
+                <div class="single-post nobottommargin">
+                    <!-- Single Post
+                    ============================================= -->
+                    <div class="entry clearfix nomargin nobottompadding">
+                        <!-- Posts
+                        ============================================= -->
+                        <div class="entry-title">
+                            <h2>{% if title != '' && title != undefined %}  {{title|url_decode}} {% endif %}</h2>
+                        </div>
+
+                        <ul class="entry-meta clearfix">
+                            <li style="font-style:inherit;"></li>
+                        </ul>
+
+                        <div class="line topmargin bottommargin imageline" hidden></div>
+
+                        <div class="entry-image single" hidden>
+
+
+                        </div>
+
+                        <div class="entry-image multi" hidden>
+
+                            <div class="fslider" data-arrows="true" data-animation="slide">
+                                <div class="flexslider">
+                                    <div class="slider-wrap">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="line topmargin bottommargin contentline" hidden></div>
+
+                        <div class="entry-content notopmargin">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div id="gotoTop" class="icon-angle-up"></div>
+{% include '../script.html' %}
+<script src="/js/plugins/turnjs/lib/lazyload.js"></script>
+<script src="/js/jquery.nivo.js"></script>
+<script src="/js/private/db.js"></script>
+<script src="/js/private/test.js"></script>
+</body>
+</html>

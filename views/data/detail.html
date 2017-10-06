@@ -1,0 +1,196 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+
+{%include '../head.html' %}
+<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=false onselectstart="return false">
+<!--[if lt IE 8]>
+<p class="browserupgrade">您正在使用 <strong>版本过低的</strong> 浏览器. 请到 <a href="http://browsehappy.com/">更新您的浏览器</a></p>
+<![endif]-->
+<div id="wrapper" class="clearfix">
+    {%include '../nav.html' %}
+    <section id="page-title" class="page-title-dark page-title-mini" style="background-color: #9c721d;">
+        <div class="container clearfix nopadding" >
+            <h1>{{tableInfo.title}}详情</h1>
+            <ol class="breadcrumb">
+                <li><a href="/">首页</a></li>
+                {% if title != '' %}
+                <li><a href="javascript:history.go(-1)">{{title}}</a></li>
+                {% endif %}
+                <li class="active">查看</li>
+            </ol>
+        </div>
+    </section>
+
+    <section id="content">
+        <div class="content-wrap">
+            <div class="container nopadding clearfix">
+                <div id="posts" class="small-thumbs">
+                    <div class="entry clearfix nobottommargin" style="padding-bottom: 0px;">
+                        {% if detail.child.bgImgs.length != 0 %}
+                            <div class="entry-image">
+                                <div class="fslider" data-arrows="false">
+                                    <div class="flexslider">
+                                        <div class="slider-wrap">
+                                            {% for bgImg in detail.child.bgImgs %}
+                                                <div class="slide"><a href="#"><img src="{{bgImg}}"></a></div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="sale-flash col_two_fifth nomargin">
+                                        <p style="font-family: 'STLiti,STKaiti';font-size: 28px;color:#fff;width:80px;height:150px;word-wrap:break-word;letter-spacing:.2em;">{{main.info[detail.child.groupTitle]}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {%endif%}
+                        <div class="entry-c">
+                            <div class="fancy-title title-bottom-border">
+                                <h2>{{main.info[detail.child.groupTitle]}}</h2>
+                            </div>
+                            <ul class="entry-meta clearfix">
+                                {% if detail.child.showViewNum %}
+                                    <li><a href="javascript:void(0)" onclick=""><i class="icon-eye-open"></i> 查看</a></li>
+                                {% endif %}
+                                {% if detail.child.canCollection %}
+                                    <li><a href="javascript:void(0)" onclick=""><i class="icon-heart3"></i> 收藏</a></li>
+                                {% endif %}
+                                {% if detail.child.canLike %}
+                                    <li><a href="javascript:void(0)" onclick=""><i class="icon-like"></i> 点赞</a></li>
+                                {% endif %}
+                                {% if detail.child.canShare %}
+                                    <li><a href="javascript:void(0)" onclick=""><i class="icon-share-alt"></i> 分享</a></li>
+                                {% endif %}
+                            </ul>
+                            {% set i = 1 %}
+                            {% set fileVal = '' %}
+                            {% set fileField = '' %}
+                            {% for field in main.fields %}
+                                {% if field.hasFile %}
+                                   {% set fileVal = main.info[field.name] %}
+                                    {% set fileField = field.title %}
+                                {% endif %}
+                                {% if (field.needShow || field.needQuery) && field.refTable == '' && !field.hasFile %}
+                                    {% if  main.info[field.name] && main.info[field.name].length > 20  %}
+                                        <div class="entry-content nobottommargin col_full">
+                                            <div class="nomargin col_one_sixth">
+                                                <h5>{{field.title}}:</h5>
+                                            </div>
+                                            <div class="nomargin col_five_sixth">
+                                                <h5 style="font-weight: 400;">{% if main.info[field.name] %} {{main.info[field.name]}} {%endif%}</h5>
+                                            </div>
+                                        </div>
+                                    {% set i = i + 2 %}
+                                    {% else %}
+                                        <div class="entry-content nobottommargin col_half {%if i % 2 == 0 || loop.index == main.fields.length %}col_last{%endif%}">
+                                            <div class="nomargin col_one_third">
+                                                <h5>{{field.title}}:</h5>
+                                            </div>
+                                            <div class="nomargin col_two_third col_last">
+                                                <h5 style="font-weight: 400;">{% if main.info[field.name] %} {{main.info[field.name]}} {%endif%}</h5>
+                                            </div>
+                                        </div>
+                                    {% set i = i + 1 %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if fileField != '' %}
+                            <div class="entry-content  col_full">
+                                <div class="nomargin col_one_sixth" style="margin-top: 20px;">
+                                    <h5 class="nomargin" style="margin-top: 20px;">{{fileField}}:</h5>
+                                </div>
+                                <div class="nomargin col_five_sixth">
+                                    <h5 class="nomargin" style="font-weight: 400;" id="file_{{fileVal}}">
+                                    </h5>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if main.info.cnt != 0 %}
+                                <div class="entry-meta col_full clearfix nomargin">
+                                    <div class="divider divider-rounded"><a href="javascript:void(0)" title="查看文件详情" data-toggle="tooltip" data-placement="bottom" onclick="viewFileDetail('{{detail.child.refTable}}','{{detail.child.refField}}','{{main.info[detail.child.mainField]}}')"><i class="icon-hand-up" style="font-size: 26px;"></i></a></div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="divider"><i class="icon-circle"></i></div>
+
+                    {% if detail.refTables.length != 0 %}
+                        <div class="tabs tabs-bordered clearfix">
+                            <ul class="tab-nav clearfix">
+                                {% for refTable in detail.refTables %}
+                                    <li><a href="#divRefTable{{refTable.refTable}}">{{refTable.refTitle}}</a></li>
+                                {%endfor%}
+                            </ul>
+
+                            <!--font-family: myHTFont light;-->
+                            <!--font-size: 16px;-->
+                            <!--letter-spacing: .3em;-->
+                            <!--line-height: 28px;-->
+
+                            <div class="tab-container">
+                            {% for refTable in detail.refTables %}
+                                {% if refTable.showMode == 'list' %}
+                                    <div class="tab-content clearfix" id="divRefTable{{refTable.refTable}}">
+                                        <table class="table table-no-bordered" id="refTable{{refTable.refTable}}" style="border-bottom: 0px;"
+                                               data-group-by="false"
+                                               data-toggle="table"
+                                               data-search="false"
+                                               data-show-columns="false"
+                                               data-show-refresh="false"
+                                               data-show-toggle="false"
+                                               data-show-export="false"
+                                               data-detail-view="false"
+                                               data-unique-id="_id"
+                                               data-pagination="true"
+                                               data-page-size="10"
+                                               data-search-text="{{refTable.refTable}}|{{refTable.refField}}|{{main.info[refTable.tableField]}}|{{main.info._id.toString()}}|{{title}}"
+                                               data-url="/data/refList"
+                                               data-query-params="getRefQueryParam"
+                                               data-side-pagination="server"
+                                               data-show-header="false"
+                                        >
+                                            <thead>
+                                            <tr>
+                                                {% for field in refTable.showField %}
+                                                    <th data-field="{{field}}" data-sortable="false"></th>
+                                                {% endfor %}
+                                                <th data-formatter="setRefFormatter">{{refTable.refTable}}|{{refTable.refField}}|{{main.info[refTable.tableField]}}|{{main.info._id.toString()}}|{{tableInfo.title}}详情</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                {% elseif refTable.showMode == 'page' %}
+                                    <input type="hidden" value="{{refTable.refTable}}" id="{{refTable.refTable}}_refTable"/>
+                                    <input type="hidden" value="{{refTable.showField}}" id="{{refTable.refTable}}_showField"/>
+                                    <input type="hidden" value="{{refTable.refField}}" id="{{refTable.refTable}}_refField"/>
+                                    <input type="hidden" value="{{main.info[refTable.tableField]}}" id="{{refTable.refTable}}_mainField"/>
+                                    <div id="refPost_{{refTable.refTable}}" class="small-thumbs">
+
+                                    </div>
+                                {%endif%}
+                            {%endfor%}
+                            </div>
+                        </div>
+                    {%endif%}
+                </div><!-- #posts end -->
+            </div>
+        </div>
+    </section><!-- #content end -->
+    {% include '../miniFooter.html' %}
+</div>
+{% include '../script.html' %}
+
+<script src="/js/plugins/toastr/toastr.min.js"></script>
+<script src="/js/components/moment.js"></script>
+<script src="/js/components/daterangepicker.js"></script>
+<script src="/js/private/tableoption.js"></script>
+<script src="/js/private/data.js"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table.js"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<script src="/js/fixed-column.js"></script>
+<script src="/js/plugins/loading/jquery.loading.js"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table-group-by.js"></script>
+<script src="/js/components/bs-select.js"></script>
+</body>
+</html>

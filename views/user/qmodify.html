@@ -1,0 +1,103 @@
+<div class="postcontent norightmargin nobottommargin clearfix" style="width: 100%!important;">
+    <input type="hidden" value="{{question.images.join(',')}}" id="imgPaths">
+    <input type="hidden" id="deletePaths">
+    <input type="hidden" id="pageCurrent" value="{{current}}">
+    <input type="hidden" id="typeId" name="typeId" value="{{question.type.toString()}}"/>
+    <div id="imageDiv" hidden>
+        {% if question.images.length > 0 %}
+            {% for imagePath in question.images %}
+                <img src="{{imagePath}}" width="200px" height="auto">
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="form-process"></div>
+    <div class="input-group bottommargin-xs">
+        <span class="input-group-addon hidden-xs"><i class="icon-user"></i></span>
+        {% if question %}
+            <input class="sm-form-control" type="text" placeholder="请输入姓名，最多10个字" onkeyup="checkValue(this,'',true)" maxlength="10" id="username" name="username" value="{{question.username}}">
+        {% else %}
+            <input class="sm-form-control" type="text" placeholder="请输入姓名，最多10个字" onkeyup="checkValue(this,'',true)" maxlength="10" id="username" name="username" value="{% if user && user.surname!= '' && user.realname != '' %}{{user.surname}}{{user.realname}}{% elseif user && user.nickname!= ''%}{{user.nickname}}{% elseif user %}{{user.username}}{% endif %}">
+        {% endif %}
+       <span class="input-group-addon hidden-xs"><i class="icon-envelope-alt"></i></span>
+        <input type="text" id="email" name="email" class="sm-form-control" placeholder="请输入邮箱地址" onkeyup="checkValue(this,'email',true)" value="{% if question %}{{question.email}}{%else%}{{user.email}}{%endif%}">
+        <span class="input-group-addon hidden-xs"><i class="icon-phone3"></i></span>
+        <input class="sm-form-control" type="text" placeholder="请输入联系电话" id="telphone" name="telphone" onkeyup="checkValue(this,'phone',true)" value="{% if question %}{{question.telphone}}{%else%}{{user.phone}}{%endif%}">
+        <span class="input-group-addon" style="display: none;"></span>
+        {% if question %}
+            <div class="input-group-btn">
+                <a href="javascript:void(0)" onclick="updateQuestion('{{question._id.toString()}}', this)" style="margin: 0 0 0 5px;" class="userModify"><i class="icon-edit" style="position: relative;top:1px;"></i><i class="icon-line-loader" style="display: none;"></i><span class="hidden-xs"> 修改</span></a>
+                <a href="#confirmDelete" data-lightbox="inline" class="userModify" style="margin: 0 5px;"><i class="icon-trash"></i><span class="hidden-xs"> 删除</span></a>
+                <a href="javascript:void(0)" onclick="goBack('question','{{current}}', 2)" class="userModify"><i class="icon-arrow-left2" style="position: relative;top:1px;"></i><span class="hidden-xs"> 返回</span></a>
+            </div>
+
+            <!--<div class="hidden-lg" style="display: inline-flex;">-->
+                <!--<a href="javascript:void(0)" onclick="updateQuestion('{{question._id.toString()}}', this)" class="userModifyMini"><i class="icon-edit"></i><i class="icon-line-loader" style="display: none;"></i></a>-->
+                <!--<a href="#confirmDelete" data-lightbox="inline" class="userModifyMini"><i class="icon-trash"></i></a>-->
+                <!--<a href="javascript:void(0)" onclick="goBack('question','{{current}}')" class="userModifyMini"><i class="icon-arrow-left2" style="position: relative;top:1px;"></i></a>-->
+            <!--</div>-->
+        {% else %}
+            <div class="input-group-btn">
+                <a href="javascript:void(0)" onclick="saveQuestion(this)" class="userModify" style="margin: 0 10px;"><i class="icon-upload" style="position: relative;top:1px;"></i><i class="icon-line-loader" style="display: none;"></i><span class="hidden-xs"> 提交</span></a>
+                <a href="javascript:void(0)" onclick="goBack('question','{{current}}', 2)" class="userModify"><i class="icon-arrow-left2" style="position: relative;top:1px;"></i><span class="hidden-xs"> 返回</span></a>
+            </div>
+
+            <!--<div class="hidden-lg" style="display: inline-flex;">-->
+                <!--<a href="javascript:void(0)" onclick="saveQuestion(this)" class="userModifyMini"><i class="icon-upload"></i><i class="icon-line-loader" style="display: none;"></i></a>-->
+                <!--<a href="javascript:void(0)" onclick="goBack('question','{{current}}')" class="userModifyMini"><i class="icon-arrow-left2" style="position: relative;top:1px;"></i></a>-->
+            <!--</div>-->
+        {% endif %}
+    </div>
+
+    <div class="input-group bottommargin-xs">
+        {% if question %}
+            <span class="input-group-addon hidden-xs" id="chooseTagBtn" style="font-weight: 600;"><i class="{{question.icon}}"></i>&nbsp;&nbsp;{{question.tag}}</span>
+        {% else %}
+            <span class="input-group-addon hidden-xs" id="chooseTagBtn" style="font-weight: 600;"><i class="icon-private-tags"></i>&nbsp;&nbsp;请选择问题类型</span>
+        {% endif %}
+
+        <div class="input-group-btn">
+            <button type="button" style="height: 40px;" class="btn btn-default dropdown-toggle t500" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                {% for tag in tags %}
+                    <li><a href="javascript:void(0)" onclick="chooseTag('{{tag._id.toString()}}',this)"><i class="{{tag.icon}}"></i>&nbsp;&nbsp;{{tag.name}}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <input class="sm-form-control" type="text" onkeyup="checkValue(this,'',true)" placeholder="请输入标题，最多100个字" maxlength="100" id="title" name="title" autocomplete="false" value="{{question.title}}">
+    </div>
+    <div class="col_full bottommargin-xs noradius">
+        <div class="col_full file-loading" dir=rtl>
+            <input id="questionFiles" name="questionFiles[]" type="file" multiple data-show-upload="false"
+                   data-browse-icon="<i class='icon-picture' style='color:#555;'></i>"
+                   data-browse-label="请选择要上传的图片 (最多5张)"
+                   accept="image/*">
+        </div>
+    </div>
+
+    <div class="input-group nobottommargin col_full">
+        <div id="questionContent" style="font-size: 15px;"></div>
+    </div>
+    <div class="input-group bottommargin-sm col_full">
+        <p class="nopadding nomargin" style="font-style: italic;font-weight: 500;color: #9C721D;text-align: right;">请在文本框中详细描述您需要咨询的内容，最多3000个字，还可以输入<span id="wordNumInfo">3000</span>个字。</p>
+    </div>
+
+    <div class="modal1 mfp-hide" id="confirmDelete">
+        <div class="block divcenter" style="background-color: #FFF; max-width: 600px;">
+            <div class="feature-box fbox-center fbox-effect nobottomborder nobottommargin" style="padding: 20px;">
+                <h4 class="nomargin">是否确认删除该问题？</h4>
+            </div>
+            <div class="section center" style="padding: 20px;background-color: #f5f5f5;margin: 0;">
+                <button class="button button-darkblue col-sm-5" type="button" style="margin: 0 0 0 20px;" onclick="confirmOP('{{question._id.toString()}}','question','delete',JSON.stringify({status:-3}),'{{current}}'), 2">是</button>
+                <button class="button button-leaf col-sm-5" type="button" style="margin: 0 0 0 9.5%;" onclick="$.magnificPopup.close();return false;">否</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="contentDiv" hidden>
+        {% if question.content.longContent != undefined && question.content.longContent != '' %}
+            {% autoescape false %}{{ question.content.longContent|url_decode }}{% endautoescape %}
+        {% else %}
+            {% autoescape false %}{{ question.content.shortContent|url_decode }}{% endautoescape %}
+        {% endif %}
+    </div>
+</div>

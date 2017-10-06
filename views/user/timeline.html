@@ -1,0 +1,61 @@
+<div class="postcontent nomargin col_full clearfix" style="min-height: 418px;">
+
+    <input type="hidden" value="{{current}}" id="pageCurrent">
+    <input type="hidden" value="{{total}}" id="pagetotal">
+
+    {% if list.length == 0 %}
+        <div class="panel-group nobottommargin well" id="nodata" align="center" style="height: 463px"><h3 style="padding: 9.5em 0;color: #9CA0A9;font-size: 1.6em;font-style: italic;">您还没有上传任何日志，赶紧去创建吧！</h3></div>
+    {% else %}
+        <div class="post-timeline  clearfix">
+        <div class="timeline-border"></div>
+            {% for blog in list %}
+            <div class="entry clearfix">
+                <div class="entry-timeline">
+                    {{blog.createStr.substring(5,10)}}<span>{{blog.createStr.substring(0,4)}}</span>
+                    <div class="timeline-divider"></div>
+                </div>
+                {% if blog.imgPaths.length > 0 %}
+                <div class="entry-image">
+                    {% if blog.imgPaths.length > 1 %}
+                        <div class="fslider" data-arrows="true" data-lightbox="gallery">
+                            <div class="flexslider">
+                                <div class="slider-wrap">
+                                    {% for image in blog.imgPaths %}
+                                        <div class="slide"><a href="{{image}}" data-lightbox="gallery-item"><img class="image_fade" src="{{image}}" alt="封面图片"></a></div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="{{blog.imgPaths[0]}}" data-lightbox="image"><img class="image_fade" src="{{blog.imgPaths[0]}}" alt="问题图片"></a>
+                    {% endif %}
+                </div>
+                {% endif %}
+                <div class="entry-title">
+                    <h2>{{blog.title}}</h2>
+                </div>
+                <ul class="entry-meta clearfix">
+                    <li><a href="#"><i class="icon-user"></i><label>{% if blog.user.nickname != '' %} {{blog.user.nickname}} {% else %} {{blog.user.username}} {% endif %}</label></a></li>
+                    <li><i class="icon-comments"></i>{{blog.reply}} 评论</li>
+                    <li><i class="icon-star3"></i>{{blog.collectionNum}} 收藏</li>
+                    <li><i class="icon-private-eye-1"></i>{{blog.viewNum}} 浏览</li>
+                    <li><i class="icon-share"></i>{{blog.shareNum}} 分享</li>
+                    <li><i class="icon-like"></i>{{blog.likeNum}} 点赞</li>
+                    <li>{% if blog.canShare == 1 %}<i class="icon-link"></i>可分享{%else%}<i class="icon-unlink"></i>不可分享{%endif%}</li>
+                    <li>{% if blog.viewRange == 1 %}<i class="icon-folder-close"></i>本人可见{%elseif blog.viewRange == 2%}<i class="icon-users"></i>亲友可见{%elseif blog.viewRange == 3%}<i class="icon-group"></i>姓氏可见{%else%}<i class="icon-folder-open"></i>全网可见{%endif%}</li>
+                </ul>
+                <div class="entry-content">
+                    <blockquote><p class="short">{{ blog.shortContent|url_decode }}</p></blockquote>
+                    <a href="javascript:void(0)" class="more-link" onclick="showMoreInfo('{{blog._id.toString()}}')">查看详情</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+<div class="noradius clearfix" id="pageDiv" style="padding: 10px 0 0 0;" >
+    <p class="pull-left userPage hidden-xs">显示第 <span id="start"></span> 到第 <span id="current"></span> 条记录，总共 <span id="total"></span> 条记录</p>
+    <div id="pageInfo" class="pull-right">
+
+    </div>
+</div>

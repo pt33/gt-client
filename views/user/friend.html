@@ -1,0 +1,91 @@
+<div id="portfolio" class="portfolio grid-container clearfix" style="min-height: 328px;width: 100%;">
+    {% if list.length == 0 %}
+    <div class="panel-group nobottommargin well" id="nodata" align="center" style="height: 465px;"><h3 style="padding: 9.5em 0;color: #9CA0A9;font-size: 1.6em;font-style: italic;">您还没有添加任何亲友，赶紧去邀请吧！</h3></div>
+    {% else %}
+    <input type="hidden" value="{{current}}" id="pageCurrent">
+    <input type="hidden" value="{{total}}" id="pagetotal">
+    {% for book in list %}
+    <article class="portfolio-item loaded" style="width: 212px;height: auto;background-color: transparent;margin-right: 19px;margin-bottom:20px;padding: 5px;border:1px solid #ddd;">
+        <div class="portfolio-image">
+            <img class="image_fade" src="{% if book.cover %}{{book.cover}}{%else%}img/cover.jpg{%endif%}" alt="家谱封面" style="widthd:200px;height:310px;">
+            <div class="sale-flash">
+                {% if book.status == 0 %}
+                <span class="label label-info">未审核</span>
+                {% elseif book.status == 1 %}
+                <span class="label label-success">已通过</span>
+                {% elseif book.status == -1 %}
+                <span class="label label-warning">未通过</span>
+                {% elseif book.status == -3 %}
+                <span class="label label-default">已撤消</span>
+                {% endif %}
+            </div>
+            <div class="portfolio-overlay">
+                <!--{% if book.status == 0 %}-->
+                <!--<a href="#mainConfirmUndo" onclick="$('#mainBookId').val('{{book._id.toString()}}');" data-lightbox="inline" class="left-icon" title="撤销家谱"><i class="icon-line2-action-undo"></i></a>-->
+                <!--{% elseif book.status == 1 %}-->
+                <!--<a href="#mainConfirmDelete" data-lightbox="inline" class="left-icon" title="删除家谱"><i class="icon-line-trash"></i></a>-->
+                <!--{% elseif book.status == -1 || book.status == -3 %}-->
+                <!--<a href="#mainConfirmUpload" data-lightbox="inline" class="left-icon" title="重新提交家谱"><i class="icon-line-upload"></i></a>-->
+                <!--{% endif %}-->
+                <a href="javascript:void(0)" class="center-icon" onclick="showMoreInfo('{{book._id.toString()}}')" title= "查看详情"><i class="icon-line-ellipsis"></i></a>
+            </div>
+        </div>
+        <div class="portfolio-desc" style="padding: 15px 5px 0 5px;">
+            <h3><a href="portfolio-single.html">{{book.name}}aabbkdfdfdafldfas</a></h3>
+
+            <ul class="entry-meta clearfix">
+                <li><a href="#"><i class="icon-private-calendar-4"></i></a>{{book.createStr}}</li>
+            </ul>
+            <ul class="entry-meta clearfix" style="position: relative;top:-10px;">
+                <li style="margin-right: 5px;">{% if book.canShare == 1 %}<i class="icon-link"></i>可分享{%else%}<i class="icon-unlink"></i>不可分享{%endif%}</li>
+                <li style="margin-right: 5px;">{% if book.viewRange == 1 %}<i class="icon-folder-close"></i>本人可见{%elseif book.viewRange == 2%}<i class="icon-users"></i>亲友可见{%elseif book.viewRange == 3%}<i class="icon-group"></i>姓氏可见{%else%}<i class="icon-folder-open"></i>全网可见{%endif%}</li>
+            </ul>
+        </div>
+    </article>
+    {% endfor %}
+    <!--<div class="modal1 mfp-hide" id="mainConfirmUndo">-->
+    <!--<div class="block divcenter" style="background-color: #FFF; max-width: 600px;">-->
+    <!--<div class="feature-box fbox-center fbox-effect nobottomborder nobottommargin" style="padding: 20px;">-->
+    <!--<h4 class="nomargin">是否确认撤回该家谱？</h4>-->
+    <!--</div>-->
+    <!--<div class="section center" style="padding: 20px;background-color: #f5f5f5;margin: 0;">-->
+    <!--<button class="button button-darkblue col-sm-5" type="button" style="margin: 0 0 0 20px;" onclick="confirmOP('{{book._id.toString()}}','book','delete',JSON.stringify({status:-3}),'{{current}}', 8)">是</button>-->
+    <!--<button class="button button-leaf col-sm-5" type="button" style="margin: 0 0 0 9.5%;" onclick="$.magnificPopup.close();return false;">否</button>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+
+    <!--<div class="modal1 mfp-hide" id="mainConfirmDelete">-->
+    <!--<div class="block divcenter" style="background-color: #FFF; max-width: 600px;">-->
+    <!--<div class="feature-box fbox-center fbox-effect nobottomborder nobottommargin" style="padding: 20px;">-->
+    <!--<h4 class="nomargin">是否确认删除该家谱？</h4>-->
+    <!--</div>-->
+    <!--<div class="section center" style="padding: 20px;background-color: #f5f5f5;margin: 0;">-->
+    <!--<button class="button button-darkblue col-sm-5" type="button" style="margin: 0 0 0 20px;" onclick="confirmOP('{{book._id.toString()}}','book','delete',JSON.stringify({status:-3}),'{{current}}', 8)">是</button>-->
+    <!--<button class="button button-leaf col-sm-5" type="button" style="margin: 0 0 0 9.5%;" onclick="$.magnificPopup.close();return false;">否</button>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+
+    <!--<div class="modal1 mfp-hide" id="mainConfirmUpload">-->
+    <!--<div class="block divcenter" style="background-color: #FFF; max-width: 600px;">-->
+    <!--<div class="feature-box fbox-center fbox-effect nobottomborder nobottommargin" style="padding: 20px;">-->
+    <!--<h4 class="nomargin">是否确认重新提交该家谱？</h4>-->
+    <!--</div>-->
+    <!--<div class="section center" style="padding: 20px;background-color: #f5f5f5;margin: 0;">-->
+    <!--<button class="button button-darkblue col-sm-5" type="button" style="margin: 0 0 0 20px;"-->
+    <!--onclick=""/>-->
+    <!--<button class="button button-leaf col-sm-5" type="button" style="margin: 0 0 0 9.5%;" onclick="$.magnificPopup.close();return false;">否</button>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    {% endif %}
+</div>
+<div class="noradius clearfix nobottommargin" id="pageDiv" style="" >
+    <p class="pull-left userPage hidden-xs">显示第 <span id="start"></span> 到第 <span id="current"></span> 条记录，总共 <span id="total"></span> 条记录</p>
+    <div id="pageInfo" class="pull-right"></div>
+</div>
+
+
+
+

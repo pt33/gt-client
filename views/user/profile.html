@@ -1,0 +1,87 @@
+<div class="postcontent nomargin col_full clearfix">
+    <input type="hidden" value="{{user.sex}}" id="userSex">
+    <div class="small-thumbs" id="posts" style="min-height: 369px;">
+        <div class="entry clearfix">
+            <div class="entry-image nomargin" style="width: auto;">
+                <a href="#modifyAvatar" data-lightbox="inline" class="userLightbox"><img id="userAvatar" src="{% if user.avatar %}{{user.avatar}}{%else%}img/avatar.jpg{%endif%}" data-toggle="tooltip" data-placement="bottom" title="修改头像" class="alignleft img-circle img-thumbnail notopmargin nobottommargin" alt="用户头像" style="max-width: 100px;"></a>
+            </div>
+            <div class="entry-c">
+                <div class="entry-title">
+                    <h3 id="username" class="bottommargin-xs" style="font-size: 2em;">{{user.username}}</h3>
+                    <div class="input-group" style="display: flex">
+                        <input type="text" id="nickname" name="nickname" value="{{user.nickname}}" class="sm-form-control" onkeyup="checkValue(this)" placeholder="请输入昵称，最多20个字" maxlength="20">
+                        <a href="javascript:void(0)" onclick="saveProfile()" class="userModify" style="padding: 8px;display: inline-table;margin: 0 12px 0 10px;"><i class="icon-edit" style="position: relative;top: 2px;left: 3px;width: 22px;"></i><span class="hidden-xs" style="position: relative;left:-4px;"> 修改</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col_full nobottommargin topmargin-lg" style="padding-top: 13px;">
+            <div class="input-group bottommargin-xs hidden-xs">
+                <span class="input-group-addon">真实姓氏: </span>
+                <input class="sm-form-control" type="text" value="{{user.surname}}" placeholder="请输入姓氏" maxlength="4" id="surname" name="surname">
+                <span class="input-group-addon">真实名字: </span>
+                <input class="sm-form-control" type="text" value="{{user.realname}}" placeholder="请输入名字" maxlength="4" id="realname" name="username">
+            </div>
+            <div class="input-group bottommargin-xs hidden-sm hidden-lg hidden-md visible-xs-block">
+                <span class="input-group-addon" style="border-bottom-color: transparent;border-left: 1px solid #ddd;border-right: 1px solid #ddd;border-top: 1px solid #ddd;">真实姓氏: </span>
+                <input class="sm-form-control" type="text" value="{{user.surname}}" placeholder="请输入姓氏" maxlength="4" id="surname" name="surname">
+                <span class="input-group-addon" style="border-bottom-color: transparent;border-top-color: transparent;border-left: 1px solid #ddd;border-right: 1px solid #ddd;">真实名字: </span>
+                <input class="sm-form-control" type="text" value="{{user.realname}}" placeholder="请输入名字" maxlength="4" id="realname" name="username">
+            </div>
+            <div class="input-group bottommargin-xs hidden-xs" style="border-bottom: 1px solid #ddd;border-top: 1px solid #ddd;">
+                <span class="input-group-addon">个人性别: </span>
+                <input type="radio" name="canShare1" class="radio-style" id="canShare0" onchange="chooseSex(this)" {% if user.sex == 0 %} checked {%endif%}><span style="padding: 0 18px 0 5px;font-size: 14.5px;font-weight: 500;">男</span>
+                <input type="radio" name="canShare1" class="radio-style" id="canShare1" onchange="chooseSex(this)" {% if user.sex == 1 %} checked {%endif%}><span style="padding: 0 55px 0 5px;font-size: 14.5px;font-weight: 500;">女</span>
+                <span class="input-group-addon hidden-xs" style="border-bottom-color: transparent;border-top-color:transparent;border-left: 1px solid #ddd;">出生日期: </span>
+                <input class="sm-form-control tleft today" type="text" value="{{user.birthday}}" placeholder="请选择出生日期" id="birthday" name="birthday" style="border-bottom-color: transparent;border-top-color:transparent;">
+            </div>
+            <div class="input-group bottommargin-xs visible-xs-block" style="border-left: 1px solid #ddd;border-right: 1px solid #ddd;">
+                <span class="input-group-addon" style="border-left-color: transparent;">个人性别:</span>
+                <input type="radio" name="canShare2" class="radio-style" id="canShare0" onchange="chooseSex(this)" {% if user.sex == 0 %} checked {%endif%}><span style="padding: 0 10px 0 5px;font-size: 14.5px;font-weight: 500;">男</span>
+                <input type="radio" name="canShare2" class="radio-style" id="canShare1" onchange="chooseSex(this)" {% if user.sex == 1 %} checked {%endif%}><span style="padding: 0 55px 0 5px;font-size: 14.5px;font-weight: 500;">女</span>
+                <span class="input-group-addon" style="border-color: transparent;border-top:1px solid #ddd;">出生日期: </span>
+                <input class="sm-form-control tleft today" type="text" value="{{user.birthday}}" placeholder="请选择出生日期" id="birthday" name="birthday" style="border-left-color: transparent;border-right-color:transparent;">
+            </div>
+            <div class="input-group bottommargin-xs hidden-xs">
+                <span class="input-group-addon" style="border-bottom-color: transparent;">电子邮箱: </span>
+                <input type="text" id="email" name="email" onkeyup="checkValue(this,'email',false)" value="{{user.email}}" class="sm-form-control" placeholder="请输入邮箱地址">
+                <span class="input-group-addon" style="border-bottom-color: transparent;border-top-color: transparent;">联系电话: </span>
+                <input class="sm-form-control" type="text" onkeyup="checkValue(this,'phone',false)" value="{{user.phone}}" placeholder="请输入联系电话" id="phone" name="phone">
+            </div>
+            <div class="input-group bottommargin-xs hidden-sm hidden-lg hidden-md visible-xs-block">
+                <span class="input-group-addon" style="border-bottom-color: transparent;border-left: 1px solid #ddd;border-right: 1px solid #ddd;border-top: 1px solid #ddd;">电子邮箱: </span>
+                <input type="text" id="email" name="email" onkeyup="checkValue(this,'email',false)" value="{{user.email}}" class="sm-form-control" placeholder="请输入邮箱地址">
+                <span class="input-group-addon" style="border-bottom-color: transparent;border-top:1px solid #ddd;border-left: 1px solid #ddd;border-right: 1px solid #ddd;">联系电话: </span>
+                <input class="sm-form-control" type="text" onkeyup="checkValue(this,'phone',false)" value="{{user.phone}}" placeholder="请输入联系电话" id="phone" name="phone">
+            </div>
+        </div>
+    </div>
+    <div class="modal1 mfp-hide" id="modifyAvatar">
+        <div class="block divcenter" style="background-color: #FFF; max-width: 600px;">
+            <div class="feature-box fbox-center fbox-effect nobottomborder nobottommargin" style="padding: 40px;">
+                <div class="col-sm-12  style-msg errormsg" style="display: none;">
+                    <div class="sb-msg" style="font-size: 1.1em;text-align: left;"><i class="icon-remove"></i><strong id="errorMsg"></strong></div>
+                </div>
+                <img id="modifyUserAvatar">
+                <br>
+                <div class="col-sm-10 nopadding">
+                    <input id="avatarFiles" name="avatarFiles" type="file" data-show-upload="false" class="file-loading noradius"
+                           data-browse-icon="<i class='icon-picture' style='color:#555;'></i>"
+                           data-browse-label="选择图片"
+                           accept="image/*">
+                </div>
+
+                <div class="col-sm-2 nopadding">
+                    <button class="btn btn-default nomargin btn-md" type="button" onclick="resetAvatar()" style="padding:9px 15px;"><i class='icon-reload'></i>&nbsp;&nbsp;重置</button>
+                </div>
+
+            </div>
+            <div class="section center" style="padding: 20px;background-color: #f5f5f5;margin: 40px 0 0 0;">
+                <button class="button button-darkblue col-sm-5" type="button" style="margin: 0 0 0 20px;" onclick="saveAvatar()" >确定</button>
+                <button class="button button-leaf col-sm-5" type="button" style="margin: 0 0 0 9.5%;" onclick="$.magnificPopup.close();return false;">关闭</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+

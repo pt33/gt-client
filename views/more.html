@@ -1,0 +1,73 @@
+
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+{%include 'head.html' %}
+<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=false onselectstart="return false">
+<!--[if lt IE 8]>
+<p class="browserupgrade">您正在使用 <strong>版本过低的</strong> 浏览器. 请到 <a href="http://browsehappy.com/">更新您的浏览器</a></p>
+<![endif]-->
+<div id="wrapper" class="clearfix">
+    {%include 'nav.html' %}
+    <section id="page-title" class="page-title-dark page-title-mini" style="background-color: #9C721D;">
+        <div class="container nopadding clearfix">
+            <h1>{{title}}</h1>
+            <ol class="breadcrumb">
+                <li><a href="/">首页</a></li>
+                <li class="active">数据列表</li>
+            </ol>
+        </div>
+    </section>
+    <section id="content">
+        <div class="content-wrap" style="padding: 40px 0px">
+            <div class="container nopadding clearfix" >
+                <div id="posts" class="small-thumbs">
+                    <div class="entry clearfix nobottommargin" style="padding-bottom: 0px;">
+                        <div class="entry-c" style="min-height: 550px;">
+                            <table class="display table table-no-bordered table-hover" id="list{{tablename}}"
+                                   data-group-by="false"
+                                   data-toggle="table"
+                                   data-search="false"
+                                   data-show-columns="false"
+                                   data-show-refresh="false"
+                                   data-show-toggle="false"
+                                   data-show-export="false"
+                                   data-detail-view="false"
+                                   data-unique-id="_id"
+                                   data-pagination="true"
+                                   data-page-size="10"
+                                   data-search-text="{{key}}|{{field}}|{{tableId}}|{{tablename}}|{{title}}"
+                                   data-url="/data/viewLocationList"
+                                   data-query-params="getMoreListQueryParam"
+                                   data-side-pagination="server"
+                            >
+                                <thead>
+                                <tr>
+                                    {% for field in fields %}
+                                        <th data-field="{{field.name}}" data-sortable="{{field.needSort}}">{{field.title}}</th>
+                                    {% endfor %}
+                                    {% if showDetail %}
+                                        <th data-formatter="setListFormatter" data-sortable=false data-order="{{tableId}}|{{tablename}}|{{title}}">查看明细</th>
+                                    {% endif %}
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div><!-- #posts end -->
+            </div>
+        </div>
+    </section>
+
+    {% include 'miniFooter.html' %}
+</div>
+<div id="gotoTop" class="icon-angle-up"></div>
+{% include 'script.html' %}
+
+<script src="/js/plugins/bootstrap-table/bootstrap-table.js"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<script src="/js/private/list.js"></script>
+</body>
+</html>

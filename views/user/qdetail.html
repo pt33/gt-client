@@ -1,0 +1,109 @@
+<div class="postcontent norightmargin nobottommargin clearfix" style="width: 100%!important;">
+    <input type="hidden" id="pageCurrent" value="{{current}}">
+    <div class="single-post nobottommargin" style="min-height: 400px;">
+        <div class="entry clearfix">
+            <div class="entry-title">
+                <h2>{{question.title}}</h2>
+            </div>
+            <ul class="entry-meta clearfix">
+                <li><i class="{{question.icon}}"></i>{{question.tag}}</li>
+                <li><i class="icon-private-calendar-4"></i>{{question.createStr}}</li>
+                <li><i class="icon-private-eye-1"></i>{{question.viewNum}}</li>
+                <li>
+                    {% if question.status == 0 %}
+                    <i class="icon-info"></i>未审核
+                    {% elseif question.status == 1%}
+                    <i class="icon-info"></i>审核通过
+                    {% elseif question.status == 2 && question.reply == 0 %}
+                    <i class="icon-info"></i>待回复
+                    {% elseif question.status == 2 && question.reply != 0 %}
+                    <i class="icon-info"></i>已回复
+                    {% elseif question.status == 2 && question.reply != 0 && question.isCommonly == 1 %}
+                    <i class="icon-info"></i>已标星
+                    {% elseif question.status == -1%}
+                    <i class="icon-info"></i>审核未通过
+                    {% endif %}
+                </li>
+
+                <div class="pull-right">
+                    {% if question.status == 1 | (question.status == 2 && question.reply == 0) %}
+                        <a href="#confirmDelete" data-lightbox="inline" style="padding-right: 10px;font-size: 15px;font-weight: 500;"><i class="icon-undo"></i> 撤消</a>
+                    {% endif %}
+                        <a href="javascript:void(0)" onclick="shareQuestion('{{question._id.toString()}}')" style="padding-right: 10px;font-size: 15px;font-weight:500;position: relative;top:1px;"><i class="icon-share2" style="position: relative;top:1px;"></i> 分享</a>
+                        <a href="javascript:void(0)" onclick="goBack('question','{{current}}', 2)" style="padding-right: 10px;font-size: 15px;font-weight:500;position: relative;top:1px;"><i class="icon-arrow-left2" style="position: relative;top:1px;"></i> 返回</a>
+                </div>
+
+            </ul>
+
+            {% if question.images.length > 0 %}
+                <div class="entry-image">
+                    <div class="fslider" data-arrows="false" data-smooth-height="true" data-lightbox="gallery">
+                        <div class="flexslider">
+                            <div class="slider-wrap">
+                                {% for image in question.images %}
+                                    <div class="slide"><a href="{{image}}" data-lightbox="gallery-item"><img class="image_fade" src="{{image}}" width="100%" height="500px" alt="封面图片"></a></div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="entry-content well notopmargin" style="font-size:1.13em;">
+                <p class="nomargin">
+                    {% if question.content.longContent != undefined && question.content.longContent != '' %}
+                    {% autoescape false %}{{ question.content.longContent|url_decode }}{% endautoescape %}
+                {% else %}
+                    {% autoescape false %}{{ question.content.shortContent|url_decode }}{% endautoescape %}
+                {% endif %}
+                </p>
+            </div>
+
+            <div id="comments" class="clearfix">
+
+                <h3 id="comments-title"><span>{{question.reply}}</span> 回复</h3>
+
+                <!-- Comments List
+                ============================================= -->
+                {% if question.comments && question.comments.length != 0 %}
+                <ol class="commentlist clearfix">
+                    {% for comment in question.comments %}
+
+                    <li class="comment even thread-even depth-1" id="li-comment-{{loop.index}}">
+
+                        <div id="comment-{{loop.index}}" class="comment-wrap clearfix">
+                            <div class="comment-meta">
+                                <div class="comment-author vcard">
+                                    <span class="comment-avatar clearfix">
+                                    <img src="/img/logo@2x.png" class="avatar avatar-60 photo avatar-default" height="60"
+                                         width="43"/></span>
+                                </div>
+                            </div>
+                            <div class="comment-content clearfix">
+
+                                <div class="comment-author">
+                                    回复时间<span>{{comment.replytime}}</span></div>
+                                <p>{% autoescape false %}{{ comment.content|url_decode }}{% endautoescape%}</p>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ol>
+                {% endif %}
+            </div>
+
+        </div>
+        <div class="modal1 mfp-hide" id="confirmDelete">
+            <div class="block divcenter" style="background-color: #FFF; max-width: 600px;">
+                <div class="feature-box fbox-center fbox-effect nobottomborder nobottommargin" style="padding: 20px;">
+                    <h4 class="nomargin">是否确认撤消该问题？</h4>
+                </div>
+                <div class="section center" style="padding: 20px;background-color: #f5f5f5;margin: 0;">
+                    <button class="button button-darkblue col-sm-5" type="button" style="margin: 0 0 0 20px;" onclick="confirmOP('{{question._id.toString()}}','question','delete',JSON.stringify({status:-4}),'{{current}}'), 2">是</button>
+                    <button class="button button-leaf col-sm-5" type="button" style="margin: 0 0 0 9.5%;" onclick="$.magnificPopup.close();return false;">否</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

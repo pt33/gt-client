@@ -1,0 +1,39 @@
+{% if list.length == 0 %}
+    <div class="panel-group nobottommargin well" id="nodata" align="center" style="height: 463px"><h3 style="padding: 9.5em 0;color: #9CA0A9;font-size: 1.6em;font-style: italic;">无家族族谱记录，赶紧去上传吧！</h3></div>
+{% else %}
+    {% for data in list %}
+        <div class="entry clearfix">
+            {% if data.images.length > 0 %}
+            <div class="entry-image">
+                {% if data.images.length > 1 %}
+                <div class="fslider" data-arrows="false" data-lightbox="gallery">
+                    <div class="flexslider">
+                        <div class="slider-wrap">
+                            {% for image in data.images %}
+                            <div class="slide"><a href="{{image}}" data-lightbox="gallery-item"><img class="image_fade" data-lazyload="{{image}}" alt="问题图片"></a></div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <a href="{{data.images[0]}}" data-lightbox="image"><img class="image_fade" data-lazyload="{{data.images[0]}}" alt="问题图片"></a>
+                {% endif %}
+            </div>
+            {% endif %}
+            <div class="entry-c">
+                <div class="entry-title">
+                    <h2>{{data.title}}</h2>
+                </div>
+                <ul class="entry-meta clearfix">
+                    <li><i class="{{data.icon}}"></i>{{data.tag}}</li>
+                    <li><i class="icon-private-calendar-4"></i>{{data.createStr}}</li>
+                    <li><i class="icon-private-eye-1"></i>{{data.viewNum}}</li>
+                </ul>
+                <div class="entry-content">
+                    <blockquote><p class="short">{{ data.shortContent|url_decode }}</p></blockquote>
+                    <a href="javascript:void(0)" class="more-link" onclick="showMoreInfo('{{blog._id.toString()}}')">查看详情</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}

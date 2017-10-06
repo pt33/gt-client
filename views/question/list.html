@@ -1,0 +1,89 @@
+<!doctype html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang=""> <!--<![endif]-->
+                             {%include '../head.html' %}
+<link rel="stylesheet" href="/js/plugins/bootstrap-table/bootstrap-table.css" type="text/css"/>
+<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=true onselectstart="return true" data-animation-in="fadeIn"
+      data-speed-in="1500" data-animation-out="fadeOut" data-speed-out="800">
+<!--[if lt IE 8]>
+<p class="browserupgrade">您正在使用 <strong>版本过低的</strong> 浏览器. 请到 <a href="http://browsehappy.com/">更新您的浏览器</a></p>
+<![endif]-->
+<div id="wrapper" class="clearfix">
+    {%include '../nav.html' %}
+    <section id="page-title" class="page-title-dark page-title-mini" style="background-color: #9C721D;">
+        <div class="container clearfix nopadding">
+            <h1>{{title}}</h1>
+            <ol class="breadcrumb">
+                <li><a href="/">首页</a></li>
+                <li><a href="/question">专家咨询</a></li>
+                <li class="active">数据列表</li>
+            </ol>
+        </div>
+    </section>
+
+    <section id="content">
+
+        <div class="content-wrap col-padding margin noleftpadding norightpadding">
+            <input type="hidden" value="{{title}}" id="moreTitle">
+            <input type="hidden" id="questionType" value="{{type}}">
+
+            <div class="container nopadding clearfix">
+                <div class="col_full">
+                    <div class="input-group">
+                        <input type="text" id="keyWord" class="typeahead sm-form-control"
+                               placeholder="请输入搜索关键字，如：堂号、我的空间堂号、我的空间">
+                          <span class="input-group-btn">
+                             <a href="#" class="button nomargin button-reveal button-block"><i class="icon-refresh2" onclick="$('#keyWord').val('');$('#questionList').bootstrapTable('refresh');" data-toggle="tooltip" data-placement="bottom" title="重置"></i><span onclick="searchByList()">查询</span></a>
+                          </span>
+                    </div><!-- /input-group -->
+                </div><!-- /.col-lg-6 -->
+
+                <div class="tab-content clearfix" id="questionDiv" style="min-height:500px;">
+                    <table class="display table table-no-bordered" id="questionList"
+                           data-group-by="false"
+                           data-toggle="table"
+                           data-search="false"
+                           data-show-columns="false"
+                           data-show-refresh="false"
+                           data-show-toggle="false"
+                           data-show-export="false"
+                           data-detail-view="false"
+                           data-unique-id="_id"
+                           data-pagination="true"
+                           data-page-size="10"
+                           data-url="/question/more/list/{{type}}"
+                           data-query-params="getMoreQueryParam"
+                           data-side-pagination="server"
+                    >
+                        <thead>
+                        <tr>
+                            <th data-field="tag" data-sortable="true">咨询类型</th>
+                            <th data-field="username" data-sortable="false">提问用户</th>
+                            <th data-field="createStr" data-sortable="true">提问时间</th>
+                            <th data-field="title" data-sortable="false">标题</th>
+                            <th data-field="viewNum" data-sortable="true">阅读量</th>
+                            <th data-formatter="setDetailFormatter" data-sortable="false">查看明细</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% include '../miniFooter.html' %}
+</div>
+<div id="gotoTop" class="icon-angle-up"></div>
+{% include '../script.html' %}
+<script src="/js/plugins/typeahead.jquery.min.js"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table.js"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<script src="/js/private/question.js"></script>
+</body>
+</html>

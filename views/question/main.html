@@ -1,0 +1,216 @@
+<!doctype html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang=""> <!--<![endif]-->
+                             {%include '../head.html' %}
+
+<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=true onselectstart="return true" data-animation-in="fadeIn"
+      data-speed-in="1500" data-animation-out="fadeOut" data-speed-out="800">
+<!--[if lt IE 8]>
+<p class="browserupgrade">您正在使用 <strong>版本过低的</strong> 浏览器. 请到 <a href="http://browsehappy.com/">更新您的浏览器</a></p>
+<![endif]-->
+<div id="wrapper" class="clearfix">
+    {%include '../nav.html' %}
+
+    <section id="content" style="width: 100%">
+
+        <div class="content-wrap" style="padding: 25px 0;">
+            <div class="container nopadding clearfix">
+                <input type="hidden" id="questionNum" value="{{total}}">
+                <div class="col_four_fifth  clearfix" style="margin: 0 0 30px 0">
+                    <input type="text" id="keyWord" class="sm-form-control"
+                           placeholder="请输入搜索关键字，如：堂号、我的空间堂号、我的空间">
+                </div>
+                <div class="col_one_fifth norightmargin nobottommargin col_last clearfix">
+                    <div class="col_half norightmargin nobottommargin clearfix">
+                        <a href="#" class="button nomargin button-reveal button-block"><i class="icon-refresh2" onclick="$('#keyWord').val('');$('#portfolio-filter .activeFilter a').trigger('click');" data-toggle="tooltip" data-placement="bottom" title="重置"></i><span onclick="searchByKeyword()">查询</span></a>
+                    </div>
+
+                    <div class="col_half col_last nobottommargin norightmargin clearfix">
+                        <ul class="widget_links nobottommargin" style="margin-top: -1px;margin-left: 11px;">
+                            <li class="widget_links_edit nopadding"><a href="/question/add" class="widget_links_edit">
+                                <i class="icon-edit"></i> 我要提问
+                            </a></li>
+                            <li class="widget_links_help nopadding"><a href="#" tabindex="-1">
+                                <i class="icon-private-information-white"></i> 帮助
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col_one_fourth clearfix">
+                    <div id="tab" class="widget clearfix">
+                        <div class="tabs nobottommargin clearfix" id="sidebar-tabs">
+                            <ul class="tab-nav clearfix">
+                                <li><a href="#tabs-1" style="padding:0 0.9em;"><i class="icon-private-222 nomargin"
+                                                                                  style=""></i> 常见</a></li>
+                                <li><a href="#tabs-2" style="padding:0 0.9em;"><i
+                                    class="icon-private-elusive-icons nomargin" style=""></i> 最热</a></li>
+                                <li><a href="#tabs-3" style="padding:0 0.9em;"><i
+                                    class="icon-private-hourglass nomargin" style=""></i> 待回复</a></li>
+                            </ul>
+
+                            <div class="tab-container">
+                                <div class="tab-content clearfix fadeIn" id="tabs-1">
+                                    <h5 class="highlight-me" style="padding: 10px 0 5px 0">常见问题</h5>
+                                    <div class="divider nomargin divider-left divider-thick"
+                                         style="border-color: #095D85"><i class="icon-quote-left"
+                                                                          style="color: #095D85"></i></div>
+                                    <div class="widget widget_links nomargin clearfix" style="padding: 20px 0;min-height: 200px;">
+                                        <ul>
+                                            {% for qa in normal %}
+                                            <li class="question">
+                                                <a href="javascript:void(0)"
+                                                   onclick="showContent('{{qa._id.toString()}}','专家咨询','/question')" style="display: flex">
+                                                    <i class="{{qa.icon}}"></i>
+                                                    <span
+                                                        style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display: block">&nbsp;&nbsp;{{qa.title}}</span>
+                                                </a>
+                                            </li>
+                                            {% endfor %}
+
+                                        </ul>
+                                    </div>
+                                    <br><br>
+                                    {% if normal.length > 0 %}
+                                    <a href="javascript:void(0);" onclick="showMore('normal')" class="question"
+                                       style="font-weight: 500;font-size: 14.5px;">查看更多 <i
+                                        class="icon-circle-arrow-right" style="font-size: 15px;"></i></a>
+                                    {%endif%}
+                                </div>
+                                <div class="tab-content clearfix" id="tabs-2">
+                                    <h5 class="highlight-me" style="padding: 10px 0 5px 0">最热问题</h5>
+                                    <div class="divider nomargin divider-left divider-thick"
+                                         style="border-color: #095D85"><i class="icon-quote-left"
+                                                                          style="color: #095D85"></i></div>
+                                    <div class="widget widget_links nomargin clearfix" style="padding: 20px 0;min-height: 200px;">
+                                        <ul>
+                                            {% for qa in hot %}
+                                            <li class="question">
+                                                <a href="javascript:void(0)"
+                                                   onclick="showContent('{{qa._id.toString()}}','专家咨询','/question')" >
+                                                    <i class="{{qa.icon}}"></i>
+                                                    <span
+                                                        style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">&nbsp;&nbsp;{{qa.title}}</span>
+                                                </a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    <br><br>
+                                    {% if hot.length > 0 %}
+                                    <a href="javascript:void(0);" class="question" onclick="showMore('hot')"
+                                       style="font-weight: 500;font-size: 14.5px;">查看更多 <i
+                                        class="icon-circle-arrow-right"
+                                       ></i></a>
+                                    {%endif%}
+                                </div>
+                                <div class="tab-content clearfix" id="tabs-3">
+                                    <h5 class="highlight-me" style="padding: 10px 0 5px 0">待回复问题</h5>
+                                    <div class="divider nomargin divider-left divider-thick"
+                                         style="border-color: #095D85"><i class="icon-quote-left"
+                                                                          style="color: #095D85"></i></div>
+                                    <div class="widget widget_links nomargin clearfix" style="padding: 20px 0;min-height: 200px;">
+                                        <ul>
+                                            {% for qa in unreply %}
+                                            <li class="question">
+                                                <a href="javascript:void(0)"
+                                                   onclick="showContent('{{qa._id.toString()}}','专家咨询','/question')" style="display: flex">
+                                                    <i class="{{qa.icon}}"></i>
+                                                    <span
+                                                        style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display: block;">&nbsp;&nbsp;{{qa.title}}</span>
+                                                </a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    <br><br>
+                                    {% if unreply.length > 0 %}
+                                    <a href="javascript:void(0);" onclick="showMore('noreply')" class="question"
+                                       style="font-weight: 500;font-size: 14.5px;">查看更多 <i
+                                        class="icon-circle-arrow-right"
+                                        ></i></a>
+                                    {%endif%}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div><!---->
+                </div>
+
+                <!-- Post Content
+                ============================================= -->
+                <div class="col_three_fourth nobottommargin col_last clearfix" style="min-height:500px;position:relative;top:-4px;">
+                    <ul id="portfolio-filter" class="portfolio-filter style-4 col_full nobottommargin clearfix">
+                        <li class="activeFilter"><a href="javascript:void(0)" onclick="showQuestionByType('all')"><i
+                            class="icon-private-ios-keypad"></i> 全部</a></li>
+                        {% for tag in tags %}
+                        <li><a href="javascript:void(0)" onclick="showQuestionByType('{{tag._id.toString()}}')"><i
+                            class="{{tag.icon}}"></i> {{tag.name}}</a></li>
+                        {% endfor %}
+                        <div class="pull-right" style="display: inline-grid;">
+
+                            <div class="pull-right" style="display: inline-grid;">
+                                <li class="nomargin questionSort"><a href="javascript:void(0)" class="nopadding questionSort"
+                                                        onclick="sortNum('asc')"><i
+                                    class="icon-private-arrow-up-b num asc icon-lg questionSort"></i></a></li>
+                                <li class="nomargin questionSort"><a href="javascript:void(0)" class="nopadding questionSort"
+                                                        onclick="sortNum('desc')"><i
+                                    class="icon-private-arrow-down-b num desc icon-lg questionSort"
+                                        ></i></a></li>
+                            </div>
+
+                            <div class="pull-right" style="display: inline-grid;">
+
+                                <li class="nomargin questionSort"><a href="javascript:void(0)" class="nopadding questionSort"
+                                                         onclick="sortTime('asc')"><i
+                                    class="icon-private-arrow-up-b time asc icon-lg questionSort"
+                                  ></i></a>
+                                </li>
+                                <li class="nomargin questionSort"><a href="javascript:void(0)" class="nopadding questionSort"
+                                                        onclick="sortTime('desc')"><i
+                                    class="icon-private-arrow-down-b time desc icon-lg questionSort active"
+                                    ></i></a>
+                                </li>
+                            </div>
+
+                        </div>
+                        <div class="pull-right questionSort" style="display: inline-grid;">
+                            <h6>浏览数量 </h6>
+                            <h6 style="margin: -5px 5px 10px 0;">提问时间 </h6>
+                        </div>
+                        <div class="clear"></div>
+
+                        <div class="panel-group nobottommargin" id="accordion" style="top: -5px;position: relative;">
+
+                        </div>
+
+                        <div class="panel-group nobottommargin" id="nodata" align="center" hidden>
+                            <h3 class="topmargin-lg" style="color: #999;font-style: italic">无任何记录显示</h3>
+                        </div>
+                    </ul>
+
+                </div>
+                <div class="noradius col_three_fourth nomargin pull-right clearfix" id="pageDiv" style="padding-top: 15px;">
+                    <p class="pull-left" style="color: #444;font-size: 13.5px;font-weight: 400;margin-bottom: 0;">显示第 <span id="start"></span> 到第 <span id="current"></span> 条记录，总共 <span id="total"></span> 条记录</p>
+                    <div id="pageInfo">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% include '../miniFooter.html' %}
+</div>
+<div id="gotoTop" class="icon-angle-up"></div>
+{% include '../script.html' %}
+<script src="/js/plugins/typeahead.jquery.min.js"></script>
+<script src="/js/private/question.js"></script>
+</body>
+</html>

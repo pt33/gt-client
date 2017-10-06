@@ -1,0 +1,44 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+ {%include 'head.html' %}
+<link rel="stylesheet" href="/js/plugins/map/storymap.css" type="text/css"/>
+<link rel="stylesheet" href="/js/plugins/map/font.georgia-helvetica.css?v1" type="text/css">
+<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=false onselectstart="return false">
+<!--[if lt IE 8]>
+<p class="browserupgrade">您正在使用 <strong>版本过低的</strong> 浏览器. 请到 <a href="http://browsehappy.com/">更新您的浏览器</a></p>
+<![endif]-->
+<div id="wrapper" class="clearfix">
+    {%include 'nav.html' %}
+
+    <section id="content">
+        <input type="hidden" value="{{navTitle}}" id="navTitle">
+        <div class="content-wrap" style="padding: 30px 0px;">
+            <div class="container nopadding clearfix">
+                <div id="katrina" class="small-thumbs" data-animate="slideInLeft">
+                    <h3 align="center">廖氏家族迁徙记录</h3>
+                    <div id="map_karina" style="height: 800px; margin: 20px;"></div>
+                </div>
+                <div id="sochi" class="small-thumbs" hidden data-animate="slideInLeft">
+                    <h3 align="center">廖氏家族迁徙记录</h3>
+                    <div id="map_sochi" style="height: 800px; margin: 20px;"></div>
+                </div>
+                <div id="slider-arrow-left" style="margin: 0px -40px;"><i class="icon-angle-left" onclick="changeMapStory('prev')"></i></div>
+                <div id="slider-arrow-right" style="margin: 0px -80px;"><i class="icon-angle-right" onclick="changeMapStory('next')"></i></div>
+
+            </div>
+        </div>
+    </section>
+
+    {% include 'miniFooter.html' %}
+</div>
+{% include 'script.html' %}
+<script src="/js/plugins/map/storymap-min.js"></script> <!– 中国地图文件 –>
+<script src="/js/plugins/map/zh-cn.js"></script> <!– 中国地图文件 –>
+<script src="/js/plugins/map/AnimatedMarker.js"></script>
+<script src="/js/private/map.js"></script>
+
+</body>
+</html>

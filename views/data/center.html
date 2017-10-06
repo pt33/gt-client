@@ -1,0 +1,333 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+{%include '../head.html' %}
+<link rel="stylesheet" href="/css/components/daterangepicker.css" type="text/css"/>
+<link rel="stylesheet" href="/js/plugins/bootstrap-table/bootstrap-table.css" type="text/css"/>
+<link rel="stylesheet" href="/css/components/bs-select.css" type="text/css" />
+<link rel="stylesheet" href="/js/plugins/bootstrap-table/bootstrap-table-group-by.css" type="text/css" />
+<link rel="stylesheet" href="/css/components/radio-checkbox.css" type="text/css" />
+<link rel="stylesheet" href="/js/plugins/map/mapbox-gl.css" type="text/css" />
+<link rel="stylesheet" href="/js/plugins/map/markercluster.css" type="text/css" />
+<link rel="stylesheet" href="/js/plugins/map/markercluster.Default.css" type="text/css" />
+<link rel='stylesheet' href='/js/plugins/ZoomBar/L.Control.ZoomBar.css' type="text/css"/>
+<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=true onselectstart="return true">
+<!--[if lt IE 8]>
+<p class="browserupgrade">您正在使用 <strong>版本过低的</strong> 浏览器. 请到 <a href="http://browsehappy.com/">更新您的浏览器</a></p>
+<![endif]-->
+<div id="wrapper" class="clearfix">
+    {%include '../nav.html' %}
+    {%if column && column.hasChild && column.childShowMode == 'tab' %}
+        <div id="page-menu">
+            <div id="page-menu-wrap">
+                <div class="container nopadding clearfix">
+                    <nav style="float: left;">
+                        <ul>
+                            {% for child in childs %}
+                                <li {%if loop.index == 1 %} class="current" {%endif%}><a href="javascript:void(0)" onclick="showSubView(this, 'main_{{child.cid.toString()}}')"><div>{{child.childName}}</div></a></li>
+                            {% endfor %}
+                        </ul>
+                    </nav>
+                    <div id="page-submenu-trigger"><i class="icon-reorder"></i></div>
+                </div>
+            </div>
+        </div>
+    {%endif%}
+    <section id="content">
+        <div class="content-wrap" id="dataContent" style="padding-top: 40px;">
+            {% for child in childs %}
+                <div class="container nopadding clearfix" id="main_{{child.cid.toString()}}" {%if loop.index != 1 %} hidden {%endif%}>
+                    {%if child.showSearch %}
+                        <div class="promo promo-light nobottommargin container" id="promo_{{child.childTable}}" style="background-image: url('../img/pattern.jpg');">
+                            <form class="form-horizontal searchForm">
+                                {% for search in child.normalSearch %}
+                                    {%if search.searchType == 'text' %}
+                                        <div class="col_one_fourth nobottommargin {%if loop.index  % 4 == 0 %} col_last {%endif%}">
+                                            <input class="typeahead sm-form-control nobottommargin" type="text" placeholder="{{search.title}}" onmousedown="hideDropMenu()"  id="{{child.childTable}}_{{search.name}}">
+                                        </div>
+                                    {%elseif search.searchType == 'date' %}
+                                        <div class="col_one_fourth nobottommargin {%if loop.index  % 4 == 0 %} col_last {%endif%}">
+                                            <input class="sm-form-control nobottommargin daterange1" placeholder="{{search.title}}" onmousedown="hideDropMenu()" id="{{child.childTable}}_{{search.name}}">
+                                        </div>
+                                    {%elseif search.searchType == 'area' %}
+                                        {%include '../area.html' %}
+                                    {%elseif search.searchType == 'name' %}
+                                    <div class="col_one_fourth nobottommargin {%if loop.index  % 4 == 0 %} col_last {%endif%}">
+                                        <input class="typeahead sm-form-control nobottommargin nameinput" id="{{child.childTable}}_{{search.name}}" type="text" placeholder="{{search.title}}" onfocus="showNameSearch('{{child.childTable}}','{{child.childTable}}_{{search.name}}',this)"  onkeyup="showNameSearch('{{child.childTable}}','{{child.childTable}}_{{search.name}}',this)">
+                                        <ul class="dropdown-menu list-group name" role="menu" style="display: none;width:1060px;padding: 5px 10px;" id="ul_{{child.childTable}}_{{search.name}}">
+                                            {% for name in names %}
+                                            <p class="navbar-text name_list {{name.key}}" style="margin: 5px 0px;padding: 7px 17px;border: 1px solid #ddd;height: 40px;width: 45px;cursor: pointer;{%if loop.index != 1 %} border-left:0px solid #ddd; {%endif%}" onmouseover="showSubName('{{child.childTable}}','{{name.key}}',this)" onclick="showSubName('{{child.childTable}}','{{name.key}}',this)">{{name.key}}</p>
+                                            {% endfor %}
+                                            {% for name in names %}
+                                            <div id="{{child.childTable}}_name_{{name.key}}" style="display: none;" class="name">
+                                                {% for val in name.val %}
+                                                <p class="navbar-text name_list sub_name" onclick="chooseName('{{child.childTable}}','{{val}}','{{name.key}}',this)">{{val}}</p>
+                                                {% endfor %}
+                                            </div>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    {%endif%}
+                                    {%if loop.index  % 4 == 0 %}
+                                        <div class="clear"></div><br/>
+                                    {%endif%}
+                                {% endfor %}
+                                    <a href="#" class="button button-rounded button-reveal button-large"><i class="icon-refresh2" onclick="clearParam()" data-toggle="tooltip" data-placement="bottom" title="重置"></i><span onclick="dataSearch('sub_{{child.cid.toString()}}','{{child.childTable}}')">查询</span></a>
+                                {%if child.highSearch.length > 0 %}
+                                    <div id="highSearchView_{{child.childTable}}" style="display: none;width: 100%" class="promo-light clearfix nopadding">
+                                        <div class="clear"></div><br/>
+                                        {% for search in child.highSearch %}
+                                            {%if search.searchType == 'text' %}
+                                                <div class="col_one_fourth nobottommargin {%if loop.index % 4 == 0 %} col_last {%endif%}">
+                                                    <input class="typeahead sm-form-control nobottommargin" type="text" placeholder="{{search.title}}" onmousedown="hideDropMenu()" id="{{child.childTable}}_{{search.name}}">
+                                                </div>
+                                            {%elseif search.searchType == 'date' %}
+                                                <div class="col_one_fourth nobottommargin {%if loop.index  % 4 == 0 %} col_last {%endif%}">
+                                                    <input class="sm-form-control nobottommargin daterange1" type="text" placeholder="{{search.title}}" onmousedown="hideDropMenu()" id="{{child.childTable}}_{{search.name}}">
+                                                </div>
+                                            {%elseif search.searchType == 'area' %}
+                                                {%include '../area.html' %}
+                                            {%elseif search.searchType == 'name' %}
+                                                {%include '../name.html' %}
+                                            {%endif%}
+                                            {%if loop.index  % 4 == 0 %}
+                                                <div class="clear"></div><br/>
+                                            {%endif%}
+                                        {% endfor %}
+                                    </div>
+                                {%endif%}
+                            </form>
+                        </div>
+                        {%if child.highSearch.length > 0 %}
+                            <div class="divider divider-short divider-center notopmargin container nopadding"><a href="#" onclick="showHighSearch('{{child.childTable}}')"><i class="fa fa-angle-double-down" style="font-size: 2.3em;" id="fa_{{child.childTable}}"></i></a></div>
+                        {%endif%}
+                    {%endif%}
+                    {%if child.showMode == 'group' %}
+                        <div class="tabs tabs-responsive nobottommargin">
+                            <ul class="tab-nav tab-nav2 clearfix">
+                                <li class="current"><a href="#sub_{{child.cid.toString()}}" style="font-size: 15px;"><i class="icon-th-list"></i>&nbsp;列表查看</a></li>
+                                {% for group in child.groupFields %}
+                                    {%if group.groupType == 'name' %}
+                                        <li><a href="#sub_{{group.fieldId.toString()}}" style="font-size: 15px;"><i class="icon-th-large"></i>&nbsp;{{group.groupTitle}}</a></li>
+                                    {%elseif group.groupType == 'area' %}
+                                        <li><a href="#sub_{{group.fieldId.toString()}}" style="font-size: 15px;" onclick="initMap('{{group.name}}_{{child.childTable}}_{{group.showDetail}}_{{group.groupTitle}}','{{group.name}}')"><i class="icon-th-large"></i>&nbsp;{{group.groupTitle}}</a></li>
+                                    {%elseif group.groupType == 'field' %}
+                                        <li><a href="#sub_{{group.fieldId.toString()}}" style="font-size: 15px;"><i class="icon-th-large"></i>&nbsp;{{group.groupTitle}}</a></li>
+                                    {%endif%}
+                                {% endfor %}
+                            </ul>
+
+                            <div class="postcontent tab-container nobottommargin norightmargin">
+                                <div class="tab-content clearfix" style="padding: 0 0 30px 0;"  id="sub_{{child.cid.toString()}}" >
+                                    <div class="container nomargin notopborder nopadding clearfix" style="min-height: 550px;">
+                                        <table id="tableList{{child.childTable}}"  class="display table table-no-bordered table-hover"></table>
+                                    </div>
+                                </div>
+                                {% for group in child.groupFields %}
+                                    <div class="tab-content container nopadding clearfix" id="sub_{{group.fieldId.toString()}}">
+                                        {% if group.groupType == 'name' %}
+                                            <div class="sidebar col_one_sixth  clearfix">
+                                                <div class="sidebar-widgets-wrap">
+                                                    <div class="widget widget_links clearfix" id="groupdiv{{group.name}}">
+                                                        <input id="checkbox-{{group.name}}" class="checkbox-style" name="checkbox-{{group.name}}" type="checkbox" onchange="chooseAll(this,'{{group.name}}','{{child.childTable}}')">
+                                                        <label for="checkbox-{{group.name}}" class="checkbox-style-3-label checkbox-small notopmagin" style="font-size: 16px;font-weight: 500;font-family: Source Han Sans CN,Tahoma,Verdana,STHeiTi,simsun,sans-serif;">按拼音分组</label>
+                                                        {% for data in group.datas %}
+                                                            <div class="toggle nobottommargin">
+                                                                <div class="togglet noleftmargin" id="{{child.childTable}}_{{data._id}}_{{group.name}}" style="text-transform: uppercase;font-size: 16px;" ><i class="toggle-closed icon-caret-down"></i><i class="toggle-open icon-caret-up"></i>{{data._id}}
+                                                                    <!--<span class="badge pull-right" style="position: relative;top:2px">{{data.cnt}}</span>-->
+                                                                    <div class="pull-right">
+                                                                        <input id="checkbox-{{data._id}}" class="checkbox-style" name="checkbox-{{data._id}}" type="checkbox" onchange="pinyinChoose(this,'{{group.name}}','{{child.childTable}}')">
+                                                                        <label for="checkbox-{{data._id}}" class="checkbox-style-3-label checkbox-small notopmagin" style="font-size: 16px;color: #9c721d"></label>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="togglec">
+                                                                    <ul>
+                                                                        {% for surname in data.surname %}
+                                                                        <div>
+                                                                            <input id="checkbox-{{surname}}" class="checkbox-style" name="checkbox-{{surname}}" type="checkbox" onchange="surnameChoose('{{group.name}}','{{child.childTable}}','{{surname}}')">
+                                                                            <label for="checkbox-{{surname}}" class="checkbox-style-2-label checkbox-small" style="font-size: 16px;">{{surname}}</label>
+                                                                        </div>
+                                                                        {% endfor %}
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col_five_sixth col_last clearfix">
+                                                {% if group.showMode == 'list' %}
+                                                    <table id="namegroup{{child.childTable}}"
+                                                       data-group-by="true"
+                                                       data-toggle="table"
+                                                       data-group-by-field="{{group.name}}"
+                                                       data-search="false"
+                                                       data-show-columns="false"
+                                                       data-show-refresh="false"
+                                                       data-show-toggle="false"
+                                                       data-show-export="false"
+                                                       data-detail-view="false"
+                                                       data-unique-id="_id"
+                                                       data-pagination="true"
+                                                       data-page-list="[10, 20, 50, 100]"
+                                                       data-page-size="10"
+                                                       data-url="/data/subList/{{child.childTable}}/{{group.name}}"
+                                                       data-query-params="getQueryParam"
+                                                       data-side-pagination="server"
+                                                       data-response-handler="responseHandler"
+                                                       >
+                                                    <thead>
+                                                    <tr>
+                                                        {% for field in group.fields %}
+                                                            {% if field.needShow %}
+                                                            <th data-field="{{field.name}}" data-sortable="{{field.needSort}}">{{field.title}}</th>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% if group.showDetail %}
+                                                            <th data-formatter="setListFormatter">查看明细</th>
+                                                        {% endif %}
+                                                    </tr>
+                                                    </thead>
+                                                </table>
+                                                {%elseif group.showMode == 'map' %}
+
+                                                {%elseif group.showMode == 'page' %}
+
+                                                {%endif%}
+                                            </div>
+                                        {% elseif group.groupType == 'area'%}
+                                            <div class="sidebar col_one_sixth  clearfix" id="left-{{group.name}}">
+                                                <div class="sidebar-widgets-wrap">
+                                                    <div class="widget widget_links clearfix" id="groupdiv{{group.name}}">
+                                                        <input id="checkbox-{{group.name}}" class="checkbox-style" name="checkbox-{{group.name}}" type="checkbox" onchange="chooseAllArea(this,'{{group.name}}','{{child.childTable}}','{{group.name}}_{{child.childTable}}_{{group.showDetail}}_{{group.groupTitle}}')" checked>
+                                                        <label for="checkbox-{{group.name}}" class="checkbox-style-3-label checkbox-small notopmagin" style="font-size: 16px;font-weight: 500;font-family: Source Han Sans CN,Tahoma,Verdana,STHeiTi,simsun,sans-serif;">按省市县分组</label>
+                                                        {% for data in group.datas %}
+                                                            <div class="toggle nobottommargin">
+                                                                <input type="hidden" value="{{data.location}}" id="location_0_{{data.name}}">
+                                                                {% if data.citys.length != 0 %}
+                                                                    <div class="togglet noleftmargin" id="{{child.childTable}}_{{data.name}}_{{group.name}}" style="text-transform: uppercase;font-size: 16px;" >
+                                                                        <i class="toggle-closed icon-caret-down"></i><i class="toggle-open icon-caret-up"></i>{{data.name}}<!--<span class="badge pull-right" style="position: relative;top:2px">{{data.cnt}}</span>-->
+                                                                        <div class="pull-right">
+                                                                            <input id="checkbox0-{{data.name}}" class="checkbox-style" name="checkbox0-{{data.name}}" type="checkbox" onchange="areaChoose(this,'{{group.name}}','{{child.childTable}}','{{group.showDetail}}','{{group.groupTitle}}')" checked>
+                                                                            <label for="checkbox0-{{data.name}}" class="checkbox-style-3-label checkbox-small notopmagin" style="font-size: 16px;color: #9c721d"></label>
+                                                                        </div>
+                                                                    </div>
+                                                                {% else %}
+                                                                    <div class="togglet noleftmargin" id="{{child.childTable}}_{{data.name}}_{{group.name}}" style="text-transform: uppercase;font-size: 16px;" >{{data.name}}
+                                                                        <div class="pull-right">
+                                                                            <input id="checkbox0-{{data.name}}" class="checkbox-style" name="checkbox0-{{data.name}}" type="checkbox" onchange="areaChoose(this,'{{group.name}}','{{child.childTable}}','{{group.showDetail}}','{{group.groupTitle}}')" checked>
+                                                                            <label for="checkbox0-{{data.name}}" class="checkbox-style-3-label checkbox-small notopmagin" style="font-size: 16px;color: #9c721d"></label>
+                                                                        </div>
+                                                                    </div>
+                                                                {% endif %}
+
+                                                                {% if data.citys.length != 0 %}
+                                                                    <div class="togglec">
+                                                                        <ul>
+                                                                        {% for city in data.citys %}
+                                                                            <input type="hidden" value="{{city.location}}" id="location_1_{{city.name}}">
+                                                                            {% if city.countys.length != 0 %}
+                                                                                <div class="togglett noleftmargin notopmargin" id="{{child.childTable}}_{{city.name}}_{{group.name}}" style="text-transform: uppercase;font-size: 16px;" ><i class="toggle-closed icon-caret-down"></i><i class="toggle-open icon-caret-up"></i>{{city.name}}<!--<span class="badge pull-right" style="position: relative;top:2px">{{data.cnt}}</span>-->
+                                                                                    <div class="pull-right">
+                                                                                        <input id="checkbox1-{{city.name}}" class="checkbox-style" name="checkbox1-{{city.name}}" type="checkbox" onchange="cityChoose(this,'{{group.name}}','{{child.childTable}}','{{group.showDetail}}','{{group.groupTitle}}')" checked>
+                                                                                        <label for="checkbox1-{{city.name}}" class="checkbox-style-3-label checkbox-small notopmagin" style="font-size: 16px;color: #9c721d"></label>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="togglecc">
+                                                                                    <ul>
+                                                                                        {% for county in city.countys %}
+                                                                                        <input type="hidden" value="{{county.location}}" id="location_2_{{county.name}}">
+                                                                                        <div>
+                                                                                            <input id="checkbox2-{{county.name}}" class="checkbox-style" name="checkbox2-{{county.name}}" type="checkbox" onchange="countyChoose(this,'{{group.name}}','{{child.childTable}}','{{group.showDetail}}','{{group.groupTitle}}')" checked>
+                                                                                            <label for="checkbox2-{{county.name}}" class="checkbox-style-2-label checkbox-small" style="font-size: 16px;">{{county.name}}</label>
+                                                                                        </div>
+                                                                                        {% endfor %}
+                                                                                    </ul>
+                                                                                </div>
+                                                                            {% else %}
+                                                                                <div>
+                                                                                    <input id="checkbox1-{{city.name}}" class="checkbox-style" name="checkbox1-{{city.name}}" type="checkbox" onchange="cityChoose(this,'{{group.name}}','{{child.childTable}}','{{group.showDetail}}','{{group.groupTitle}}')" checked>
+                                                                                    <label for="checkbox1-{{city.name}}" class="checkbox-style-2-label checkbox-small" style="font-size: 16px;">{{city.name}}</label>
+                                                                                </div>
+                                                                            {% endif %}
+                                                                        {% endfor %}
+                                                                    </ul>
+                                                                    </div>
+                                                                {% endif %}
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col_five_sixth col_last clearfix" id="right-{{group.name}}" style="height: 100%;">
+                                                {% if group.showMode == 'list' %}
+
+                                                {%elseif group.showMode == 'map' %}
+                                                    <div id="map_{{group.name}}_{{child.childTable}}_{{group.showDetail}}_{{group.groupTitle}}" style="height: 1000px;"></div>
+                                                {%elseif group.showMode == 'page' %}
+
+                                                {%endif%}
+                                            </div>
+                                        {% elseif group.groupType == 'field' %}
+                                        <div class="sidebar col_one_sixth  clearfix">
+                                            <div class="sidebar-widgets-wrap">
+                                                <div class="widget widget_links clearfix" id="groupdiv{{group.name}}">
+                                                    <!--{% for data in group.datas %}-->
+                                                    <!--<div class="toggle nobottommargin">-->
+                                                        <!--<div class="togglet noleftmargin" id="{{child.childTable}}_{{data._id}}_{{group.name}}" style="text-transform: uppercase;font-size: 18px;" >{{data._id}}&lt;!&ndash;<span class="badge pull-right" style="position: relative;top:2px">{{data.cnt}}</span>&ndash;&gt;-->
+                                                            <!--<div class="pull-right">-->
+                                                                <!--<input id="checkbox-{{data._id}}" class="checkbox-style" name="checkbox-{{data._id}}" type="checkbox" onchange="fieldChoose(this,'{{group.name}}','{{child.childTable}}')">-->
+                                                                <!--<label for="checkbox-{{data._id}}" class="checkbox-style-3-label checkbox-small notopmagin" style="font-size: 16px;color: #9c721d"></label>-->
+                                                            <!--</div>-->
+                                                        <!--</div>-->
+                                                    <!--</div>-->
+                                                    <!--{% endfor %}-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {%endif%}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% elseif child.showMode == 'page' %}
+                        <div class="tabs tabs-responsive nobottommargin">
+                            <div id="page_{{child.childTable}}" class="postcontent tab-container nomargin nopadding"></div>
+                        </div>
+                    {% else %}
+                        <div class="tabs tabs-responsive nobottommargin" >
+                            <div class="postcontent tab-container" style="padding-top: 50px;">
+                            <div class="container notopborder nopadding clearfix" style="min-height: 550px;">
+                                <table id="tableList{{child.childTable}}"  class="display table table-no-bordered table-hover"></table>
+                            </div>
+                            </div>
+                        </div>
+                    {%endif%}
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% include '../miniFooter.html' %}
+</div>
+<div id="gotoTop" class="icon-angle-up"></div>
+{% include '../script.html' %}
+
+<script src="/js/plugins/toastr/toastr.min.js"></script>
+<script src="/js/components/moment.js"></script>
+<script src="/js/components/daterangepicker.js"></script>
+<script src="/js/private/tableoption.js"></script>
+<script src="/js/private/data.js"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table.js"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table-group-by.js"></script>
+<script src="/js/components/bs-select.js"></script>
+<script src="/js/plugins/map/mapbox-gl.js"></script> <!– 中国地图文件 –>
+<script src="/js/plugins/map/mapbox-gl-language.js"></script>
+<script src="/js/plugins/map/markercluster.js"></script>
+<script src='/js/plugins/ZoomBar/L.Control.ZoomBar.js'></script>
+<script src='/js/plugins/map/svg-icon.js'></script>
+</body>
+</html>

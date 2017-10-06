@@ -1,0 +1,98 @@
+
+<div class="entry clearfix nobottommargin" style="padding-bottom: 0px;">
+    {% if detail.child.bgImgs.length != 0 %}
+    <div class="entry-image">
+        <div class="fslider" data-arrows="false">
+            <div class="flexslider">
+                <div class="slider-wrap">
+                    <!--{% for bgImg in detail.child.bgImgs %}-->
+                        <div class="slide"><a href="#"><img src=""></a></div>
+                    <!--{% endfor %}-->
+                </div>
+            </div>
+            <div class="sale-flash col_two_fifth nomargin">
+                <p style="font-family: 'STLiti,STKaiti';font-size: 26px;color:#fff;width:80px;height:150px;word-wrap:break-word;letter-spacing:.2em;">{{main.info[detail.child.groupTitle]}}</p>
+            </div>
+        </div>
+    </div>
+    {%endif%}
+    <div class="entry-c">
+        <div class="fancy-title title-bottom-border">
+            <h2>{{main.info[detail.child.groupTitle]}}</h2>
+        </div>
+        <ul class="entry-meta clearfix">
+            {% if detail.child.showViewNum %}
+            <li><a href="javascript:void(0)" onclick=""><i class="icon-eye-open"></i> 查看</a></li>
+            {% endif %}
+            {% if detail.child.canCollection %}
+            <li><a href="javascript:void(0)" onclick=""><i class="icon-heart3"></i> 收藏</a></li>
+            {% endif %}
+            {% if detail.child.canLike %}
+            <li><a href="javascript:void(0)" onclick=""><i class="icon-like"></i> 点赞</a></li>
+            {% endif %}
+            {% if detail.child.canShare %}
+            <li><a href="javascript:void(0)" onclick=""><i class="icon-share-alt"></i> 分享</a></li>
+            {% endif %}
+        </ul>
+        {% set i = 1 %}
+        {% for field in main.fields %}
+            {% if field.needShow || field.needQuery %}
+                {% if  main.info[field.name] && main.info[field.name].length > 20  %}
+                    <div class="entry-content nobottommargin col_full">
+                        <div class="nomargin col_one_sixth">
+                            <h5>{{field.title}}:</h5>
+                        </div>
+                        <div class="nomargin col_five_sixth">
+                            <h5 style="font-weight: 400;">{% if main.info[field.name] %} {{main.info[field.name]}} {%endif%}</h5>
+                        </div>
+                    </div>
+                    {% set i = i + 2 %}
+                {% else %}
+                    <div class="entry-content nobottommargin col_half {%if i % 2 == 0 || loop.index == main.fields.length %}col_last{%endif%}">
+                        <div class="nomargin col_one_third">
+                            <h5>{{field.title}}:</h5>
+                        </div>
+                        <div class="nomargin col_two_third col_last">
+                            <h5 style="font-weight: 400;">{% if main.info[field.name] %} {{main.info[field.name]}} {%endif%}</h5>
+                        </div>
+                    </div>
+                    {% set i = i + 1 %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+        {% if main.info.cnt != 0 %}
+        <div class="entry-meta col_full clearfix nomargin">
+            <div class="divider divider-rounded"><a href="javascript:void(0)" title="查看文件详情" data-toggle="tooltip" data-placement="bottom" onclick="viewFileDetail('{{detail.child.refTable}}','{{detail.child.refField}}','{{main.info[detail.child.mainField]}}')"><i class="icon-hand-up" style="font-size: 26px;"></i></a></div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<div class="divider"><i class="icon-circle"></i></div>
+
+{% if detail.refTables.length != 0 %}
+<div class="tabs tabs-bordered clearfix">
+    <ul class="tab-nav clearfix">
+        {% for refTable in detail.refTables %}
+            <li><a href="#divPageTable{{tableInfo.name}}">{{refTable.refTitle}}</a></li>
+        {%endfor%}
+    </ul>
+
+    <div class="tab-container">
+        {% for refTable in detail.refTables %}
+        {% if refTable.showMode == 'list' %}
+        <div class="tab-content clearfix" id="divPageTable{{tableInfo.name}}">
+            <input type="hidden" value="{{refTable.showField}}" id="{{tableInfo.name}}_showField"/>
+            <input type="hidden" value="{{tableInfo._id.toString()}}" id="{{tableInfo.name}}_tableId"/>
+            <input type="hidden" value="{{refTable.refTable}}" id="{{tableInfo.name}}_refTable"/>
+            <input type="hidden" value="{{refTable.refField}}" id="{{tableInfo.name}}_refField"/>
+            <input type="hidden" value="{{main.info[refTable.tableField]}}" id="{{tableInfo.name}}_mainField"/>
+            <input type="hidden" value="{{main.info._id.toString()}}" id="{{tableInfo.name}}_key"/>
+            <table class="table table-no-bordered" id="pageTable{{tableInfo.name}}" style="border-bottom: 0px;"></table>
+        </div>
+        {% elseif refTable.showMode == 'page' %}
+
+        {%endif%}
+        {%endfor%}
+    </div>
+</div>
+{%endif%}

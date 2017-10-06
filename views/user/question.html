@@ -1,0 +1,72 @@
+<div class="postcontent nomargin col_full clearfix" style="min-height: 418px;">
+    <input type="hidden" value="{{current}}" id="pageCurrent">
+    <input type="hidden" value="{{total}}" id="pagetotal">
+    <div class="small-thumbs" id="posts" style="min-height: 378px;">
+        {% if list.length == 0 %}
+            <div class="panel-group nobottommargin well" id="nodata" align="center" style="height: 463px"><h3 style="padding: 9.5em 0;color: #9CA0A9;font-size: 1.6em;font-style: italic;">您还没有咨询任何问题，赶紧去创建吧！</h3></div>
+        {% else %}
+            {% for question in list %}
+                <div class="entry clearfix">
+                {% if question.images.length > 0 %}
+                <div class="entry-image">
+                    {% if question.images.length > 1 %}
+                        <div class="fslider" data-arrows="false" data-lightbox="gallery">
+                            <div class="flexslider">
+                                <div class="slider-wrap">
+                                    {% for image in question.images %}
+                                        <div class="slide"><a href="{{image}}" data-lightbox="gallery-item"><img class="image_fade" data-lazyload="{{image}}" alt="问题图片"></a></div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="{{question.images[0]}}" data-lightbox="image"><img class="image_fade" data-lazyload="{{question.images[0]}}" alt="问题图片"></a>
+                    {% endif %}
+                </div>
+                {% endif %}
+                <div class="entry-c">
+                    <div class="entry-title">
+                        <h2>{{question.title}}</h2>
+                    </div>
+                    <ul class="entry-meta clearfix">
+                        <li><i class="{{question.icon}}"></i>{{question.tag}}</li>
+                        <li><i class="icon-private-calendar-4"></i>{{question.createStr}}</li>
+                        <li><i class="icon-private-eye-1"></i>{{question.viewNum}}</li>
+                        <li>
+                        {% if question.status == 0 %}
+                            <i class="icon-info"></i>未审核
+                        {% elseif question.status == 1%}
+                            <i class="icon-info"></i>已通过
+                        {% elseif question.status == 2 && question.reply == 0 %}
+                            <i class="icon-info"></i>待回复
+                        {% elseif question.status == 2 && question.reply != 0 %}
+                            <i class="icon-info"></i>已回复
+                        {% elseif question.status == 2 && question.reply != 0 && question.isCommonly == 1 %}
+                            <i class="icon-info"></i>已标星
+                        {% elseif question.status == -1%}
+                            <i class="icon-info"></i>未通过
+                        {% elseif question.status == -4%}
+                            <i class="icon-info"></i>已撤消
+                        {% endif %}
+                        </li>
+                    </ul>
+                    <div class="entry-content">
+                        <blockquote>
+                            <p class="short">
+                                {{ question.content.shortContent|url_decode }}
+                            </p>
+                        </blockquote>
+                        <a href="javascript:void(0)" class="more-link" onclick="showMoreInfo('{{question._id.toString()}}')">查看详情</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="noradius  clearfix" id="pageDiv" style="padding: 10px 0 0 0;" >
+        <p class="pull-left userPage hidden-xs">显示第 <span id="start"></span> 到第 <span id="current"></span> 条记录，总共 <span id="total"></span> 条记录</p>
+        <div id="pageInfo" class="pull-right">
+
+        </div>
+    </div>
+</div>

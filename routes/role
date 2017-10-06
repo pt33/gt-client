@@ -1,0 +1,130 @@
+let express = require('express')
+let router = express.Router()
+let role = require('../models/role')
+let menu = require('../models/menu')
+let mongoose = require('mongoose')
+
+router.get('/', async function(req, res, next) {
+    try{
+        let menus = await menu.find({status: 1}).sort({'sort':1})
+        let data = {
+            menus: menus,
+            headTitle: '角色与权限管理',
+            searchHolder: '请输入账户名/角色名....',
+            headBtnId: 'addRole',
+            headBtnTitle: '创建角色',
+            headMode:'addRoleModal'
+        }
+        res.render('role', data)
+    } catch (e) {
+        res.render('error',{errorMsg:e.message})
+    }
+})
+
+router.get('/list', async function(req, res, next) {
+    try{
+        let data = await getPaperData(
+            req.query.page
+            ,req.query.limit
+            ,req.query.sort
+            ,req.query.key === undefined ? '' : req.query.key
+        )
+        return res.json(data)
+    } catch (e) {
+        return res.json({error:e.message})
+    }
+})
+
+router.post('/save', function(req, res, next) {
+    let menus = req.body.menus
+    let tmp = []
+    for(let i = 0;i< menus.length;i++) {
+        tmp.push(mongoose.Types.ObjectId(menus[i]))
+    }
+
+    if (req.body.roleId !== undefined && req.body.roleId !== '') {
+        role.update({_id:mongoose.Types.ObjectId(req.body.roleId)},{
+            name: req.body.name,
+            menus: tmp
+        }).then(function () {
+            return res.json({statusCode: 200})
+        }).catch(function (e) {
+            return res.json({statusCode: 201, error: e.message})
+        })
+    } else {
+        role.create({
+            name: req.body.name,
+            menus: tmp
+        }).then(function () {
+            return res.json({statusCode: 200})
+        }).catch(function (e) {
+            return res.json({statusCode: 201, error: e.message})
+        })
+    }
+})
+
+router.delete('/:roleId', function(req, res, next) {
+    role.remove(
+        {_id:mongoose.Types.ObjectId(req.params.roleId)}
+    ).then(function () {
+        return res.json({statusCode: 200})
+    }).catch(function (e) {
+        return res.json({statusCode: 201, error: e.message})
+    })
+})
+
+router.post('/checkRoleName', function(req, res, next) {
+    role.findOne({name:req.body.name}).then(function (data) {
+        if (!data){
+            return res.json(true)
+        } else {
+            if (req.body.roleId !== undefined && req.body.roleId !== '' && data._id.toString() !== req.body.roleId) {
+                return res.json(true)
+            }
+            return res.json(false)
+        }
+    })
+})
+
+async function getPaperData(current, limit, sort, key) {
+
+    let count = await role.count({'name': {$regex: key}})
+
+    let info = []
+
+    if (count !== 0) {
+
+        info = await role.aggregate(
+            [
+                {
+                    $lookup:
+                        {
+                            from: 'admins',
+                            localField: '_id',
+                            foreignField: 'roleId',
+                            as: 'admin'
+                        }
+                },
+                {
+
+                    $match: {'name': {$regex: key}}
+                },
+                {$project:
+                    {
+                        name: 1,
+                        menus: 1,
+                        enable: 1,
+                        admin: {$size: '$admin'}
+                    }
+                }
+            ]
+        ).sort(sort).skip(Number(current)).limit(Number(limit))
+    }
+
+    return {
+        rows: info,
+        total: count
+    }
+}
+
+module.exports = router
