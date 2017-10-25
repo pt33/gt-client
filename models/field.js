@@ -16,11 +16,11 @@ const fieldSchema = new mongoose.Schema({
     tableId: mongoose.Schema.Types.ObjectId,
     createTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     },
     updateTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     }
 })
 

@@ -1,39 +1,62 @@
+<input type="hidden" value="{{current}}" id="pageCurrent">
+<input type="hidden" value="{{total}}" id="pagetotal">
 {% if list.length == 0 %}
-    <div class="panel-group nobottommargin well" id="nodata" align="center" style="height: 463px"><h3 style="padding: 9.5em 0;color: #9CA0A9;font-size: 1.6em;font-style: italic;">无家族族谱记录，赶紧去上传吧！</h3></div>
+    <div class="panel-group nobottommargin col_full well" id="nodata" align="center" style="height: 463px"><h3 style="padding: 9.5em 0;color: #9CA0A9;font-size: 1.6em;font-style: italic;">无家族族谱记录，赶紧去上传吧！</h3></div>
 {% else %}
-    {% for data in list %}
-        <div class="entry clearfix">
-            {% if data.images.length > 0 %}
-            <div class="entry-image">
-                {% if data.images.length > 1 %}
-                <div class="fslider" data-arrows="false" data-lightbox="gallery">
-                    <div class="flexslider">
-                        <div class="slider-wrap">
-                            {% for image in data.images %}
-                            <div class="slide"><a href="{{image}}" data-lightbox="gallery-item"><img class="image_fade" data-lazyload="{{image}}" alt="问题图片"></a></div>
-                            {% endfor %}
-                        </div>
+    <div id="portfolio" class="portfolio grid-container clearfix">
+    {% for book in list %}
+        <article class="portfolio-item loaddone {% if loop.index % 2 == 0 %}pull-right norightmargin{% endif %}">
+            <div class="col_half nobottommargin" style="width: 200px;height: 310px;">
+                <div class="portfolio-image">
+                    <img src="{% if book.cover %}{{book.cover}}{%else%}img/cover.jpg{%endif%}" alt="家谱封面" style="width: 200px;height: 310px;">
+                    <div class="portfolio-overlay" style="width: 200px;height: 310px;">
+                        {% if book.cover %}
+                            <a href="{{book.cover}}" class="left-icon" data-lightbox="image" title="查看封面大图"><i class="icon-zoom-in"></i></a>
+                        {% endif %}
+                        <a href="javascript:void(0)" class="{% if book.cover %}right-icon{% else %}center-icon{%endif%}" title="查看家谱明细" onclick="showMoreInfo('{{book._id.toString()}}','book')"><i class="icon-line-ellipsis"></i></a>
                     </div>
                 </div>
+            </div>
+
+            <div class="portfolio-desc nobottommargin col_half col_last hidden-xs">
+                {% if book.name.length < 6 %}
+                    <h3>{{book.name}}</h3>
                 {% else %}
-                <a href="{{data.images[0]}}" data-lightbox="image"><img class="image_fade" data-lazyload="{{data.images[0]}}" alt="问题图片"></a>
+                    {% set ary = [0,1,2,3,4,5,6,7,8] %}
+                        {% set tmp = 0 %}
+                        {% for i in ary %}
+                            {% set check = loop.index * 6 %}
+                            {% if check < book.name.length %}
+                                <h3 {% if loop.index0 >=2 %}class="visible-lg"{% endif %}>{{book.name.substring(loop.index0*6, loop.index * 6)}}</h3>
+                                {% set tmp = loop.index*6 %}
+                            {% endif %}
+                        {% endfor %}
+                        <h3 {% if tmp >=2 %}class="visible-lg"{% endif %}>{{book.name.substring(tmp, book.name.length)}}</h3>
                 {% endif %}
             </div>
-            {% endif %}
-            <div class="entry-c">
-                <div class="entry-title">
-                    <h2>{{data.title}}</h2>
-                </div>
-                <ul class="entry-meta clearfix">
-                    <li><i class="{{data.icon}}"></i>{{data.tag}}</li>
-                    <li><i class="icon-private-calendar-4"></i>{{data.createStr}}</li>
-                    <li><i class="icon-private-eye-1"></i>{{data.viewNum}}</li>
-                </ul>
-                <div class="entry-content">
-                    <blockquote><p class="short">{{ data.shortContent|url_decode }}</p></blockquote>
-                    <a href="javascript:void(0)" class="more-link" onclick="showMoreInfo('{{blog._id.toString()}}')">查看详情</a>
-                </div>
+            <div class="portfolio-desc col_half nomargin col_last hidden-xs">
+                <blockquote class="quote noleftmargin norightmargin notopmargin" style="width: 100%">
+                    <p>{% if book.user.nickname != '' %} {{book.user.nickname}} {% else %} {{book.user.username}} {% endif %}</p>
+                    <footer style="font-style: italic;">上传于{{book.createStr}}</footer>
+                </blockquote>
             </div>
-        </div>
+            <div class="pull-left visible-lg" style="padding-top: 37px;">
+                <ul class="entry-meta clearfix">
+                    <li><i class="icon-private-eye-1"></i>{% if book.viewNum||0 > 1000 %}999+{%else%}{{book.viewNum}}{%endif%} 浏览</li>
+                </ul>
+            </div>
+            <div class="familyShare hidden-xs" style="{% if book.canShare == 1 %}right:70px{%else%}right:55px;{%endif%}">
+                <a href="javascript:void(0)" onclick="likeBook('{{book._id.toString()}}', this)" style="margin-right: 15px;">&nbsp;<i class="icon-like"></i> <span style="position: relative;top:3px;">点赞</span><span> {% if book.likeNum||0 > 1000 %}999+{%else%}{{book.likeNum||0}}{%endif%}</span></a>
+                <a href="javascript:void(0)" onclick="collectionBook('{{book._id.toString()}}',this)">
+                    &nbsp;<i class="{% if book.collection == 1 %}icon-star3{%else%}icon-star2{%endif%}"></i> <span style="position: relative;top:3px;">收藏</span> <span>{% if book.collectionNum||0 > 1000 %}999+{%else%}{{book.collectionNum||0}}{%endif%}</span>
+                </a>
+                {% if book.canShare == 1 %}
+                <div class="bdsharebuttonbox">
+                    <a href="#" class="bds_more" data-cmd="more">&nbsp;<i class="icon-share" style="position: relative;left:4px;"></i> <span style="position: relative;left:5px;">分享</span> <span style="position: relative;top:-6px;width: 100%;left:8px;"> {% if book.shareNum||0 > 1000 %}999+{%else%}{{book.shareNum||0}}{%endif%}</span></a>
+                </div>
+                {% endif %}
+            </div>
+        </article>
     {% endfor %}
+    </div>
 {% endif %}

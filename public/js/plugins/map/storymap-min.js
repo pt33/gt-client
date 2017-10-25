@@ -19262,6 +19262,7 @@ VCO.StoryMap = VCO.Class.extend({
     },
 
     _onSlideChange: function(e) {
+        if (this._menubar.animated) return
         if (this.current_slide != e.current_slide) {
             try {
                 this._map._map._popup._close()

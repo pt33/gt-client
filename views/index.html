@@ -1,36 +1,34 @@
-<!DOCTYPE html>
-<html dir="ltr" lang="zh-CN">
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="zh-CN"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="zh-CN"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="zh-CN"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN"> <!--<![endif]-->
 {%include 'head.html' %}
-<link rel="stylesheet" type="text/css" href="/rs-plugin/css/settings.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="/rs-plugin/css/settings.css" media="screen"/>
 <link rel="stylesheet" type="text/css" href="/rs-plugin/css/layers.css">
 <link rel="stylesheet" type="text/css" href="/rs-plugin/css/navigation.css">
-
 <style>
-    .revo-slider-button-text  {
+    .revo-slider-button-text {
         /*font-family: 'beatyFont';*/
         font-weight: 800;
         font-size: 1.2em;
         text-shadow: 4px 3px 5px rgba(0, 0, 0, 0.8);
     }
 
-    .revo-slider-button-text:hover  {
+    .revo-slider-button-text:hover {
         text-shadow: none;
-        background-color:rgba(255, 255, 255, 0.5);
+        background-color: rgba(255, 255, 255, 0.5);
     }
 
-    .revo-slider-emphasis-text{
+    .revo-slider-emphasis-text {
         font-size: 3.6em;
         font-weight: 600;
         letter-spacing: .15em;
         font-family: beatyFont;
-        font-style:italic ;
+        font-style: italic;
         /*font-family: 'Raleway', sans-serif;*/
         padding: 15px 20px;
-        color: #FFF;
+        color: #FFFFFF;
         text-shadow: 6px 4px 5px rgba(0, 0, 0, 0.5);
         /*border-top: 2px solid #FFF;*/
         /*border-bottom: 2px solid #FFF;*/
@@ -42,7 +40,7 @@
         font-style: italic;
         letter-spacing: .15em;
         text-shadow: 6px 4px 5px rgba(0, 0, 0, 0.5);
-        color:#fff;
+        color: #FFFFFF;
         font-weight: 600;
     }
 
@@ -52,7 +50,7 @@
         letter-spacing: .15em;
         font-family: 'beatyFont';
         font-style: italic;
-        color:#fff;
+        color: #FFFFFF;
         text-shadow: 5px 3px 5px rgba(0, 0, 0, 0.5);
     }
 
@@ -61,10 +59,10 @@
         font-weight: 500;
         letter-spacing: .1em;
         font-family: 'beatyFont';
-        color:#fff;
+        color: #FFFFFF;
         position: relative;
-        top:42px;
-        left:2px;
+        top: 42px;
+        left: 2px;
     }
 
     .revo-slider-tp-small-text {
@@ -72,19 +70,24 @@
         font-weight: 500;
         letter-spacing: .06em;
         font-family: 'beatyFont';
-        color:#111;
+        color: #111111;
         position: relative;
-        top:16px;
-        left:2px;
+        top: 16px;
+        left: 2px;
     }
-    .tp-video-play-button { display: none !important; }
 
-    .tp-caption { white-space: nowrap; }
+    .tp-video-play-button {
+        display: none !important;
+    }
+
+    .tp-caption {
+        white-space: nowrap;
+    }
 
     p2 {
         width: 220px;
         height: 58px;
-        text-overflow:ellipsis;
+        text-overflow: ellipsis;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 3;
@@ -123,24 +126,26 @@
     }
 
     .book1 span {
-        color: #fff;
-        font-size: .6em;
-        font-family: cursive;
+        color: #FFFFFF;
+        font-size: 1.5em;
         font-weight: 600;
+        font-family: cursive;
+        width: 22px;
+        height: 240px;
+        display: table-caption;
         line-height: 22px;
-        text-align: center;
-        position: absolute;
-        cursor: pointer;
-        top: -5px;
-        left: 0;
-        text-shadow: 3px 5px 8px rgba(255, 255, 255, 0.5);
+        overflow: hidden;
+        word-break: break-all;
+        margin: 0 .06em;
     }
 
 </style>
 
-<body class="stretched" oncontextmenu=self.event.returnValue=false onselectstart="return false">
+<body class="stretched" oncontextmenu=self.event.returnValue=false onselectstart="return false" data-loader="7"
+      data-loader-color="#9c721d;">
 <div id="wrapper" class="clearfix">
-    <header id="header" class="transparent-header full-header" data-sticky-class="not-dark" style="border-bottom: 2px solid rgba(255,255,255,0.1)">
+    <header id="header" class="transparent-header full-header" data-sticky-class="not-dark"
+            style="border-bottom: 2px solid rgba(255,255,255,0.1)">
 
         <div id="header-wrap">
 
@@ -151,28 +156,32 @@
                 <!-- Logo
                 ============================================= -->
                 <div id="logo" style="display:flex;">
-                    <a href="index.html" class="standard-logo" data-mobile-logo="img/114.png"><img src="img/logo-b.png" alt="中华寻根网"><span class="revo-slider-tp-text">中华寻根网</span></a>
-                    <a href="index.html" class="retina-logo" data-mobile-logo="img/228.png" style="display: flex;"><img src="img/logo-b.png" alt="中华寻根网"><span class="big revo-slider-tp-text">中华寻根网</span><span class="small revo-slider-tp-small-text">中华寻根网</span></a>
+                    <a href="index.html" class="standard-logo" data-mobile-logo="img/114.png"><img src="img/logo-b.png"
+                                                                                                   alt="中华寻根网"><span
+                        class="revo-slider-tp-text">中华寻根网</span></a>
+                    <a href="index.html" class="retina-logo" data-mobile-logo="img/228.png" style="display: flex;"><img
+                        src="img/logo-b.png" alt="中华寻根网"><span class="big revo-slider-tp-text">中华寻根网</span><span
+                        class="small revo-slider-tp-small-text">中华寻根网</span></a>
                 </div><!-- #logo end -->
 
                 {% if userId != '' %}
-                    <div id="top-account" class="top-links">
-                        <ul>
-                            <li><a href="/user"><i class="icon-user"></i></a>
-                                <ul class="top-link-section">
-                                    <li><a href="#">个人中心</a></li>
-                                    <li><a href="#">消息中心 <span class="badge pull-right">5</span></a></li>
-                                    <li><a href="#">退出登录 <i class="icon-signout pull-right"></i></a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
+                <div id="top-account" class="top-links">
+                    <ul>
+                        <li><a href="/user"><i class="icon-user"></i></a>
+                            <ul class="top-link-section">
+                                <li><a href="#">个人中心</a></li>
+                                <li><a href="#">消息中心 <span class="badge pull-right">5</span></a></li>
+                                <li><a href="#">退出登录 <i class="icon-signout pull-right"></i></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
                 {% else %}
-                    <div id="top-account" class="top-links">
-                        <ul>
-                            <li><a href="/login"><i class="icon-guest"></i></a></li>
-                        </ul>
-                    </div>
+                <div id="top-account" class="top-links">
+                    <ul>
+                        <li><a href="/login"><i class="icon-guest"></i></a></li>
+                    </ul>
+                </div>
                 {% endif %}
                 <!-- Primary Navigation
                 ============================================= -->
@@ -193,14 +202,17 @@
                         <li><a href="#">{{column.name}}</a>
                             <ul>
                                 {% for child in column.childs %}
-                                <li><a href="#" onclick="gotoSubView('{{child.childTable}}')"><div>{{child.childName}}</div></a></li>
+                                <li><a href="#" onclick="gotoSubView('{{child.childTable}}')">
+                                    <div>{{child.childName}}</div>
+                                </a></li>
                                 {% endfor %}
                             </ul>
                         </li>
                         {% endif %}
                         {% else %}
                         {%if column.url == current %}
-                        <li class="current"><a href="javascript:void(0)" onclick="gotoView('{{column.url}}')">{{column.name}}</a></li>
+                        <li class="current"><a href="javascript:void(0)" onclick="gotoView('{{column.url}}')">{{column.name}}</a>
+                        </li>
                         {%else%}
                         <li><a href="javascript:void(0)" onclick="gotoView('{{column.url}}')">{{column.name}}</a></li>
                         {%endif%}
@@ -219,59 +231,67 @@
             <div class="tp-banner-container">
                 <div class="tp-banner">
                     <ul>
-                        <li data-transition="slideup" data-slotamount="1" data-masterspeed="1000" data-thumb="/img/index1-thumb.jpg"  data-fstransition="fade" data-fsmasterspeed="1000" data-fsslotamount="7" data-saveperformance="off"  data-title="首页">
+                        <li data-transition="slideup" data-slotamount="1" data-masterspeed="1000"
+                            data-thumb="/img/index1-thumb.jpg" data-fstransition="fade" data-fsmasterspeed="1000"
+                            data-fsslotamount="7" data-saveperformance="off" data-title="首页">
                             <!-- MAIN IMAGE -->
                             <!--<img src="/img/thumbs/bg2.jpg"  alt="kenburns6"  data-bgposition="left bottom" data-kenburns="on" data-duration="20000" data-ease="Linear.easeNone" data-scale="100" data-scaleend="120" data-bgpositionend="right top">-->
                             <!--&lt;!&ndash; LAYERS &ndash;&gt;-->
-                            <img src="/img/main.jpg"  alt=""  data-bgposition="center bottom" data-kenburns="on" data-duration="30000" data-ease="Linear.easeNone" data-scale="100" data-scaleend="120" data-bgpositionend="center top">
+                            <img src="/img/main.jpg" alt="" data-bgposition="center bottom" data-kenburns="on"
+                                 data-duration="30000" data-ease="Linear.easeNone" data-scale="100" data-scaleend="120"
+                                 data-bgpositionend="center top">
                             <!-- LAYERS -->
 
                             <!-- LAYER NR. 2 -->
 
-                            <div class="tp-caption customin ltl tp-resizeme revo-slider-emphasis-text nopadding noborder uppercase"
-                                 data-x="-100"
-                                 data-y="220"
-                                 data-customin="x:10;y:0;z:0;rotationY:120;rotationZ:0;scaleX:0.8;scaleY:0.8;skewX:0;s:600;skewY:0;opacity:0;transformPerspective:200;transformOrigin:50% 50%;"
-                                 data-speed="800"
-                                 data-start="1500"
-                                 data-easing="easeOutCubic"
-                                 data-splitin="chars"
-                                 data-splitout="none"
-                                 data-elementdelay="0.2"
-                                 data-endelementdelay="0.2"
-                                 data-endspeed="1000"
-                                 data-endeasing="Power4.easeIn" style="z-index: 3;white-space: nowrap;">家之有谱 犹国之有史也</div>
+                            <div
+                                class="tp-caption customin ltl tp-resizeme revo-slider-emphasis-text nopadding noborder uppercase"
+                                data-x="-100"
+                                data-y="220"
+                                data-customin="x:10;y:0;z:0;rotationY:120;rotationZ:0;scaleX:0.8;scaleY:0.8;skewX:0;s:600;skewY:0;opacity:0;transformPerspective:200;transformOrigin:50% 50%;"
+                                data-speed="800"
+                                data-start="1500"
+                                data-easing="easeOutCubic"
+                                data-splitin="chars"
+                                data-splitout="none"
+                                data-elementdelay="0.2"
+                                data-endelementdelay="0.2"
+                                data-endspeed="1000"
+                                data-endeasing="Power4.easeIn" style="z-index: 3;white-space: nowrap;">家之有谱 犹国之有史也
+                            </div>
 
 
-                            <div class="tp-caption customin ltl tp-resizeme revo-slider-middle-text nopadding noborder uppercase"
-                                 data-x="-50"
-                                 data-y="320"
-                                 data-customin="x:10;y:0;z:0;rotationY:120;rotationZ:0;scaleX:0.8;scaleY:0.8;skewX:0;s:600;skewY:0;opacity:0;transformPerspective:200;transformOrigin:50% 50%;"
-                                 data-speed="800"
-                                 data-start="2800"
-                                 data-easing="easeOutCubic"
-                                 data-splitin="chars"
-                                 data-splitout="none"
-                                 data-endspeed="1000"
-                                 data-elementdelay="0.1"
-                                 data-endelementdelay="0.1"
-                                 data-endspeed="1000"
-                                 data-endeasing="Power4.easeIn" style="z-index: 3;white-space: nowrap;">一部家谱</div>
+                            <div
+                                class="tp-caption customin ltl tp-resizeme revo-slider-middle-text nopadding noborder uppercase"
+                                data-x="-50"
+                                data-y="320"
+                                data-customin="x:10;y:0;z:0;rotationY:120;rotationZ:0;scaleX:0.8;scaleY:0.8;skewX:0;s:600;skewY:0;opacity:0;transformPerspective:200;transformOrigin:50% 50%;"
+                                data-speed="800"
+                                data-start="2800"
+                                data-easing="easeOutCubic"
+                                data-splitin="chars"
+                                data-splitout="none"
+                                data-endspeed="1000"
+                                data-elementdelay="0.1"
+                                data-endelementdelay="0.1"
+                                data-endeasing="Power4.easeIn" style="z-index: 3;white-space: nowrap;">一部家谱
+                            </div>
 
-                            <div class="tp-caption customin ltl tp-resizeme revo-slider-middle-text nopadding noborder uppercase"
-                                 data-x="-30"
-                                 data-y="360"
-                                 data-customin="x:10;y:0;z:0;rotationY:120;rotationZ:0;scaleX:0.8;scaleY:0.8;skewX:0;s:600;skewY:0;opacity:0;transformPerspective:200;transformOrigin:50% 50%;"
-                                 data-speed="800"
-                                 data-start="3200"
-                                 data-easing="easeOutCubic"
-                                 data-splitin="chars"
-                                 data-splitout="none"
-                                 data-endspeed="1000"
-                                 data-elementdelay="0.1"
-                                 data-endelementdelay="0.1"
-                                 data-endspeed="1000"
-                                 data-endeasing="Power4.easeIn" style="z-index: 3;white-space: nowrap;">就是一段被封存的家族历史回忆</div>
+                            <div
+                                class="tp-caption customin ltl tp-resizeme revo-slider-middle-text nopadding noborder uppercase"
+                                data-x="-30"
+                                data-y="360"
+                                data-customin="x:10;y:0;z:0;rotationY:120;rotationZ:0;scaleX:0.8;scaleY:0.8;skewX:0;s:600;skewY:0;opacity:0;transformPerspective:200;transformOrigin:50% 50%;"
+                                data-speed="800"
+                                data-start="3200"
+                                data-easing="easeOutCubic"
+                                data-splitin="chars"
+                                data-splitout="none"
+                                data-endspeed="1000"
+                                data-elementdelay="0.1"
+                                data-endelementdelay="0.1"
+                                data-endeasing="Power4.easeIn" style="z-index: 3;white-space: nowrap;">就是一段被封存的家族历史回忆
+                            </div>
 
 
                             <div class="tp-caption customin ltl tp-resizeme revo-slider-desc-text"
@@ -286,7 +306,8 @@
                                  data-elementdelay="0.01"
                                  data-endelementdelay="0.1"
                                  data-endspeed="1000"
-                                 data-endeasing="Power4.easeIn" style="z-index: 3; white-space: nowrap;">传承历史文化  翻阅家谱</div>
+                                 data-endeasing="Power4.easeIn" style="z-index: 3; white-space: nowrap;">传承历史文化 翻阅家谱
+                            </div>
 
                             <div class="tp-caption customin ltl tp-resizeme revo-slider-desc-text"
                                  data-x="30"
@@ -300,7 +321,9 @@
                                  data-elementdelay="0.01"
                                  data-endelementdelay="0.1"
                                  data-endspeed="1000"
-                                 data-endeasing="Power4.easeIn" style="z-index: 3; white-space: nowrap;">开始追寻家族在历史长河中遗留的足迹吧！</div>
+                                 data-endeasing="Power4.easeIn" style="z-index: 3; white-space: nowrap;">
+                                开始追寻家族在历史长河中遗留的足迹吧！
+                            </div>
 
 
                             <div class="tp-caption customin ltl tp-resizeme"
@@ -315,16 +338,25 @@
                                  data-elementdelay="0.01"
                                  data-endelementdelay="0.1"
                                  data-endspeed="1300"
-                                 data-endeasing="Power4.easeIn" style="z-index: 11;"><a href="#" class="button button-border button-white button-light tright nomargin" style="padding: 2px 14px 2px 24px;"><span class="revo-slider-button-text" style="font-family: initial;">立即进入</span> <i class="icon-angle-right icon-lg revo-slider-button-text" style="position: relative;top:-2px;"></i></a></div>
-                           </li>
+                                 data-endeasing="Power4.easeIn" style="z-index: 11;"><a href="#"
+                                                                                        class="button button-border button-white button-light tright nomargin"
+                                                                                        style="padding: 2px 14px 2px 24px;"><span
+                                class="revo-slider-button-text" style="font-family: initial;">立即进入</span> <i
+                                class="icon-angle-right icon-lg revo-slider-button-text"
+                                style="position: relative;top:-2px;"></i></a></div>
+                        </li>
 
-                        <li class="dark" data-transition="slideup" data-slotamount="1" data-masterspeed="1000" data-thumb="img/3-edit-thumb.jpg"  data-fstransition="fade" data-fsmasterspeed="1000" data-fsslotamount="7" data-saveperformance="off"  data-title="数字影像馆">    <!-- MAIN IMAGE -->
-                            <img src="/img/3-edit.jpg"  alt=""  data-bgposition="left bottom" data-kenburns="on" data-duration="20000" data-ease="Linear.easeNone" data-scale="100" data-scaleend="120" data-bgpositionend="right top">
+                        <li class="dark" data-transition="slideup" data-slotamount="1" data-masterspeed="1000"
+                            data-thumb="img/3-edit-thumb.jpg" data-fstransition="fade" data-fsmasterspeed="1000"
+                            data-fsslotamount="7" data-saveperformance="off" data-title="数字影像馆">    <!-- MAIN IMAGE -->
+                            <img src="/img/3-edit.jpg" alt="" data-bgposition="left bottom" data-kenburns="on"
+                                 data-duration="20000" data-ease="Linear.easeNone" data-scale="100" data-scaleend="120"
+                                 data-bgpositionend="right top">
 
-                            <!-- LAYER NR. 2 -->
-                              {% set foo = [1,2,3,4,5,6,7,8] %}
-                                 {% set start = 1600 %}
-                                {%for i in foo%}
+                                <!-- LAYER NR. 2 -->
+                            {% set foo = [1,2,3,4,5,6,7,8] %}
+                            {% set start = 1600 %}
+                            {% for i in foo %}
                             <div class="tp-caption customin ltl tp-resizeme rs-parallaxlevel-{{9-i}}"
                                  data-x="275"
                                  data-y="125"
@@ -337,10 +369,11 @@
                                  data-elementdelay="0.01"
                                  data-endelementdelay="0.1"
                                  data-endspeed="1000"
-                                 data-endeasing="Power4.easeIn" style="z-index: 3; white-space: nowrap;"><img src="/img/index/1-{{i}}.png" alt="家谱"></div>
+                                 data-endeasing="Power4.easeIn" style="z-index: 3; white-space: nowrap;"><img
+                                src="/img/index/1-{{i}}.png" alt="家谱"></div>
 
-                                  {% set start = start + 200 %}
-                                {%endfor%}
+                                {% set start = start + 200 %}
+                            {% endfor %}
 
                             <div class="tp-caption customin ltl tp-resizeme revo-slider-middle-text"
                                  data-x="-50"
@@ -354,21 +387,28 @@
                                  data-elementdelay="0.01"
                                  data-endelementdelay="0.1"
                                  data-endspeed="1000"
-                                 data-endeasing="Power4.easeIn" style="z-index: 11; white-space: nowrap;font-family: inherit;font-style: normal;font-weight: 400;font-size: 2.2em;">数字化家谱馆</div>
+                                 data-endeasing="Power4.easeIn"
+                                 style="z-index: 11; white-space: nowrap;font-family: inherit;font-style: normal;font-weight: 400;font-size: 2.2em;">
+                                数字化家谱馆
+                            </div>
 
-                            <div class="tp-caption customin ltl tp-resizeme revo-slider-emphasis-text nopadding noborder"
-                                 data-x="-50"
-                                 data-y="350"
-                                 data-customin="x:10;y:0;z:0;rotationY:120;rotationZ:0;scaleX:0.8;scaleY:0.8;skewX:0;s:600;skewY:0;opacity:0;transformPerspective:200;transformOrigin:50% 50%;"
-                                 data-speed="800"
-                                 data-start="1800"
-                                 data-easing="easeOutQuad"
-                                 data-splitin="chars"
-                                 data-splitout="none"
-                                 data-elementdelay="0.2"
-                                 data-endelementdelay="0.2"
-                                 data-endspeed="1000"
-                                 data-endeasing="Power4.easeIn" style="z-index: 11; white-space: nowrap;font-family: inherit;font-style: normal;font-size: 3em;">我们在这里等你</div>
+                            <div
+                                class="tp-caption customin ltl tp-resizeme revo-slider-emphasis-text nopadding noborder"
+                                data-x="-50"
+                                data-y="350"
+                                data-customin="x:10;y:0;z:0;rotationY:120;rotationZ:0;scaleX:0.8;scaleY:0.8;skewX:0;s:600;skewY:0;opacity:0;transformPerspective:200;transformOrigin:50% 50%;"
+                                data-speed="800"
+                                data-start="1800"
+                                data-easing="easeOutQuad"
+                                data-splitin="chars"
+                                data-splitout="none"
+                                data-elementdelay="0.2"
+                                data-endelementdelay="0.2"
+                                data-endspeed="1000"
+                                data-endeasing="Power4.easeIn"
+                                style="z-index: 11; white-space: nowrap;font-family: inherit;font-style: normal;font-size: 3em;">
+                                我们在这里等你
+                            </div>
 
                             <div class="tp-caption customin ltl tp-resizeme revo-slider-desc-text tleft"
                                  data-x="-50"
@@ -382,7 +422,10 @@
                                  data-elementdelay="0.01"
                                  data-endelementdelay="0.1"
                                  data-endspeed="1000"
-                                 data-endeasing="Power4.easeIn" style="z-index: 11; font-family: inherit;font-style: normal;font-size: 1.5em;font-weight: 400;">将自己的足迹刻在历史的天空里</div>
+                                 data-endeasing="Power4.easeIn"
+                                 style="z-index: 11; font-family: inherit;font-style: normal;font-size: 1.5em;font-weight: 400;">
+                                将自己的足迹刻在历史的天空里
+                            </div>
 
                             <div class="tp-caption customin ltl tp-resizeme"
                                  data-x="-50"
@@ -396,20 +439,30 @@
                                  data-elementdelay="0.01"
                                  data-endelementdelay="0.1"
                                  data-endspeed="1300"
-                                 data-endeasing="Power4.easeIn" style="z-index: 11;"><a href="#" class="button button-border btn-white button-light tright nomargin" style="padding: 2px 14px 2px 24px;"><span class="revo-slider-button-text" style="font-family: initial;">点击开启</span> <i class="icon-angle-right icon-lg revo-slider-button-text" style="position: relative;top:-2px;"></i></a></div>
+                                 data-endeasing="Power4.easeIn" style="z-index: 11;"><a href="#"
+                                                                                        class="button button-border btn-white button-light tright nomargin"
+                                                                                        style="padding: 2px 14px 2px 24px;"><span
+                                class="revo-slider-button-text" style="font-family: initial;">点击开启</span> <i
+                                class="icon-angle-right icon-lg revo-slider-button-text"
+                                style="position: relative;top:-2px;"></i></a></div>
 
                         </li>
-                            <!-- LAYERS -->
-                        </li>
-                        <li class="dark" data-transition="zoomout" data-slotamount="1" data-masterspeed="1500" data-thumb="/img/2-thumb.jpg"  data-saveperformance="off">
+                        <!-- LAYERS -->
+                        <li class="dark" data-transition="zoomout" data-slotamount="1" data-masterspeed="1500"
+                            data-thumb="/img/2-thumb.jpg" data-saveperformance="off" data-title="">
                             <!-- MAIN IMAGE -->
-                            <img src="/img/2.jpg"  alt=""  data-bgposition="left bottom" data-kenburns="on" data-duration="20000" data-ease="Linear.easeNone" data-scale="100" data-scaleend="120" data-bgpositionend="right top">
+                            <img src="/img/2.jpg" alt="" data-bgposition="left bottom" data-kenburns="on"
+                                 data-duration="20000" data-ease="Linear.easeNone" data-scale="100" data-scaleend="120"
+                                 data-bgpositionend="right top">
                             <!-- LAYERS -->
 
                         </li>
-                        <li class="dark" data-transition="zoomout" data-slotamount="1" data-masterspeed="1500" data-thumb="/img/5-thumb.jpg"  data-saveperformance="off">
+                        <li class="dark" data-transition="zoomout" data-slotamount="1" data-masterspeed="1500"
+                            data-thumb="/img/5-thumb.jpg" data-saveperformance="off" data-title="">
                             <!-- MAIN IMAGE -->
-                            <img src="/img/5.jpg"  alt=""  data-bgposition="left bottom" data-kenburns="on" data-duration="20000" data-ease="Linear.easeNone" data-scale="100" data-scaleend="120" data-bgpositionend="right top">
+                            <img src="/img/5.jpg" alt="图片" data-bgposition="left botom" data-kenburns="on"
+                                 data-duration="20000" data-ease="Linear.easeNone" data-scale="100" data-scaleend="120"
+                                 data-bgpositionend="right top">
                             <!-- LAYERS -->
 
                         </li>
@@ -423,227 +476,80 @@
             <div class="container nopadding clearfix">
                 {%for grid in grids%}
                 <div class="fancy-title title-center title-dotted-border topmargin">
-                    <h3 style="margin-left: 95px;"><i class="icon-double-angle-right" style="color:#d0d0d0;"></i>&nbsp;
-                        <i class="icon-double-angle-right" style="color:#d0d0d0;"></i>&nbsp;&nbsp;
-                                                                                      {{grid.name}}
-                                                                                      &nbsp;&nbsp;<i class="icon-double-angle-left" style="color:#d0d0d0;"></i>
-                                                                                      &nbsp;<i class="icon-double-angle-left" style="color:#d0d0d0;"></i>
+                    <h3 style="margin-left: 95px;"><i class="icon-double-angle-right" style="color:#D0D0D0;"></i>&nbsp;
+                        <i class="icon-double-angle-right" style="color:#D0D0D0;"></i>&nbsp;&nbsp;
+                                                                                                                 {{grid.name}}
+                                                                                                                 &nbsp;&nbsp;<i
+                            class="icon-double-angle-left" style="color:#D0D0D0;"></i>
+                                                                                                                 &nbsp;<i
+                            class="icon-double-angle-left" style="color:#D0D0D0;"></i>
                     </h3>
-                    <div class="pull-right"><a href="#" onclick="viewMoreList('{{grid.refTable}}','{{grid.showMode}}')">查看更多 <i class="icon-line-arrow-right"></i></a></div>
+                    <div class="pull-right"><a href="/data">查看更多 <i class="icon-line-arrow-right"></i></a></div>
                 </div>
 
-                <div class="owl-carousel portfolio-carousel carousel-widget" data-margin="40" data-nav="false" data-pagi="true" data-merge="true" data-lazyload="true" data-items-xxs="1" data-items-xs="2" data-items-sm="4" data-items-md="6" data-items-lg="6">
+                <div class="owl-carousel portfolio-carousel carousel-widget" data-margin="40" data-nav="false"
+                     data-pagi="true" data-merge="true" data-lazyload="true" data-items-xxs="1" data-items-xs="2"
+                     data-items-sm="4" data-items-md="6" data-items-lg="6">
 
-                {%for data in grid.data%}
+                    {%for data in grid.data%}
                     <div class="oc-item">
                         <div class="product iproduct clearfix">
                             <div class="product-image">
                                 <a>
-                                    {% if grid.showMode == 'name'  %}
-                                        <img src="img/name-s.png" alt="姓氏">
+                                    {% if grid.showMode == 'name' %}
+                                    <img src="img/name-s.png" alt="姓氏">
                                     {% elseif grid.showMode == 'book' %}
-                                        <img src="img/fengmian.jpg" alt="家谱">
+                                    <img src="img/fengmian.jpg" alt="家谱">
                                     {% endif %}
                                 </a>
-                                {% if grid.contentTitle != ''  %}
+                                {% if grid.contentTitle != '' %}
                                 {% set tmp_title = data[grid.contentTitle] %}
-                                    <div class="sale-flash {{grid.showMode}}1">{% if grid.showMode == 'book'  %}<span>{% endif %}{% if data[grid.contentTitle].length > 10 %} {{tmp_title.substring(0,10)}}<br>... {% else %} {{data[grid.contentTitle]}} {% endif %}{% if grid.showMode == 'book'  %}</span>{% endif %}</div>
+                                <div class="sale-flash {{grid.showMode}}1"
+                                     style="width: 100%;{% if grid.showMode == 'book' %}display: inline-flex;{% endif %}">
+                                    {% if tmp_title.length < 11 %}
+                                    {% if grid.showMode == 'book' %}<span>{% endif %}{{tmp_title}}{% if grid.showMode == 'book' %}</span>{%
+                                    endif %}
+                                    {% else %}
+                                    {% set ary = [0,1,2,3,4,5] %}
+                                    {% set tmp = 0 %}
+                                    {% for i in ary %}
+                                    {% set check = loop.index * 10 %}
+                                    {% if check < tmp_title.length %}
+                                    {% if grid.showMode == 'book' %}<span>{% endif %}{{tmp_title.substring(loop.index0*10, loop.index * 10)}}{% if grid.showMode == 'book' %}</span>{%
+                                    endif %}
+                                    {% set tmp = loop.index*10 %}
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% if grid.showMode == 'book' %}<span>{% endif %}{{tmp_title.substring(tmp, tmp_title.length)}}{% if grid.showMode == 'book' %}</span>{%
+                                    endif %}
+                                    {% endif %}
+                                </div>
                                 {% endif %}
-                                {% if grid.contentSubTitle != ''  %}
-                                    <div class="sale-flash {{grid.showMode}}2"><div>{{data[grid.contentSubTitle]}}</div></div>
+                                {% if grid.contentSubTitle != '' %}
+                                <div class="sale-flash {{grid.showMode}}2">
+                                    <div>{{data[grid.contentSubTitle]}}</div>
+                                </div>
                                 {% endif %}
 
-                                {% if grid.showButton == 1  %}
-                                    <div class="product-overlay">
-                                        {% for btn in grid.buttons %}
-                                            {% if btn.handleTable !== undefined && btn.handleField == undefined %}
-                                                <a href="javascript:void(0)" style="width: {{100/grid.buttons.length}}%"  onclick="doCallback('{{btn.handle}}','{{btn.handleTable}}','{{data._id.toString()}}','{{grid.showMode}}','_id')"><span>{{btn.title}}</span></a>
-                                            {% else %}
-                                                <a href="javascript:void(0)" style="width: {{100/grid.buttons.length}}%"  onclick="doCallback('{{btn.handle}}','{{btn.handleTable}}','{{data[grid[btn.handleField]]}}','{{grid.showMode}}','{{btn.handleTableField}}')"><span>{{btn.title}}</span></a>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </div>
+                                {% if grid.showButton == 1 %}
+                                <div class="product-overlay">
+                                    {% for btn in grid.buttons %}
+                                    {% if btn.handleTable !== undefined && btn.handleField == undefined %}
+                                    <a href="javascript:void(0)" style="width:{{100/grid.buttons.length}}%"
+                                       onclick="doCallback('{{btn.handle}}','{{btn.handleTable}}','{{data._id.toString()}}','{{grid.showMode}}','_id')"><span>{{btn.title}}</span></a>
+                                    {% else %}
+                                    <a href="javascript:void(0)" style="width:{{100/grid.buttons.length}}%"
+                                       onclick="doCallback('{{btn.handle}}','{{btn.handleTable}}','{{data[grid[btn.handleField]]}}','{{grid.showMode}}','{{btn.handleTableField}}')"><span>{{btn.title}}</span></a>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
-                {%endfor%}
+                    {%endfor%}
                 </div>
                 {%endfor%}
-
-
-                <div class="fancy-title title-center title-dotted-border topmargin">
-                    <h3><i class="icon-double-angle-right" style="color:#d0d0d0;"></i>&nbsp;
-                        <i class="icon-double-angle-right" style="color:#d0d0d0;"></i>&nbsp;&nbsp;
-                                                                                      谱牒文化
-                                                                                      &nbsp;&nbsp;<i class="icon-double-angle-left" style="color:#d0d0d0;"></i>
-                                                                                      &nbsp;<i class="icon-double-angle-left" style="color:#d0d0d0;"></i>
-                    </h3>
-                </div>
-                <div id="oc-events" class="owl-carousel events-carousel carousel-widget" data-margin="20" data-nav="false" data-pagi="true" data-margin="20" data-items-xxs="1" data-items-xs="2" data-items-sm="3" data-items-md="4" data-items-lg="4">
-
-                    <div class="oc-item">
-                        <div class="ievent clearfix">
-                            <div class="entry-c">
-                                <div class="entry-title">
-                                    <h4 class="nobottommargin">廖氏名人录</h4>
-                                </div>
-                                <div class="entry-content">
-                                    <p style="font-size:1.05em;text-overflow: ellipsis;text-indent: 25px;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;">
-                                            五帝夏商周秦汉时期前年公元年廖叔安得姓始祖帝顓頊後裔夏朝時受封于飂又作蓼國為今河
-                                                南省唐河汝南固始即濮陽東南一帶傳至世佰廖将飂蓼改为廖字春秋時
-                                                廖國被楚所灭国人以國为姓祭祀而成廖姓鄖人軍于蒲騷将与隋绞蓼伐楚师蓼国系廖氏发源之地叔安乃廖氏从出之源
-                                    </p>
-                                    <a href="blog-single.html" class="more-link">阅读全文</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="oc-item">
-                        <div class="ievent clearfix">
-                            <div class="entry-c">
-                                <div class="entry-title">
-                                    <h4 class="nobottommargin">广东罗定生江镇廖氏</h4>
-                                </div>
-                                <div class="entry-content">
-                                    <p style="font-size:1.05em;text-overflow: ellipsis;text-indent: 25px;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;">
-                                        广东省罗定市生江镇廖氏宗枝族谱流年部一修订说明生塘老祖福林公后裔廖晓登所掌管的流水部成立以来存在缺
-                                        七世祖八世祖十世祖十一世祖因此对枝分房无法查阅根本是同祖兄弟也不敢相认直到公元二四年甲申初春由大房退休
-                                        人员电大结业生助理统计师廖显源通过查看赤
-                                    </p>
-                                    <a href="blog-single.html" class="more-link">阅读全文</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="oc-item">
-                        <div class="ievent clearfix">
-                            <div class="entry-c">
-                                <div class="entry-title">
-                                    <h4 class="nobottommargin">廖氏族谱</h4>
-                                </div>
-                                <div class="entry-content">
-                                    <p style="font-size:1.05em;text-overflow: ellipsis;text-indent: 25px;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;">
-                                        廖氏远祖及花公世系自从盘古开天地三皇五帝到如今中华民族绵延繁衍为人类创造了灿烂的文化炎帝
-                                        和黄帝是中华儿女的共同祖先炎帝王将相即传说中的神农氏生于
-                                        渭河流域的姜水故姓姜黄帝即传说中的轩辕氏发祥于泾河流域的姬水故姓姬炎帝和黄帝是中国最早的有姓者
-                                    </p>
-                                    <a href="blog-single.html" class="more-link">阅读全文</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="oc-item">
-                        <div class="ievent clearfix">
-                            <div class="entry-c">
-                                <div class="entry-title">
-                                    <h4 class="nobottommargin">《苏氏族谱》</h4>
-                                </div>
-                                <div class="entry-content">
-                                    <p style="font-size:1.05em;text-overflow: ellipsis;text-indent: 25px;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;">
-                                        有序表后录上下篇序为谱例表是后世的世系表以支为经以世次为纬与欧阳氏世系图大致
-                                        相同但自苏洵的高祖记至苏洵的侄辈共六世苏洵的直系高曾祖父均记其仕宦婚姻生卒其他人
-                                        则不记后录上篇记述苏氏得姓以来的源流下篇记述高曾祖父事迹其表采取的是小宗之法做谱者
-                                    </p>
-                                    <a href="blog-single.html" class="more-link">阅读全文</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="oc-item">
-                        <div class="ievent clearfix">
-                            <div class="entry-c">
-                                <div class="entry-title">
-                                    <h4 class="nobottommargin">家谱格式</h4>
-                                </div>
-                                <div class="entry-content">
-                                    <p style="font-size:1.05em;text-overflow: ellipsis;text-indent: 25px;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;">
-                                        明清家谱基本格式为谱序题辞恩荣凡例图节孝像赞考世系世系录派语字辈传记宗规家训祠堂祠产坊墓先世考辨志杂
-                                        记文献著述艺文文苑纂修捐资人名五服图余庆录领谱字号等有些家谱中还会加入一些特殊的内
-                                        容比如义谱一类的收载族内各支所收异姓养子义子的世系有些家谱</p>
-                                    <a href="blog-single.html" class="more-link">阅读全文</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="oc-item">
-                        <div class="ievent clearfix">
-                            <div class="entry-c">
-                                <div class="entry-title">
-                                    <h4 class="nobottommargin">江氏家谱</h4>
-                                </div>
-                                <div class="entry-content">
-                                    <p style="font-size:1.05em;text-overflow: ellipsis;text-indent: 25px;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;">
-                                        江氏安徽谱系的由来宋体据元和姓纂载宋体赢姓颛顼元孙伯益之后爵封于江后为楚所灭以国为氏济阳考城条云宋体
-                                        后汉有太常轑阳德其先居陈留圉县汉分陈留为济阳因
-                                        居考城为著姓据记载江国灭亡后还有一部分江国子孙逃到齐今山东临淄一带此后江姓在河南山东立足后又</p>
-                                    <a href="blog-single.html" class="more-link">阅读全文</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="oc-item">
-                        <div class="ievent clearfix">
-                            <div class="entry-c">
-                                <div class="entry-title">
-                                    <h4 class="nobottommargin">《欧阳氏谱图》</h4>
-                                </div>
-                                <div class="entry-content">
-                                    <p style="font-size:1.05em;text-overflow: ellipsis;text-indent: 25px;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;">
-                                        分序图传三部分序为本支派自得姓以来的源流概况图就是后代家
-                                        谱中的世系图以支为经以世为纬一世祖之下以长幼顺序由右至左横列其子辈每一子之下
-                                        有依次横列其子辈以此类推五世一幅图第二幅图自本支派的五世祖开始至第九世后世以此类推传就是后代家谱的小传内容</p>
-                                    <a href="blog-single.html" class="more-link">阅读全文</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="oc-item">
-                        <div class="ievent clearfix">
-                            <div class="entry-c">
-                                <div class="entry-title">
-                                    <h4 class="nobottommargin">王氏家谱收集</h4>
-                                </div>
-                                <div class="entry-content">
-                                    <p style="font-size:1.05em;text-overflow: ellipsis;text-indent: 25px;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;">
-                                        四川省都江堰市王氏寻亲宋体王慎王伟落业地蜀眉州即今四川省眉山市王铭禄王慎之
-                                        子从眉山迁往雅州水东乡即包括今雅安市上里镇中里镇和碧峰峡镇后又迁往灌县即今都江
-                                        堰市宋体宋体锡字派与天字派同辈贵字派子字派文字派万字派与春字派同辈联系号祖籍山西太原府入</p>
-                                    <a href="blog-single.html" class="more-link">阅读全文</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="oc-item">
-                        <div class="ievent clearfix">
-                            <div class="entry-c">
-                                <div class="entry-title">
-                                    <h4 class="nobottommargin">廖氏迁徙图</h4>
-                                </div>
-                                <div class="entry-content">
-                                    <p style="font-size:1.05em;text-overflow: ellipsis;text-indent: 25px;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;">
-                                        廖氏始祖叔安至代廖太全由河南省唐河縣湖陽鎮至香港上水遷移路綫圖</p>
-                                    <a href="blog-single.html" class="more-link">阅读全文</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="oc-item">
-                        <div class="ievent clearfix">
-                            <div class="entry-c">
-                                <div class="entry-title">
-                                    <h4 class="nobottommargin">世系图表</h4>
-                                </div>
-                                <div class="entry-content">
-                                    <p style="font-size:1.05em;text-overflow: ellipsis;text-indent: 25px;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;">
-                                        世系图表将一个世系群成员编制成一个具有相互关系的网络图表</p>
-                                    <a href="blog-single.html" class="more-link">阅读全文</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </section>
@@ -652,7 +558,6 @@
 {% include 'script.html' %}
 <script type="text/javascript" src="/rs-plugin/js/jquery.themepunch.tools.min.js"></script>
 <script type="text/javascript" src="/rs-plugin/js/jquery.themepunch.revolution.min.js"></script>
-
 <script type="text/javascript" src="/rs-plugin/js/extensions/revolution.extension.video.min.js"></script>
 <script type="text/javascript" src="/rs-plugin/js/extensions/revolution.extension.slideanims.min.js"></script>
 <script type="text/javascript" src="/rs-plugin/js/extensions/revolution.extension.actions.min.js"></script>
@@ -661,7 +566,7 @@
 <script type="text/javascript" src="/rs-plugin/js/extensions/revolution.extension.navigation.min.js"></script>
 <script type="text/javascript" src="/rs-plugin/js/extensions/revolution.extension.migration.min.js"></script>
 <script type="text/javascript" src="/rs-plugin/js/extensions/revolution.extension.parallax.min.js"></script>
-<script type="text/javascript" src="js/private/index.js"></script>
+<script type="text/javascript" src="/js/private/index.js"></script>
 </body>
 </html>
 

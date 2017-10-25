@@ -1,0 +1,91 @@
+<!doctype html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang=""> <!--<![endif]-->
+                             {%include 'head.html' %}
+<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=true onselectstart="return true" data-animation-in="fadeIn"
+      data-speed-in="1500" data-animation-out="fadeOut" data-speed-out="800" onload="showNewsContent();" data-loader="7" data-loader-color="#9c721d;">
+<!--[if lt IE 8]>
+<p class="browserupgrade">您正在使用 <strong>版本过低的</strong> 浏览器. 请到 <a href="http://browsehappy.com/">更新您的浏览器</a></p>
+<![endif]-->
+<div id="wrapper" class="clearfix">
+    {%include 'nav.html' %}
+
+    <section id="content" style="width: 100%">
+
+        <div class="content-wrap" style="padding: 25px 0;">
+            <div class="container nopadding clearfix">
+                <div class="col_five_sixth  clearfix" style="margin: 0 0 30px 0">
+                    <input type="text" id="keyWord" class="sm-form-control"
+                           placeholder="请输入搜索关键字......">
+
+                </div>
+                <div class="col_one_sixth norightmargin nobottommargin col_last clearfix">
+                    <a href="#" class="button nomargin button-reveal button-block">
+                        <i class="icon-refresh2" onclick="$('#keyWord').val('');$('.nav-pills .active a').trigger('click');" data-toggle="tooltip" data-placement="bottom" title="重置"></i>
+                        <span onclick="search()">查询</span></a>
+                </div>
+                <!-- Post Content
+                ============================================= -->
+                <div class="col_full bottommargin-xs clearfix" style="min-height:500px;" id="newsDiv">
+                    <ul class="nav nav-pills col_full nobottommargin clearfix">
+                        <li class="active"><a href="javascript:void(0)" style="padding: 10px 20px;"><i
+                            class="icon-private-ios-keypad"></i> 全部</a></li>
+                        <li><a href="javascript:void(0)" news-type="news" style="padding: 10px 20px;"><i class="icon-news"></i> 资讯</a></li>
+                        <li><a href="javascript:void(0)" news-type="exhibition" style="padding: 10px 20px;"><i class="icon-display"></i> 展览</a></li>
+                        <li><a href="javascript:void(0)" news-type="entry" style="padding: 10px 20px;"><i class="icon-globe"></i> 百科</a></li>
+
+                        <div class="pull-right" style="display: inline-grid;">
+
+                            <div class="pull-right" style="display: inline-grid;">
+                                <li class="nomargin questionSort"><a href="javascript:void(0)" class="nopadding questionSort"
+                                                                     onclick="sortNum('asc')"><i
+                                    class="icon-private-arrow-up-b num asc icon-lg questionSort"></i></a></li>
+                                <li class="nomargin questionSort"><a href="javascript:void(0)" class="nopadding questionSort"
+                                                                     onclick="sortNum('desc')"><i
+                                    class="icon-private-arrow-down-b num desc icon-lg questionSort"></i></a></li>
+                            </div>
+
+                            <div class="pull-right" style="display: inline-grid;">
+
+                                <li class="nomargin questionSort"><a href="javascript:void(0)" class="nopadding questionSort"
+                                                                     onclick="sortTime('asc')"><i
+                                    class="icon-private-arrow-up-b time asc icon-lg questionSort"></i></a>
+                                </li>
+                                <li class="nomargin questionSort"><a href="javascript:void(0)" class="nopadding questionSort"
+                                                                     onclick="sortTime('desc')"><i
+                                    class="icon-private-arrow-down-b time desc icon-lg questionSort active"
+                                ></i></a>
+                                </li>
+                            </div>
+
+                        </div>
+                        <div class="pull-right questionSort" style="display: inline-grid;">
+                            <h6>浏览数量 </h6>
+                            <h6 style="margin: -5px 5px 10px 0;">更新时间 </h6>
+                        </div>
+                        <div class="clear"></div>
+
+                        <div class="col_full nobottommargin main" style="margin-bottom:0!important;">
+                            <div class="form-process"></div>
+                            <div id="newsCell" class="post-masonry" data-animate="fadeIn" data-delay="500">
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% include 'miniFooter.html' %}
+</div>
+<div id="gotoTop" class="icon-angle-up"></div>
+{% include 'script.html' %}
+<script src="js/plugins/typeahead.jquery.min.js"></script>
+<script src="js/private/news.js"></script>
+</body>
+</html>

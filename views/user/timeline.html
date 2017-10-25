@@ -36,7 +36,7 @@
                 </div>
                 <ul class="entry-meta clearfix">
                     <li><a href="#"><i class="icon-user"></i><label>{% if blog.user.nickname != '' %} {{blog.user.nickname}} {% else %} {{blog.user.username}} {% endif %}</label></a></li>
-                    <li><i class="icon-comments"></i>{{blog.reply}} 评论</li>
+                    <li><i class="icon-comments"></i>{{blog.commentNum}} 评论</li>
                     <li><i class="icon-star3"></i>{{blog.collectionNum}} 收藏</li>
                     <li><i class="icon-private-eye-1"></i>{{blog.viewNum}} 浏览</li>
                     <li><i class="icon-share"></i>{{blog.shareNum}} 分享</li>

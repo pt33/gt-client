@@ -11,7 +11,7 @@
 .checkbox-style-3-label, .radio-style-3-label {
 	display: inline-block;
 	vertical-align: middle;
-	margin: 5px;
+	/* margin: 5px; */
 	cursor: pointer;
 	font-size: 14.5px;
 	/* background-color: red; */
@@ -19,7 +19,7 @@
 
 .checkbox-style-1-label, .radio-style-1-label,
 .checkbox-style-2-label, .radio-style-2-label,
-.checkbox-style-3-label, .radio-style-3-label {position: relative;padding:2px;}
+.checkbox-style-3-label, .radio-style-3-label {position: relative;padding:2px;margin: 0;}
 
 .checkbox-style-1-label:before, .radio-style-1-label:before,
 .checkbox-style-2-label:before, .radio-style-2-label:before,

@@ -10,11 +10,11 @@ const roleSchema = new mongoose.Schema({
     menus:[],
     createTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     },
     updateTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     }
 })
 

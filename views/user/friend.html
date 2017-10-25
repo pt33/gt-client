@@ -1,91 +1,149 @@
-<div id="portfolio" class="portfolio grid-container clearfix" style="min-height: 328px;width: 100%;">
+<div class="postcontent nomargin col_full clearfix" style="min-height: 418px;">
+    <!-- Portfolio Filter
+    ============================================= -->
+    <ul id="portfolio-filter" class="portfolio-filter style-3 bottommargin-sm clearfix" data-container="#portfolio">
+        <li class="activeFilter "><a href="#" data-filter="*">全部</a></li>
+        <li><a href="#" data-filter=".pf-invite">我的邀请</a></li>
+        <li><a href="#" data-filter=".pf-invited">邀请我的</a></li>
+        <li><a href="#" data-filter=".pf-friend">我的亲友</a></li>
+    </ul><!-- #portfolio-filter end -->
+
+    <div class="clear"></div>
     {% if list.length == 0 %}
-    <div class="panel-group nobottommargin well" id="nodata" align="center" style="height: 465px;"><h3 style="padding: 9.5em 0;color: #9CA0A9;font-size: 1.6em;font-style: italic;">您还没有添加任何亲友，赶紧去邀请吧！</h3></div>
+        <div class="panel-group nobottommargin well" id="nodata" align="center" style="height: 303px;"><h3 style="line-height:300px;color: #9CA0A9;font-size: 1.6em;font-style: italic;">您还没有添加任何亲友，赶紧去邀请吧！</h3></div>
     {% else %}
-    <input type="hidden" value="{{current}}" id="pageCurrent">
-    <input type="hidden" value="{{total}}" id="pagetotal">
-    {% for book in list %}
-    <article class="portfolio-item loaded" style="width: 212px;height: auto;background-color: transparent;margin-right: 19px;margin-bottom:20px;padding: 5px;border:1px solid #ddd;">
-        <div class="portfolio-image">
-            <img class="image_fade" src="{% if book.cover %}{{book.cover}}{%else%}img/cover.jpg{%endif%}" alt="家谱封面" style="widthd:200px;height:310px;">
-            <div class="sale-flash">
-                {% if book.status == 0 %}
-                <span class="label label-info">未审核</span>
-                {% elseif book.status == 1 %}
-                <span class="label label-success">已通过</span>
-                {% elseif book.status == -1 %}
-                <span class="label label-warning">未通过</span>
-                {% elseif book.status == -3 %}
-                <span class="label label-default">已撤消</span>
+        <div id="portfolio" class="portfolio grid-container clearfix col_full" style="min-height: 400px;">
+            {% set data = {} %}
+            {% set image = '' %}
+            {% set type = '' %}
+            {% set name = '' %}
+            {% set tmpUserId = '' %}
+            {% set phone = '' %}
+        {% for info in list %}
+            {% if info.type == 'invite'%}
+                {% set type = '我的邀请' %}
+                {% set name = info.name %}
+                {% set phone = info.phone %}
+            {% elseif info.type == 'invited'%}
+                {% set type = '邀请我的' %}
+                {% set name = info.user.surname + info.user.realname %}
+                {% set phone = info.user.phone %}
+                {% if info.user.avatarStatus == 1 %}
+                    {% set image = info.user.avatar %}
+                {% endif %}
+            {% elseif info.type == 'friend'%}
+                {% set type = '我的亲友' %}
+                {% set image = info.friend.avatar %}
+                {% if info.friend._id.toString() == userId.toString() %}
+                    {% set image = info.user.avatar %}
+                    {% set name = info.user.surname + info.user.realname %}
+                    {% set phone = info.user.phone %}
+                    {% set tmpUserId = info.user._id.toString() %}
+                    {% if info.user.avatarStatus == 1 %}
+                        {% set image = info.user.avatar %}
+                    {% endif %}
+                {% elseif info.user._id.toString() == userId.toString() %}
+                    {% set name = info.friend.surname + info.friend.realname %}
+                    {% set phone = info.friend.phone %}
+                    {% set tmpUserId = info.friend._id.toString() %}
+                    {% if info.friend.avatarStatus == 1 %}
+                        {% set image = info.friend.avatar %}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        <article class="portfolio-item pf-{{info.type}}" style="min-width: 180px;min-height: 165px">
+            <div class="portfolio-image visible-lg" style="max-width: 95px;">
+                {% if image == '' %}
+                    <a href="#">
+                        <img style="max-width: 80px;" class="alignleft img-circle img-thumbnail notopmargin nobottommargin" src="img/avatar.jpg">
+                    </a>
+                {% else %}
+                    <a href="{{image}}" data-lightbox="image"><img style="max-width: 80px;" class="alignleft img-circle img-thumbnail notopmargin nobottommargin" src="{{image}}" alt="用户头像"></a>
                 {% endif %}
             </div>
-            <div class="portfolio-overlay">
-                <!--{% if book.status == 0 %}-->
-                <!--<a href="#mainConfirmUndo" onclick="$('#mainBookId').val('{{book._id.toString()}}');" data-lightbox="inline" class="left-icon" title="撤销家谱"><i class="icon-line2-action-undo"></i></a>-->
-                <!--{% elseif book.status == 1 %}-->
-                <!--<a href="#mainConfirmDelete" data-lightbox="inline" class="left-icon" title="删除家谱"><i class="icon-line-trash"></i></a>-->
-                <!--{% elseif book.status == -1 || book.status == -3 %}-->
-                <!--<a href="#mainConfirmUpload" data-lightbox="inline" class="left-icon" title="重新提交家谱"><i class="icon-line-upload"></i></a>-->
-                <!--{% endif %}-->
-                <a href="javascript:void(0)" class="center-icon" onclick="showMoreInfo('{{book._id.toString()}}')" title= "查看详情"><i class="icon-line-ellipsis"></i></a>
+            <div class="portfolio-desc nopadding">
+                <div>
+                    <h4 style="display: inline-block;margin: 0;font-size: 1.15em;">{{type}}&nbsp;&nbsp;</h4>
+                    {% if info.type == 'invite' %}
+                        {% if info.status == 0 %}
+                            <span class="label label-info pull-right">已发送</span>
+                        {% elseif info.status == 1 %}
+                            <span class="label label-success pull-right">已接受</span>
+                        {% elseif info.status == -1 %}
+                            <span class="label label-warning pull-right">已删除</span>
+                        {% elseif info.status == -2 %}
+                            <span class="label label-default pull-right">已拒绝</span>
+                        {% elseif info.status == -3 %}
+                            <span class="label label-default pull-right">已撤消</span>
+                        {% endif %}
+                    {% elseif info.type == 'invited' %}
+                        {% if info.status == 0 %}
+                            <span class="label label-info pull-right">未处理</span>
+                        {% elseif info.status == 1 %}
+                            <span class="label label-success pull-right">已接受</span>
+                        {% elseif info.status == -2 %}
+                            <span class="label label-default pull-right">已拒绝</span>
+                        {% endif %}
+                    {% elseif info.type == 'friend' %}
+                        {% if info.status == -1 %}
+                            <span class="label label-warning pull-right">已删除</span>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <span style="font-size: 1.1em;color: #777;font-weight: 500;">{{name}}</span>
+                <span style="font-size: 1.06em;color: #999;font-style: italic;">{{phone}}</span>
+                <span style="font-size: 1.06em;color: #999;font-style: italic;">{{info.createStr}}</span>
+                <div style="margin-top: 10px;">
+                    {% if info.type == 'friend' %}
+                        <a href="/user/friend/detail/{{tmpUserId}}" data-lightbox="ajax" class="right-icon userModify">个人资料</a>
+                        {% if info.status == 1 %}
+                            <a href="#confirmInvite" data-lightbox="inline" onclick="$('#confirmInvite #inviteTitle').html('是否确认删除该亲友?');$('#confirmInvite #inviteId').val('{{info._id.toString()}}');$('#confirmInvite #inviteStatus').val('-1');$('#confirmInvite #inviteType').val('friend');" class="userModify">删除亲友</a>
+                        {% endif %}
+                    {% elseif info.type == 'invite' %}
+                        {% if info.status == 0 %}
+                            <a href="#confirmInvite" data-lightbox="inline" onclick="$('#confirmInvite #inviteTitle').html('是否确认撤消该亲友邀请?');$('#confirmInvite #inviteId').val('{{info._id.toString()}}');$('#confirmInvite #inviteStatus').val('-3');" class="userModify">撤消邀请</a>
+                        {% elseif info.status == -1 || info.status == -2 || info.status == -3 %}
+                            <a href="#confirmInvite" data-lightbox="inline" onclick="$('#confirmInvite #inviteTitle').html('是否确认重新发送该亲友邀请?');$('#confirmInvite #inviteId').val('{{info._id.toString()}}');$('#confirmInvite #inviteStatus').val('0');" class="userModify">重新邀请</a>
+                        {% endif %}
+                    {% elseif info.type == 'invited' %}
+                        {% if info.status == 0 %}
+                            <a href="#confirmInvite" data-lightbox="inline" onclick="$('#confirmInvite #inviteTitle').html('是否确认接受该亲友邀请?');$('#confirmInvite #inviteId').val('{{info._id.toString()}}');$('#confirmInvite #inviteStatus').val('1');" class="userModify">接受邀请</a>
+                            <a href="#confirmInvite" data-lightbox="inline" onclick="$('#confirmInvite #inviteTitle').html('是否确认拒绝该亲友邀请?');$('#confirmInvite #inviteId').val('{{info._id.toString()}}');$('#confirmInvite #inviteStatus').val('-2');" class="userModify">拒绝邀请</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
             </div>
+        </article>
+        {% endfor %}
+    </div><!-- #portfolio end -->
+    <!-- Pagination
+    ============================================= -->
+        {% if list.length == total %}
+        <!--<div id="load-nomore-posts" class="center topmargin-sm">-->
+            <!--<a href="javascript:void(0)" class="button button-default btn-block bookModify"-->
+               <!--style="pointer-events: none;background-color: #F5F5F5;border: 1px solid #ddd;color: #999;-->
+                        <!--display: inline-table;font-size: 1.3em;font-style: italic;font-weight: 500;">已经到底啦!</a>-->
+        <!--</div>-->
+        {% else %}
+        <div id="load-next-posts" class="center">
+            <a href="/user/friend?current=2&limit=9"  class="button privateloadmore" style="border: 1px solid rgba(177,129,33,0.89);background-color: #fff;font-size: 16px;font-weight: 500;font-style: italic;">加载更多...</a>
         </div>
-        <div class="portfolio-desc" style="padding: 15px 5px 0 5px;">
-            <h3><a href="portfolio-single.html">{{book.name}}aabbkdfdfdafldfas</a></h3>
-
-            <ul class="entry-meta clearfix">
-                <li><a href="#"><i class="icon-private-calendar-4"></i></a>{{book.createStr}}</li>
-            </ul>
-            <ul class="entry-meta clearfix" style="position: relative;top:-10px;">
-                <li style="margin-right: 5px;">{% if book.canShare == 1 %}<i class="icon-link"></i>可分享{%else%}<i class="icon-unlink"></i>不可分享{%endif%}</li>
-                <li style="margin-right: 5px;">{% if book.viewRange == 1 %}<i class="icon-folder-close"></i>本人可见{%elseif book.viewRange == 2%}<i class="icon-users"></i>亲友可见{%elseif book.viewRange == 3%}<i class="icon-group"></i>姓氏可见{%else%}<i class="icon-folder-open"></i>全网可见{%endif%}</li>
-            </ul>
-        </div>
-    </article>
-    {% endfor %}
-    <!--<div class="modal1 mfp-hide" id="mainConfirmUndo">-->
-    <!--<div class="block divcenter" style="background-color: #FFF; max-width: 600px;">-->
-    <!--<div class="feature-box fbox-center fbox-effect nobottomborder nobottommargin" style="padding: 20px;">-->
-    <!--<h4 class="nomargin">是否确认撤回该家谱？</h4>-->
-    <!--</div>-->
-    <!--<div class="section center" style="padding: 20px;background-color: #f5f5f5;margin: 0;">-->
-    <!--<button class="button button-darkblue col-sm-5" type="button" style="margin: 0 0 0 20px;" onclick="confirmOP('{{book._id.toString()}}','book','delete',JSON.stringify({status:-3}),'{{current}}', 8)">是</button>-->
-    <!--<button class="button button-leaf col-sm-5" type="button" style="margin: 0 0 0 9.5%;" onclick="$.magnificPopup.close();return false;">否</button>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
-
-    <!--<div class="modal1 mfp-hide" id="mainConfirmDelete">-->
-    <!--<div class="block divcenter" style="background-color: #FFF; max-width: 600px;">-->
-    <!--<div class="feature-box fbox-center fbox-effect nobottomborder nobottommargin" style="padding: 20px;">-->
-    <!--<h4 class="nomargin">是否确认删除该家谱？</h4>-->
-    <!--</div>-->
-    <!--<div class="section center" style="padding: 20px;background-color: #f5f5f5;margin: 0;">-->
-    <!--<button class="button button-darkblue col-sm-5" type="button" style="margin: 0 0 0 20px;" onclick="confirmOP('{{book._id.toString()}}','book','delete',JSON.stringify({status:-3}),'{{current}}', 8)">是</button>-->
-    <!--<button class="button button-leaf col-sm-5" type="button" style="margin: 0 0 0 9.5%;" onclick="$.magnificPopup.close();return false;">否</button>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
-
-    <!--<div class="modal1 mfp-hide" id="mainConfirmUpload">-->
-    <!--<div class="block divcenter" style="background-color: #FFF; max-width: 600px;">-->
-    <!--<div class="feature-box fbox-center fbox-effect nobottomborder nobottommargin" style="padding: 20px;">-->
-    <!--<h4 class="nomargin">是否确认重新提交该家谱？</h4>-->
-    <!--</div>-->
-    <!--<div class="section center" style="padding: 20px;background-color: #f5f5f5;margin: 0;">-->
-    <!--<button class="button button-darkblue col-sm-5" type="button" style="margin: 0 0 0 20px;"-->
-    <!--onclick=""/>-->
-    <!--<button class="button button-leaf col-sm-5" type="button" style="margin: 0 0 0 9.5%;" onclick="$.magnificPopup.close();return false;">否</button>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
+        {% endif %}
     {% endif %}
 </div>
-<div class="noradius clearfix nobottommargin" id="pageDiv" style="" >
-    <p class="pull-left userPage hidden-xs">显示第 <span id="start"></span> 到第 <span id="current"></span> 条记录，总共 <span id="total"></span> 条记录</p>
-    <div id="pageInfo" class="pull-right"></div>
+
+<div class="modal1 mfp-hide" id="confirmInvite">
+    <input type="hidden" id="inviteId">
+    <input type="hidden" id="inviteStatus">
+    <input type="hidden" id="inviteType" value="invite">
+    <div class="block divcenter" style="background-color: #FFF; max-width: 600px;">
+        <div class="feature-box fbox-center fbox-effect nobottomborder nobottommargin" style="padding: 20px;">
+            <h4 class="nomargin" id="inviteTitle">是否确认撤消该邀请？</h4>
+        </div>
+        <div class="section center" style="padding: 20px;background-color: #f5f5f5;margin: 0;">
+            <button class="button button-darkblue col-sm-5" type="button" style="margin: 0 0 0 20px;" onclick="confirmOP($('#confirmInvite #inviteId').val(),$('#confirmInvite #inviteType').val(),'delete',JSON.stringify({status:$('#confirmInvite #inviteStatus').val()}),'{{current}}',9)">是</button>
+            <button class="button button-leaf col-sm-5" type="button" style="margin: 0 0 0 9.5%;" onclick="$.magnificPopup.close();return false;">否</button>
+        </div>
+    </div>
 </div>
-
-
-
 

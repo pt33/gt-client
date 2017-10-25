@@ -15,13 +15,17 @@ const bookSchema = new mongoose.Schema({
     status:{type: Number, default: 0},
     createTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     },
     updateTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     }
 })
+
+bookSchema.statics.findAndModify = function (query, sort, doc, options, callback) {
+    return this.collection.findAndModify(query, sort, doc, options, callback);
+}
 
 const book = mongoose.model('book', bookSchema)
 

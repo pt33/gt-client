@@ -3,7 +3,7 @@ jQuery(window).load(function() {
     var isUploading = false
     var filesize = 0
 
-    $($('.custom-filter li a')[0]).trigger('click')
+    // $($('.custom-filter li a')[0]).trigger('click')
 
     saveCover = function () {
         if ($('#coverFiles')[0].files.length === 0) {
@@ -64,7 +64,7 @@ jQuery(window).load(function() {
         }
 
         var range, canShare
-        $('#book').find('input[type=radio]:visible').each(function (e, obj) {
+        $('#family').find('input[type=radio]:visible').each(function (e, obj) {
             if (obj.checked && obj.name.indexOf('range-group') >= 0) {
                 range = obj.id.replace('range-', '')
             }
@@ -228,19 +228,6 @@ jQuery(window).load(function() {
                 onChange: function (contents, $editable) {
                     var contentsContainer = $('<div></div>').html(contents)
                     filesize = contentsContainer.find('img').length
-                    // contentsContainer.find('img').each(function (i,e) {
-                    //     var str = e.src
-                    //     str = str.substring(23)
-                    //     var equalIndex= str.indexOf('=');
-                    //     if(str.indexOf('=')>0)
-                    //     {
-                    //         str=str.substring(0, equalIndex);
-                    //
-                    //     }
-                    //     var strLength = str.length
-                    //     var fileLength=parseInt(strLength-(strLength/8)*2)
-                    //     console.log(fileLength/1024*1024)
-                    // })
                     var txt = contentsContainer[0].innerText
                     if (txt.trim() === '') {
                         $('.note-editor.note-frame .note-placeholder').show()
@@ -373,7 +360,7 @@ jQuery(window).load(function() {
             content = encodeURI(content)
         }
         var range, canShare
-        $('#posts').find('input[type=radio]:visible').each(function (e, obj) {
+        $('#family').find('input[type=radio]:visible').each(function (e, obj) {
             if (obj.checked && obj.name.indexOf('range-group') >= 0) {
                 range = obj.id.replace('range-', '')
             }
@@ -604,30 +591,49 @@ jQuery(window).load(function() {
         $.magnificPopup.proto.goTo(current)
     }
 
-    showMoreInfo = function (id) {
+    showMoreInfo = function (id, node) {
         $('.form-process').show()
 
-        var node = $('.custom-filter li.current')[0].className.split(' ')[0]
-
-        var url = encodeURI('/family?node=' + node + '&current=' + $('#pageCurrent').val())
-
         var param = {
-            current: $('#pageCurrent').val(),
-            url: url,
-            title: '家族日志'
+            title: node ==='blog' ? '家族日志' : '家族族谱',
+            url:'/family'
         }
 
         var encrypted = CryptoJS.AES.encrypt(JSON.stringify(param), '_SALT_G(T#*)')
         encrypted = encrypted.toString()
 
+        storage['sortBy'] = getSortParam()
+        storage['node'] = node
+        storage['current'] = $('#pageInfo li.page-number.active')[0].outerText||1
+
         window.location.href = '/family/' + node + '/' + id + '?param=' + encrypted
     }
 
     pageList = function (page, id, limit) {
-        $('#posts').load('/family/' + id + '?current=' + page + '&limit=' + limit, function () {
-            initPage($('#pagetotal').val(), $('#pageCurrent').val(), limit, id)
-            $('#gotoTop').trigger('click')
-        })
+        $('.form-process').fadeIn()
+        if (id === 'comment') {
+            $('#commentlist').load('/family/blog/comment/'+$('#qid').val()+'?current=' + page + '&limit=' + limit, function () {
+                $('.form-process').fadeOut()
+
+                initPage($('#pagetotal').val(), $('#pageCurrent').val(), limit, id)
+                $('html,body').stop(true).animate({
+                    'scrollTop': $('#commentlist').offsetTop
+                }, 900, 'easeOutQuad')
+            })
+        } else {
+
+            $('#family').load('/family/' + id + '?current=' + page + '&limit=' + limit+'&sortBy='+getSortParam(), function () {
+                $('.form-process').fadeOut()
+
+                initPage($('#pagetotal').val(), $('#pageCurrent').val(), limit, id)
+                $('#gotoTop').trigger('click')
+                if (id === 'book'){
+                    $('#pageInfo').css('marginRight','-14px')
+                } else {
+                    $('#pageInfo').css('marginRight','0')
+                }
+            })
+        }
     }
 
     initEditBookView = function () {
@@ -689,12 +695,16 @@ jQuery(window).load(function() {
     }
 
     openAddPage = function (obj, id) {
+        $('.form-process').fadeIn()
+        $('#pageDiv').hide()
+        $('#sortDiv').hide()
         if ($(obj).hasClass('current')) return
 
         $('.custom-filter li.current').removeClass('current')
 
         $(obj).addClass('current')
-        $('#posts').load('/family/' + id + '/add?current=' + $('#' + id + ' #pageCurrent').val(), function () {
+        $('#family').load('/family/' + id + '/add?current=' + $('#' + id + ' #pageCurrent').val(), function () {
+            $('.form-process').fadeOut()
             initUpload(id)
             initSummerNote(id)
             SEMICOLON.widget.loadFlexSlider()
@@ -708,18 +718,23 @@ jQuery(window).load(function() {
     }
 
     goBack = function (id, page, limit) {
-        if (page === undefined || page === 'undefined') {
-            page = 1
-        }
+        var current = $('#pageInfo li.page-number.active a')[0].outerText||1
+
         if (limit === undefined) {
             limit = 2
         }
+
         $('div[id*=add] button').removeClass('current')
         $('.custom-filter li.current').removeClass('current')
-        $('#posts').load('/family/' + id + '?current=' + page + '&limit=' + limit, function () {
-            initPage($('#pagetotal').val(), page, limit, id)
+        $('#family').load('/family/' + id + '?current=' + current + '&limit=' + limit+'&sortBy='+getSortParam(), function () {
+            initPage($('#pagetotal').val(), current, limit, id)
             $('#gotoTop').trigger('click')
             $('.custom-filter li.' + id).addClass('current')
+            if (id === 'book'){
+                $('#pageInfo').css('marginRight','-14px')
+            } else {
+                $('#pageInfo').css('marginRight','0')
+            }
         })
     }
 
@@ -738,7 +753,6 @@ jQuery(window).load(function() {
         }
         $(obj).parents('article').first().addClass('loaded')
     }
-
 
     initCheckBox = function () {
         $('input').iCheck({
@@ -759,12 +773,12 @@ jQuery(window).load(function() {
                 } else {
                     if (type === 0) {
                         showMessage('收藏成功', 'success', 1000)
-                        $(obj).find('span').html(result)
+                        $(obj).find('span:last-child').html(Math.max(Number(result),0))
                         $(obj).find('i').removeClass('icon-star2')
                         $(obj).find('i').addClass('icon-star3')
                     } else {
-                        showMessage('取消收藏成功', 'success', 1000)
-                        $(obj).find('span').html(result)
+                        showMessage('取消收藏成功:last-child', 'success', 1000)
+                        $(obj).find('span:last-child').html(Math.max(Number(result),0))
                         $(obj).find('i').removeClass('icon-star3')
                         $(obj).find('i').addClass('icon-star2')
                     }
@@ -782,31 +796,221 @@ jQuery(window).load(function() {
                     showMessage(result.error, '', 1000)
                 } else {
                     showMessage('点赞成功', 'success', 1000)
-                    $(obj).find('span').html(result)
+                    $(obj).find('span:last-child').html(Math.max(Number(result),0))
+                    // $(obj).find('span').html(Math.max(Number(result),0))
                 }
             }
         })
     }
+
+    replyTo = function (replyto, blogId, commentId) {
+        $.ajax({
+            type: 'post',
+            url: '/family/blog/like/' + id,
+            success: function (result) {
+                if (result.error) {
+                    showMessage(result.error, '', 1000)
+                } else {
+                    showMessage('点赞成功', 'success', 1000)
+                    $(obj).find('span:last-child').html(Math.max(Number(result),0))
+                }
+            }
+        })
+    }
+
+    showSubText = function (id) {
+        $('#'+id).slideToggle();
+        $('#'+id).find('textarea')[0].value = ''
+    }
+
+    addReplyTo = function (blogId,commentId, obj) {
+        if ($('#'+commentId).find('textarea')[0].value === '') {
+            $('#'+commentId).find('textarea').addClass('error')
+            return;
+        }
+
+        $('.form-process').fadeIn()
+        $.ajax({
+            type: 'post',
+            data: {
+                content: encodeURI($('#'+commentId).find('textarea')[0].value),
+                bid: blogId,
+                replyTo: commentId
+            },
+            url: '/family/blog/comment',
+            success: function (result) {
+                $('.form-process').fadeOut()
+                if (result.error) {
+                    showMessage(result.error, '', 2000)
+                } else {
+                    showMessage('回复提交成功', 'success', 2000)
+                    $('.form-process').fadeOut()
+                    $('#'+commentId).find('textarea')[0].value = ''
+                    $('#'+commentId).slideToggle()
+                    $('#commentNum').html(Math.max(Number(result),0))
+                    $('#commentNumMini').html(Math.max(Number(result),0))
+                    $('#commentlist').load('/family/blog/comment/'+ blogId, function () {
+                        initPage($('#pagetotal').val(), $('#pageCurrent').val(), 10, 'comment')
+                    })
+                }
+            }
+        })
+    }
+
+    sortData = function (obj) {
+        $('.form-process').fadeIn()
+        var node = $('.family .custom-filter li.current')[0].className.split(' ')[0]
+        var sortGroup = $(obj).find('i')[0].attributes['sort-group']
+        if (sortGroup !== undefined) {
+            if ($(obj).find('i.active').length > 0) {
+                $(obj).find('i.active').removeClass('active')
+            } else {
+                $(".family [sort-group='1']").removeClass('active')
+                $(obj).find('i').addClass('active')
+            }
+        } else {
+            $(obj).parents('ul').first().find('i.active').removeClass('active')
+            $(obj).find('i').addClass('active')
+        }
+
+        $('#family').load('/family/' + node + '?current=1&limit=8&sortBy='+getSortParam(), function () {
+            initPage($('#pagetotal').val(), $('#pageCurrent').val(), 8, node)
+            $('.form-process').fadeOut()
+            // $('#gotoTop').trigger('click')
+        })
+    }
+
+    likeBook = function (id, obj) {
+        $.ajax({
+            type: 'put',
+            url: '/family/book/like/' + id,
+            success: function (result) {
+                if (result.error) {
+                    showMessage(result.error, '', 1000)
+                } else {
+                    showMessage('点赞成功', 'success', 1000)
+                    $(obj).find('span:last-child').html(Math.max(0,Number(result)))
+                }
+            }
+        })
+    }
+
+    collectionBook = function (id, obj) {
+        var type = $(obj).find('i.icon-star3').length
+        $.ajax({
+            type: type === 0 ? 'put' : 'delete',
+            url: '/family/book/collection/' + id,
+            success: function (result) {
+                if (result.error) {
+                    showMessage(result.error, '', 1000)
+                } else {
+                    if (type === 0) {
+                        showMessage('收藏成功', 'success', 1000)
+                        $(obj).find('span:last-child').html(Math.max(0,Number(result)))
+                        $(obj).find('i').removeClass('icon-star2')
+                        $(obj).find('i').addClass('icon-star3')
+                    } else {
+                        showMessage('取消收藏成功', 'success', 1000)
+                        $(obj).find('span:last-child').html(Math.max(0,Number(result)))
+                        $(obj).find('i').removeClass('icon-star3')
+                        $(obj).find('i').addClass('icon-star2')
+                    }
+                }
+            }
+        })
+    }
+
+    changeBookImageView = function (obj) {
+        var w = obj.naturalWidth, h = obj.naturalHeight
+        if (h > w) {
+            var tmp = Math.ceil((h / w) * 370)
+            $(obj).css('height', tmp +'px')
+            $(obj).css('width', '370px')
+        } else {
+            var tmp = Math.ceil((h / w) * 370)
+            $(obj).css('width', '370px')
+            $(obj).css('height', tmp + 'px')
+        }
+        $(obj).parents('article').first().addClass('loaded')
+    }
+
+    initShare = function () {
+
+    }
 })
 
-showFamilyContent = function (id, opendb,obj, limit, a,b,c,d) {
-    $('.form-process').fadeIn()
+getSortParam = function () {
+    var param = {}
+
+    $(".family i.active[sort-group='1']").each(function (i, e) {
+        var sortType = e.attributes['sort-type'].value
+        var sortValue = e.attributes['sort-value'].value
+        param[sortType] = Number(sortValue)
+    })
+    $(".family i.active:not([sort-group='1'])").each(function (i, e) {
+        var sortType = e.attributes['sort-type'].value
+        var sortValue = e.attributes['sort-value'].value
+        param[sortType] = Number(sortValue)
+    })
+    if(Object.keys(param).length === 0) {
+        param = {createTime: -1}
+    }
+    return JSON.stringify(param)
+}
+
+setSortParam = function (sortBy) {
+    var param
+    if (sortBy !== undefined) {
+        param = JSON.parse(sortBy)
+    } else {
+        param = {createTime: -1}
+    }
+
+    $('.familySort i').removeClass('active')
+
+    for(var i in Object.keys(param)){
+        var key = Object.keys(param)[i]
+        var value = param[key]
+        $("[sort-type='"+ key + "'][sort-value='"+value+"']").addClass('active')
+    }
+}
+
+$('.family ul.custom-filter li a').on('click', function(event, param1, param2) {
+
     $('div[id*=add]').hide()
     $('div[id*=add] button').removeClass('current')
     $('.custom-filter li.current').removeClass('current')
-    $(obj).closest('li').addClass('current')
+    $(this).closest('li').addClass('current')
 
-    $('#posts').load('/family/' + id, function () {
-        $('.form-process').fadeOut()
-        initPage($('#pagetotal').val(), $('#pageCurrent').val(), limit, id)
-        $('#add' + id + 'Div').show()
-        if (opendb) {
+    var node = this.attributes['data-node'].value
+    var limit = this.attributes['data-limit'].value
+    var db = this.attributes['data-db'].value
+    var current = param1||1
+    var sortBy = param2||getSortParam()
+    showFamilyContent(node, db, limit, current, sortBy)
+    setSortParam(sortBy)
+})
+
+showFamilyContent = function (node, db, limit, current, sortBy) {
+    $('.form-process').fadeIn()
+    $('#family').load('/family/' + node + '?current='+current+'&sortBy='+sortBy+'&limit='+limit, function () {
+        initPage($('#pagetotal').val(), $('#pageCurrent').val(), limit, node)
+        $('#add' + node + 'Div').show()
+        if (db) {
             openDB()
         }
+        $('.form-process').fadeOut()
+
+        if (node === 'book'){
+            $('#pageInfo').css('marginRight','-14px')
+        } else {
+            $('#pageInfo').css('marginRight','0')
+        }
+        initShare()
     })
 }
 
-initSlider = function() {
+initSlider = function(loadComment) {
     $('.nivoSlider').nivoSlider({
         effect: 'random',
         slices: 15,
@@ -823,12 +1027,25 @@ initSlider = function() {
             $('#slider').find('.nivo-caption').addClass('slider-caption-bg');
         }
     })
+
+    if (loadComment) {
+        $('#commentlist').load('/family/blog/comment/'+ $('#qid').val(), function () {
+            initPage($('#pagetotal').val(), $('#pageCurrent').val(), 10, 'comment')
+        })
+    }
 }
 
-changeMenu = function (node, current) {
-    $($('.custom-filter li.'+node+' a')[0]).trigger('click',[current])
-}
+changeMenu = function () {
 
+    var node = storage['node']||'blog'
+    var current = storage['current']||1
+    var sortBy = storage['sortBy']||JSON.stringify({createTime:-1})
+
+    storage.removeItem('sortBy')
+    storage.removeItem('node')
+    storage.removeItem('current')
+    $($('.custom-filter li.'+node+' a')[0]).trigger('click',[current, sortBy])
+}
 
 addComment = function () {
     if ($('#reply').val() === '') {
@@ -841,7 +1058,7 @@ addComment = function () {
     $.ajax({
         type: 'post',
         data: {
-            content: $('#reply').val(),
+            content: encodeURI($('#reply').val()),
             bid: $('#qid').val()
         },
         url: '/family/blog/comment',
@@ -853,9 +1070,11 @@ addComment = function () {
                 showMessage('评论提交成功', 'success', 2000)
                 $('.form-process').fadeOut()
                 $('#reply').val('')
-                $('#commentNum').html(result)
-                $('#commentlist').load('/family/blog/comment/'+ $('#qid').val())
-
+                $('#commentNum').html(Math.max(Number(result),0))
+                $('#commentNumMini').html(Math.max(Number(result),0))
+                $('#commentlist').load('/family/blog/comment/'+ $('#qid').val(), function () {
+                    initPage($('#pagetotal').val(), $('#pageCurrent').val(), 10, 'comment')
+                })
             }
         }
     })

@@ -1,7 +1,7 @@
 
     var myDB={
         name:'library',
-        version:3,
+        version:4,
         db:null
     }
 

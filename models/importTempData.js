@@ -4,11 +4,11 @@ var mongoose = require('mongoose')
 const importTempDataSchema = new mongoose.Schema({
     createTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     },
     updateTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     }
 })
 

@@ -1,24 +1,23 @@
-let express = require('express')
-let router = express.Router()
-let role = require('../models/role')
-let field = require('../models/field')
-let table = require('../models/table')
-let mongoose = require('mongoose')
-let test = require('../models/test')
-let fs = require('fs')
-let column  = require('../models/column')
-let child = require('../models/child')
-let area = require('../models/area')
-let CryptoJS = require("crypto-js")
-let sizeOf = require('image-size')
-let path = require('path')
-let databaseProxy = require('../util/databaseProxy')
+const express = require('express')
+const router = express.Router()
+const field = require('../models/field')
+const table = require('../models/table')
+const mongoose = require('mongoose')
+const test = require('../models/test')
+const fs = require('fs')
+const column  = require('../models/column')
+const child = require('../models/child')
+const area = require('../models/area')
+const CryptoJS = require("crypto-js")
+const sizeOf = require('image-size')
+const path = require('path')
+const databaseProxy = require('../util/databaseProxy')
 
 router.get('/',async function(req, res, next) {
     let data = await databaseProxy.getColumnData(1)
     let column = {}, child = []
     if (data.length > 0) {
-        for(var i in data) {
+        for(let i in data) {
             if(data[i].url === '/data') {
                 column = data[i]
                 break
@@ -42,8 +41,6 @@ router.get('/',async function(req, res, next) {
                         obj.datas = await initNameGroup(child[i].childTable, {}, obj.name, tid)
                     } else if (obj.groupType === 'area') {
                         obj.datas = await initLocationGroup(child[i].childTable, {}, obj.name, tid)
-                    } else if (obj.groupType === 'field') {
-                        obj.datas = await initFieldGroup(child[i].childTable, {}, obj.name, tid)
                     }
                 }
             }

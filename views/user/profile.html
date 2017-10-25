@@ -3,7 +3,7 @@
     <div class="small-thumbs" id="posts" style="min-height: 369px;">
         <div class="entry clearfix">
             <div class="entry-image nomargin" style="width: auto;">
-                <a href="#modifyAvatar" data-lightbox="inline" class="userLightbox"><img id="userAvatar" src="{% if user.avatar %}{{user.avatar}}{%else%}img/avatar.jpg{%endif%}" data-toggle="tooltip" data-placement="bottom" title="修改头像" class="alignleft img-circle img-thumbnail notopmargin nobottommargin" alt="用户头像" style="max-width: 100px;"></a>
+                <a href="#modifyUserImg" data-lightbox="inline" class="userLightbox"><img id="userAvatar" src="{% if user.avatar %}{{user.avatar}}{%else%}img/avatar.jpg{%endif%}" data-toggle="tooltip" data-placement="bottom" title="修改头像" class="alignleft img-circle img-thumbnail notopmargin nobottommargin" alt="用户头像" style="max-width: 100px;"></a>
             </div>
             <div class="entry-c">
                 <div class="entry-title">
@@ -18,27 +18,27 @@
         <div class="col_full nobottommargin topmargin-lg" style="padding-top: 13px;">
             <div class="input-group bottommargin-xs hidden-xs">
                 <span class="input-group-addon">真实姓氏: </span>
-                <input class="sm-form-control" type="text" value="{{user.surname}}" placeholder="请输入姓氏" maxlength="4" id="surname" name="surname">
+                <input class="sm-form-control" type="text" value="{{user.surname}}" onkeyup="checkValue(this,'surname',true)" placeholder="请输入姓氏" maxlength="4" id="surname" name="surname" {% if Number(user.isreal) == 1 %} disabled {%endif%}>
                 <span class="input-group-addon">真实名字: </span>
-                <input class="sm-form-control" type="text" value="{{user.realname}}" placeholder="请输入名字" maxlength="4" id="realname" name="username">
+                <input class="sm-form-control" type="text" value="{{user.realname}}" onkeyup="checkValue(this,'',true)" placeholder="请输入名字" maxlength="4" id="realname" name="username" {% if Number(user.isreal) == 1 %} disabled {%endif%}>
             </div>
             <div class="input-group bottommargin-xs hidden-sm hidden-lg hidden-md visible-xs-block">
                 <span class="input-group-addon" style="border-bottom-color: transparent;border-left: 1px solid #ddd;border-right: 1px solid #ddd;border-top: 1px solid #ddd;">真实姓氏: </span>
-                <input class="sm-form-control" type="text" value="{{user.surname}}" placeholder="请输入姓氏" maxlength="4" id="surname" name="surname">
+                <input class="sm-form-control" type="text" value="{{user.surname}}" onkeyup="checkValue(this,'surname',true)" placeholder="请输入姓氏" maxlength="4" id="surname" name="surname" {% if Number(user.isreal) == 0 %} disabled {%endif%}>
                 <span class="input-group-addon" style="border-bottom-color: transparent;border-top-color: transparent;border-left: 1px solid #ddd;border-right: 1px solid #ddd;">真实名字: </span>
-                <input class="sm-form-control" type="text" value="{{user.realname}}" placeholder="请输入名字" maxlength="4" id="realname" name="username">
+                <input class="sm-form-control" type="text" value="{{user.realname}}" onkeyup="checkValue(this,'',true)" placeholder="请输入名字" maxlength="4" id="realname" name="username" {% if Number(user.isreal) == 0 %} disabled {%endif%}>
             </div>
             <div class="input-group bottommargin-xs hidden-xs" style="border-bottom: 1px solid #ddd;border-top: 1px solid #ddd;">
                 <span class="input-group-addon">个人性别: </span>
-                <input type="radio" name="canShare1" class="radio-style" id="canShare0" onchange="chooseSex(this)" {% if user.sex == 0 %} checked {%endif%}><span style="padding: 0 18px 0 5px;font-size: 14.5px;font-weight: 500;">男</span>
-                <input type="radio" name="canShare1" class="radio-style" id="canShare1" onchange="chooseSex(this)" {% if user.sex == 1 %} checked {%endif%}><span style="padding: 0 55px 0 5px;font-size: 14.5px;font-weight: 500;">女</span>
+                <input type="radio" name="canShare1" class="radio-style" id="canShare0" {% if user.sex && user.sex == 0 %} checked {%endif%}><span style="padding: 0 18px 0 5px;font-size: 14.5px;font-weight: 500;">男</span>
+                <input type="radio" name="canShare1" class="radio-style" id="canShare1" {% if user.sex && user.sex == 1 %} checked {%endif%}><span style="padding: 0 55px 0 5px;font-size: 14.5px;font-weight: 500;">女</span>
                 <span class="input-group-addon hidden-xs" style="border-bottom-color: transparent;border-top-color:transparent;border-left: 1px solid #ddd;">出生日期: </span>
                 <input class="sm-form-control tleft today" type="text" value="{{user.birthday}}" placeholder="请选择出生日期" id="birthday" name="birthday" style="border-bottom-color: transparent;border-top-color:transparent;">
             </div>
             <div class="input-group bottommargin-xs visible-xs-block" style="border-left: 1px solid #ddd;border-right: 1px solid #ddd;">
                 <span class="input-group-addon" style="border-left-color: transparent;">个人性别:</span>
-                <input type="radio" name="canShare2" class="radio-style" id="canShare0" onchange="chooseSex(this)" {% if user.sex == 0 %} checked {%endif%}><span style="padding: 0 10px 0 5px;font-size: 14.5px;font-weight: 500;">男</span>
-                <input type="radio" name="canShare2" class="radio-style" id="canShare1" onchange="chooseSex(this)" {% if user.sex == 1 %} checked {%endif%}><span style="padding: 0 55px 0 5px;font-size: 14.5px;font-weight: 500;">女</span>
+                <input type="radio" name="canShare2" class="radio-style" id="canShare0" {% if user.sex && user.sex == 0 %} checked {%endif%}><span style="padding: 0 10px 0 5px;font-size: 14.5px;font-weight: 500;">男</span>
+                <input type="radio" name="canShare2" class="radio-style" id="canShare1" {% if user.sex && user.sex == 1 %} checked {%endif%}><span style="padding: 0 55px 0 5px;font-size: 14.5px;font-weight: 500;">女</span>
                 <span class="input-group-addon" style="border-color: transparent;border-top:1px solid #ddd;">出生日期: </span>
                 <input class="sm-form-control tleft today" type="text" value="{{user.birthday}}" placeholder="请选择出生日期" id="birthday" name="birthday" style="border-left-color: transparent;border-right-color:transparent;">
             </div>
@@ -56,7 +56,7 @@
             </div>
         </div>
     </div>
-    <div class="modal1 mfp-hide" id="modifyAvatar">
+    <div class="modal1 mfp-hide" id="modifyUserImg">
         <div class="block divcenter" style="background-color: #FFF; max-width: 600px;">
             <div class="feature-box fbox-center fbox-effect nobottomborder nobottommargin" style="padding: 40px;">
                 <div class="col-sm-12  style-msg errormsg" style="display: none;">

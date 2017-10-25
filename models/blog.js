@@ -13,15 +13,15 @@ const blogSchema = new mongoose.Schema({
     likeNum:{type: Number, default: 0},
     collectionNum:{type: Number, default: 0},
     shareNum:{type: Number, default: 0},
-    comments:[{}],
+    commentNum:{type: Number, default: 0},
     imgPaths:[],
     createTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     },
     updateTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     }
 })
 

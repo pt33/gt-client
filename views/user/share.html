@@ -1,10 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="postcontent nomargin col_full clearfix" style="min-height: 418px;">
+    <!-- Portfolio Filter
+    ============================================= -->
+    <ul id="portfolio-filter" class="portfolio-filter style-3 bottommargin-sm clearfix" data-container="#portfolio" style="position: relative;top:-5px;">
+        <li class="activeFilter "><a href="#" data-filter="*">全部</a></li>
+        <li><a href="#" data-filter=".pf-blog">用户日志</a></li>
+        <li><a href="#" data-filter=".pf-book">家族族谱</a></li>
+        <li><a href="#" data-filter=".pf-library">谱牒文化</a></li>
+        <li><a href="#" data-filter=".pf-location">地方方志</a></li>
+    </ul><!-- #portfolio-filter end -->
 
-</body>
-</html>
+    <div class="clear"></div>
+    {% if list.length == 0 %}
+    <div class="panel-group nobottommargin well" id="nodata" align="center" style="height: 302px;"><h3 class="nomargin" style="line-height:300px;color: #9CA0A9;font-size: 1.6em;font-style: italic;">您还没有分享过任何信息，赶紧去看看吧！</h3></div>
+    {% else %}
+    <div id="portfolio" class="portfolio grid-container clearfix" style="min-height: 400px;">
+        {% set data = {} %}
+        {% set type = '' %}
+        {% for info in list %}
+            {% if info.type == 'book' && info.book.length > 0 %}
+                {% set data = info.book[0] %}
+                {% set type = '家族族谱' %}
+            {% elseif info.type == 'blog' && info.blog.length > 0 %}
+                {% set data = info.blog[0] %}
+                {% set type = '用户日志' %}
+            {% elseif info.type == 'library' && info.library.length > 0 %}
+                {% set data = info.library[0] %}
+                {% set type = '谱牒信息' %}
+            {% elseif info.type == 'location' && info.location.length > 0 %}
+                {% set data = info.location[0] %}
+                {% set type = '地方方志' %}
+        {% endif %}
+        <article class="portfolio-item pf-{{info.type}}" style="width: 225px;padding: 0 10px 15px 0;">
+            {% if data.images.length != 0 %}
+            <div class="portfolio-image">
+                {% if data.images.length > 1 %}
+                <div class="fslider" data-arrows="false" data-lightbox="gallery">
+                    <div class="flexslider">
+                        <div class="slider-wrap">
+                            {% for image in data.images %}
+                            <div class="slide"><a href="{{image}}" data-lightbox="gallery-item"><img class="image_fade preloader2 clipImage" src="{{image}}" alt="图片预览" onload="clipImage(this)"></a></div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% elseif data.images.length == 1%}
+                <a href="{{data.images[0]}}" data-lightbox="image" style="width: 225px;height: 160px;"><img class="image_fade preloader2 clipImage" src="{{data.images[0]}}" alt="图片预览" onload="clipImage(this)"></a>
+                {% endif %}
+                <div class="portfolio-overlay">
+                    <a href="javascript:void(0)" class="left-icon" onclick="showBigImage(this)" title ='查看大图'><i class="icon-zoom-in"></i></a>
+                    <a href="javascript:void(0)" onclick="showDetailInfo(this,'{{info.type}}','{{data._id.toString()}}')" class="right-icon" title="查看明细"><i class="icon-line-ellipsis"></i></a>
+                </div>
+            </div>
+            {% else %}
+            <div class="portfolio-image">
+                <a style="width: 225px;height: 160px;"><img class="image_fade clipImage" src="/img/cover.jpg" alt="默认图片" onload="clipImage(this)"></a>
+                <div class="portfolio-overlay">
+                    <a href="javascript:void(0)" onclick="showDetailInfo(this,'{{info.type}}','{{data._id.toString()}}')" class="center-icon" title="查看明细"><i class="icon-line-ellipsis"></i></a>
+                </div>
+            </div>
+            {% endif %}
+            <div class="portfolio-desc">
+                <h3>类型:{{type}}</h3>
+                <h3>标题:{{data.title}}</h3>
+                <span>创建日期:{{info.createStr}}</span>
+            </div>
+        </article>
+        {% endfor %}
+    </div><!-- #portfolio end -->
+
+    <!-- Pagination
+    ============================================= -->
+    {% if list.length == total %}
+    <!--<div id="load-nomore-posts" class="center topmargin-sm">-->
+        <!--<a href="javascript:void(0)" class="button button-default btn-block bookModify"-->
+           <!--style="pointer-events: none;background-color: #F5F5F5;border: 1px solid #ddd;color: #999;-->
+                    <!--display: inline-table;font-size: 1.3em;font-style: italic;font-weight: 500;">已经到底啦!</a>-->
+    <!--</div>-->
+    {% else %}
+    <div id="load-next-posts" class="center">
+        <a href="/user/share?current=2&limit=10"  class="button privateloadmore" style="border: 1px solid rgba(177,129,33,0.89);background-color: #fff;font-size: 16px;font-weight: 500;font-style: italic;">加载更多...</a>
+    </div>
+    {% endif %}
+    {% endif %}
+</div>

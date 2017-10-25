@@ -92,7 +92,7 @@ L.AnimatedMarker = L.Marker.extend({
         speed = 10;
 
     // Normalize the transition speed from vertex to vertex
-    if (this._i < len && this._i > 0) {
+    if (this._i !== 0) {
         speed = Math.ceil(this.options.speed / len)
       // speed = 4000//this._latlngs[this._i-1].distanceTo(this._latlngs[this._i]) / this.options.distance * this.options.interval;
     }

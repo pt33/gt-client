@@ -7,10 +7,9 @@
 <html class="no-js lt-ie9" lang=""> <![endif]-->
 <!--[if gt IE 8]><!-->
 <html class="no-js" lang=""> <!--<![endif]-->
-                             {%include '../head.html' %}
-
+{%include '../head.html' %}
 <body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=true onselectstart="return true" data-animation-in="fadeIn"
-      data-speed-in="1500" data-animation-out="fadeOut" data-speed-out="800">
+      data-speed-in="1500" data-animation-out="fadeOut" data-speed-out="800" data-loader="7" data-loader-color="#9c721d;">
 <!--[if lt IE 8]>
 <p class="browserupgrade">您正在使用 <strong>版本过低的</strong> 浏览器. 请到 <a href="http://browsehappy.com/">更新您的浏览器</a></p>
 <![endif]-->
@@ -145,7 +144,7 @@
 
                 <!-- Post Content
                 ============================================= -->
-                <div class="col_three_fourth nobottommargin col_last clearfix" style="min-height:500px;position:relative;top:-4px;">
+                <div class="col_three_fourth bottommargin-sm col_last clearfix" style="min-height:500px;position:relative;top:-4px;">
                     <ul id="portfolio-filter" class="portfolio-filter style-4 col_full nobottommargin clearfix">
                         <li class="activeFilter"><a href="javascript:void(0)" onclick="showQuestionByType('all')"><i
                             class="icon-private-ios-keypad"></i> 全部</a></li>
@@ -194,18 +193,15 @@
                             <h3 class="topmargin-lg" style="color: #999;font-style: italic">无任何记录显示</h3>
                         </div>
                     </ul>
-
-                </div>
-                <div class="noradius col_three_fourth nomargin pull-right clearfix" id="pageDiv" style="padding-top: 15px;">
-                    <p class="pull-left" style="color: #444;font-size: 13.5px;font-weight: 400;margin-bottom: 0;">显示第 <span id="start"></span> 到第 <span id="current"></span> 条记录，总共 <span id="total"></span> 条记录</p>
-                    <div id="pageInfo">
-
+                    <br/>
+                    <div class="noradius" id="pageDiv" style="position: relative;top:25px;">
+                        <p class="pull-left userPage hidden-xs">显示第 <span id="start"></span> 到第 <span id="current"></span> 条记录，总共 <span id="total"></span> 条记录</p>
+                        <div id="pageInfo" class="pull-right"></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
     {% include '../miniFooter.html' %}
 </div>
 <div id="gotoTop" class="icon-angle-up"></div>

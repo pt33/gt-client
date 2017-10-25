@@ -22,11 +22,11 @@ const templateSchema = new mongoose.Schema({
     status: {type: Number, default: 1},  // 状态：1：正常，-1：冻结, -2: 删除
     createTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     },
     updateTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     }
 })
 

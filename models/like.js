@@ -8,7 +8,7 @@ const likeSchema = new mongoose.Schema({
     ip:String,
     createTime:{
         type: Date,
-        default: new Date()
+        default: () => new Date()
     }
 })
 

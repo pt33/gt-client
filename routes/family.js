@@ -1,13 +1,15 @@
-let express = require('express')
-let router = express.Router()
-let mongoose = require('mongoose')
-let like = require('../models/like')
-let collection = require('../models/collection')
-let databaseProxy = require('../util/databaseProxy')
-let shareUrl = require("../models/shareUrl")
-let share = require("../models/share")
-let blog = require("../models/blog")
-let CryptoJS = require("crypto-js")
+const express = require('express')
+const router = express.Router()
+const mongoose = require('mongoose')
+const like = require('../models/like')
+const collection = require('../models/collection')
+const databaseProxy = require('../util/databaseProxy')
+//const shareUrl = require("../models/shareUrl")
+const share = require("../models/share")
+const blog = require("../models/blog")
+const book = require("../models/book")
+const comment = require("../models/comment")
+const CryptoJS = require("crypto-js")
 
 router.use(async function (req, res, next) {
     if (!req.userId) {
@@ -20,16 +22,20 @@ router.use(async function (req, res, next) {
 router.get('/', async function(req, res, next) {
     try{
         let data = await databaseProxy.getColumnData(1)
-        let grid = await databaseProxy.getIndexData()
-        for (let i in grid) {
-            let obj = grid[i]
-            obj.data = await databaseProxy.getTableListDetail(obj.refTable,obj.contentTitle,obj.contentSubTitle,obj.content)
-        }
+        // let grid = await databaseProxy.getIndexData()
+
         let userId = ''
         if (req.userId) {
             userId = req.userId
         }
-        res.render('family',{current: '/family', columns: data, grids: grid, userId: userId,node:req.query.node||'blog', currentpage:req.query.current||1})
+        res.render('family',{
+            current: '/family'
+            , columns: data
+            , userId: userId
+            , node:req.query.node||'blog'
+            , currentpage:req.query.current||1
+            , sortBy: req.query.sortBy||JSON.stringify({createTime:-1})
+        })
     } catch (e) {
         res.render('error',{errorMsg:e.message})
     }
@@ -50,13 +56,14 @@ router.get('/book', async function(req, res, next) {
            ,{viewRange: 2,'friend.friendId': mongoose.Types.ObjectId(req.userId)}
            ,{viewRange: 3,'user.surname': uinfo.surname,'user.surname':{$exists: true, $ne:''}
             }],status:1}
-       ,{createTime: -1}
+        ,req.query.sortBy === undefined ? {createTime: -1} : JSON.parse(req.query.sortBy)
        ,req.query.limit === undefined ? 8 : req.query.limit
        ,true
+        ,req.userId
     )
 
     res.render('family/book',{list:list.rows,current:(req.query.current === undefined ? 1 : req.query.current),total:list.total});
-});
+})
 
 router.get('/book/add', async function(req, res, next) {
     res.render('family/addBook', {current:(req.query.current === undefined ? 1 : req.query.current)})
@@ -65,7 +72,6 @@ router.get('/book/add', async function(req, res, next) {
 router.get('/blog', async function(req, res, next) {
 
     let uinfo = await databaseProxy.getUserInfo(req.userId)
-
     let list = await databaseProxy.getBlogList(
         req.query.current === undefined ? 1 : req.query.current
        ,{$or:[{viewRange: 0}
@@ -74,7 +80,7 @@ router.get('/blog', async function(req, res, next) {
            ,{viewRange: 3,'user.surname': uinfo.surname,'user.surname':{$exists: true, $ne:''}}
            ,{userId: mongoose.Types.ObjectId(req.userId)}
             ],status:1}
-       ,{createTime: -1}
+       ,req.query.sortBy === undefined ? {createTime: -1} : JSON.parse(req.query.sortBy)
        ,req.query.limit === undefined ? 2 : req.query.limit
        ,true
        ,req.userId
@@ -107,28 +113,52 @@ router.get('/blog/:id', async function(req, res, next) {
     if (list.length > 0) {
         await blog.update({_id:list[0]._id},{ $inc: {"viewNum": 1 } })
     }
+
+
     let data = await databaseProxy.getColumnData(1)
 
-    res.render('family/blogDetail', {info:list.length > 0 ? list[0] : {},current:param.current
-       , url: param.url
+    res.render('family/blogDetail', {info:list.length > 0 ? list[0] : {}
         ,shortUrl: '192.168.1.102:8086' + '/share/0/' + list[0]._id.toString()
        // , shortUrl: req.headers.host + '/share/0/' + list[0]._id.toString()
-        , current: '/family'
-        ,columns: data, userId: req.userId
-        ,title:param.title
+        ,current: '/family'
+        ,columns: data
+        ,userId: req.userId
+        ,title:param.title||''
+        ,url:param.url||''
+        ,isDetail: param.isDetail||false
     })
 })
 
 router.get('/book/:id', async function(req, res, next) {
+
+    var tmp = req.query.param.replace(/\ /g,'+')
+    let bytes  = CryptoJS.AES.decrypt(tmp, '_SALT_G(T#*)')
+    let param = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+
     let list = await databaseProxy.getBookList(
         1
-       ,{_id: mongoose.Types.ObjectId(req.params.id),userId: mongoose.Types.ObjectId(req.userId)}
+       ,{_id: mongoose.Types.ObjectId(req.params.id),status:1}
        ,{createTime: -1}
        ,1
        ,false
+        ,req.userId
     )
 
-    res.render('family/bookDetail', {book:list.length > 0 ? list[0] : {},current:req.query.current})
+    if (list.length > 0) {
+        await book.update({_id:list[0]._id,status:1},{ $inc: {"viewNum": 1 } })
+    }
+    let data = await databaseProxy.getColumnData(1)
+
+    res.render('family/bookDetail', {info:list.length > 0 ? list[0] : {}
+        ,shortUrl: '192.168.1.102:8086' + '/share/1/' + list[0]._id.toString()
+        // , shortUrl: req.headers.host + '/share/0/' + list[0]._id.toString()
+        ,current: '/family'
+        ,columns: data
+        ,userId: req.userId
+        ,title:param.title||''
+        ,url:param.url||''
+        ,isDetail: param.isDetail||false
+    })
 })
 
 router.put('/blog/like/:id',async function(req, res, next) {
@@ -160,7 +190,7 @@ router.put('/blog/like/:id',async function(req, res, next) {
                 if (result.lastErrorObject.updatedExisting) {
                     return res.json(result.value.likeNum)
                 } else {
-                    return res.json({error: '记录未找到'})
+                    return res.json({error: ''})
                 }
             } else {
                 return res.json({error: '不要重复点赞'})
@@ -173,29 +203,33 @@ router.put('/blog/like/:id',async function(req, res, next) {
     }
 })
 
-router.post('/blog/comment',async function(req, res, next) {
+router.post('/blog/comment',function(req, res, next) {
     if (req.userId === undefined) {
         return res.json({error:'请先登录系统'})
     }
-    blog.findAndModify(
-        {_id: mongoose.Types.ObjectId(req.body.bid), status: 1}
-        ,{_id:-1}
-        , {
-            $push: {
-                comments:
-                {
-                    content: req.body.content
-                    , commentUid: mongoose.Types.ObjectId(req.userId)
-                    , commentTime: new Date()
-                }
-            }
-        },
-        {
-            upset: true,new : true
+
+    let param = {
+        userId:mongoose.Types.ObjectId(req.userId)
+        ,content: req.body.content
+        ,mainId:mongoose.Types.ObjectId(req.body.bid)
+        ,type:'blog'
+    }
+
+    if (req.body.replyTo !== undefined) {
+        param.replyTo = mongoose.Types.ObjectId(req.body.replyTo)
+    }
+
+    comment.create(param).then(async (data) => {
+        try {
+            let result = await blog.findAndModify(
+                {_id:mongoose.Types.ObjectId(req.body.bid)}
+                ,{_id:-1},{ $inc: {"commentNum": 1 } }
+                ,{upsert: false, new : true})
+            return res.json(result.value.commentNum)
+        } catch (e) {
+            return res.json({statusCode: 201, error: e.message})
         }
-    ).then(async function (result) {
-        return res.json(result.value.comments.length)
-    }).catch(function (e) {
+    }).catch((e) => {
         return res.json({statusCode: 201, error: e.message})
     })
 })
@@ -205,7 +239,12 @@ router.get('/blog/comment/:id',async function(req, res, next) {
         return res.json({error:'请先登录系统'})
     }
 
-    let info = await blog.findOne({_id: mongoose.Types.ObjectId(req.params.id), status: 1})
+    let list = await databaseProxy.getCommentList(
+        req.query.current === undefined ? 1 : req.query.current
+        ,{mainId: mongoose.Types.ObjectId(req.params.id),status:1, type:'blog'}
+        ,10
+    )
+    res.render('family/comment', {comments:list.rows,current:req.query.current||1,total:list.total})
 })
 
 router.put('/blog/collection/:id',async function(req, res, next) {
@@ -232,7 +271,7 @@ router.put('/blog/collection/:id',async function(req, res, next) {
 
         if (url.ok === 1) {
             if (!url.lastErrorObject.updatedExisting) {
-                let result = await blog.findAndModify({_id:mongoose.Types.ObjectId(req.params.id)},{_id:-1},{ $inc: {"collectionNum": 1 } },{upsert: false,
+                let result = await blog.findAndModify({_id:mongoose.Types.ObjectId(req.params.id),status:1},{_id:-1},{ $inc: {"collectionNum": 1 } },{upsert: false,
                     new : true})
                 if (result.lastErrorObject.updatedExisting) {
                     return res.json(result.value.collectionNum)
@@ -313,6 +352,166 @@ router.put('/blog/share/:id',async function(req, res, next) {
             console.log(url.lastErrorObject.updatedExisting)
             if (!url.lastErrorObject.updatedExisting) {
                 let result = await blog.findAndModify({_id: mongoose.Types.ObjectId(req.params.id), status: 1}, {_id: -1}, {$inc: {"shareNum": 1}}, {
+                    upsert: false,
+                    new: true
+                })
+                if (result.lastErrorObject.updatedExisting) {
+                    return res.json(result.value.shareNum)
+                }
+            }
+        }
+        return res.json({ignore:true})
+    } catch (e) {
+        return res.json({error: e.message})
+    }
+})
+
+router.put('/book/like/:id',async function(req, res, next) {
+    try{
+        let param = [{ip:req.ip}]
+        if (req.userId !== '' && req.userId !== undefined) {
+            param.push({userId:mongoose.Types.ObjectId(req.userId)})
+        }
+
+        let url = await like.findAndModify(
+            {tid:mongoose.Types.ObjectId(req.params.id),
+                type: 'book',
+                $or:param},
+            {_id:-1},
+            {$set:{tid:mongoose.Types.ObjectId(req.params.id),
+                type: 'book',
+                userId:req.userId !== '' && req.userId !== undefined ? mongoose.Types.ObjectId(req.userId) : ''
+                ,ip:req.ip
+                , createTime: new Date()
+            }},
+            {upsert: true,
+                new : true}
+        )
+
+        if (url.ok === 1) {
+            if (!url.lastErrorObject.updatedExisting) {
+                let result = await book.findAndModify({_id:mongoose.Types.ObjectId(req.params.id),status:1},{_id:-1},{ $inc: {"likeNum": 1 } },{upsert: false,
+                    new : true})
+                if (result.lastErrorObject.updatedExisting) {
+                    return res.json(result.value.likeNum)
+                } else {
+                    return res.json({error: '记录未找到'})
+                }
+            } else {
+                return res.json({error: '不要重复点赞'})
+            }
+        }
+
+        return res.json(true)
+    } catch (e) {
+        return res.json({error: e.message})
+    }
+})
+
+router.put('/book/collection/:id',async function(req, res, next) {
+    try{
+        if (req.userId === '' || req.userId === undefined) {
+            return res.json({error: '请先登录'})
+        }
+
+        let url = await collection.findAndModify(
+            {tid:mongoose.Types.ObjectId(req.params.id),
+                type: 'book',
+                userId:mongoose.Types.ObjectId(req.userId)},
+            {_id:-1},
+            {$set:{tid:mongoose.Types.ObjectId(req.params.id),
+                userId:req.userId !== '' && req.userId !== undefined ? mongoose.Types.ObjectId(req.userId) : ''
+                ,ip:req.ip
+                , status:1
+                , createTime: new Date()
+                ,type:'book'
+            }},
+            {upsert: true,
+                new : true}
+        )
+
+        if (url.ok === 1) {
+            if (!url.lastErrorObject.updatedExisting) {
+                let result = await book.findAndModify({_id:mongoose.Types.ObjectId(req.params.id),status:1},{_id:-1},{ $inc: {"collectionNum": 1 } },{upsert: false,
+                    new : true})
+                if (result.lastErrorObject.updatedExisting) {
+                    return res.json(result.value.collectionNum)
+                } else {
+                    return res.json({error: '记录未找到'})
+                }
+            } else {
+                return res.json({error: '你已收藏过了'})
+            }
+        }
+        return res.json(true)
+    } catch (e) {
+        return res.json({error: e.message})
+    }
+})
+
+router.delete('/book/collection/:id',async function(req, res, next) {
+    try{
+        if (req.userId === '' || req.userId === undefined) {
+            return res.json({error: '请先登录'})
+        }
+
+        let url = await collection.findAndModify(
+            {tid:mongoose.Types.ObjectId(req.params.id),
+                type: 'book',
+                userId:mongoose.Types.ObjectId(req.userId),
+            },
+            {_id:-1},
+            true,
+            {
+                upsert: false,
+                new : true
+            }
+        )
+
+        if (url.ok === 1) {
+            if (url.lastErrorObject.updatedExisting) {
+                let result = await book.findAndModify({_id:mongoose.Types.ObjectId(req.params.id), status: 1},{_id:-1},{ $inc: {"collectionNum": -1 } },{upsert: false,
+                    new : true})
+                if (result.lastErrorObject.updatedExisting) {
+                    return res.json(result.value.collectionNum)
+                } else {
+                    return res.json({error: '记录未找到'})
+                }
+            } else {
+                return res.json({error: '还未收藏'})
+            }
+        }
+        return res.json(true)
+    } catch (e) {
+        return res.json({error: e.message})
+    }
+})
+
+router.put('/book/share/:id',async function(req, res, next) {
+    try{
+        if (req.userId === '' || req.userId === undefined) {
+            return res.json({error: '请先登录'})
+        }
+
+        let url = await share.findAndModify(
+            {tid:mongoose.Types.ObjectId(req.params.id),
+                type: 'book',
+                userId:mongoose.Types.ObjectId(req.userId),
+                source:req.query.source},
+            {_id:-1},
+            {$set:{tid:mongoose.Types.ObjectId(req.params.id),
+                type: 'book',
+                source:req.query.source,
+                userId:req.userId !== '' && req.userId !== undefined ? mongoose.Types.ObjectId(req.userId) : ''
+                ,createTime: new Date()
+            },$inc: {"shareNum": 1}},
+            {upsert: true,
+                new : true}
+        )
+
+        if (url.ok === 1) {
+            if (!url.lastErrorObject.updatedExisting) {
+                let result = await book.findAndModify({_id: mongoose.Types.ObjectId(req.params.id), status: 1}, {_id: -1}, {$inc: {"shareNum": 1}}, {
                     upsert: false,
                     new: true
                 })

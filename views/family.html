@@ -10,7 +10,6 @@
         max-width: 100%; /* This rule is very important, please do not ignore this! */
     }
 </style>
-<link rel="stylesheet" href="css/magnific-popup.css" type="text/css"/>
 <link rel="stylesheet" href="css/datepicker.css" type="text/css"/>
 <link rel="stylesheet" href="css/cropper.min.css" type="text/css"/>
 <link rel="stylesheet" href="css/components/radio-checkbox.css" type="text/css" />
@@ -20,7 +19,7 @@
 <link rel="stylesheet" href="js/plugins/plupload/js/jquery.plupload.queue/css/jquery.plupload.queue.css" type="text/css"/>
 <link rel="stylesheet" href="js/plugins/icheck/square/square.css" rel="stylesheet" type="text/css"/>
                                                     <!--<link rel="stylesheet" href="js/jquery-ui.min.css" rel="stylesheet" type="text/css"/>-->
-<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=true onselectstart="return true" onload="changeMenu('{{node}}','{{currentpage}}')">
+<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=true onselectstart="return true" onload="changeMenu()" data-loader="7" data-loader-color="#9c721d;">
 <!--[if lt IE 8]>
 <p class="browserupgrade">您正在使用 <strong>版本过低的</strong> 浏览器. 请到 <a href="http://browsehappy.com/">更新您的浏览器</a></p>
 <![endif]-->
@@ -29,15 +28,15 @@
     <section id="content" style="width: 100%;margin-bottom:0;">
         <div class="content-wrap nopadding topmargin bottommargin">
 
-            <div class="container nopadding clearfix">
+            <div class="family container nopadding clearfix">
 
                 <div class="sidebar nobottommargin col_one_fifth">
-                    <div class="sidebar-widgets-wrap">
+                    <div class="sidebar-widgets-wrap visible-sm-inline visible-xs visible-lg visible-md">
                         <div class="widget widget-filter-links clearfix">
                             <ul class="custom-filter" data-container="#shop">
-                                <li class="blog"><a href="javascript:void(0)" onclick="showFamilyContent('blog', true, this, '2')">家族日志</a></li>
-                                <li class="book"><a href="javascript:void(0)" onclick="showFamilyContent('book', true, this, '8')">家族族谱</a></li>
-                                <li class="tree"><a href="javascript:void(0)" onclick="showFamilyContent('tree', true, this, '8')">家庭树</a></li>
+                                <li class="blog"><a href="javascript:void(0)" data-limit=2 data-db=true data-node="blog">家族日志</a></li>
+                                <li class="book"><a href="javascript:void(0)" data-limit=8 data-db=true data-node="book">家族族谱</a></li>
+                                <li class="tree"><a href="javascript:void(0)" data-limit=8 data-db=true data-node="tree">家庭树</a></li>
                             </ul>
                         </div>
                         <div class="widget widget-filter-links clearfix" style="margin: 30px 0 0 0;padding-bottom: 30px;">
@@ -54,68 +53,67 @@
                                 <button class="nopadding nomargin button button-large btn-block button-border button-default" type="button" onclick="openAddPage(this, 'tree')"><i class="icon-book" style="position: relative;top:11px;font-size: 18px;"></i>我的家庭树</button>
                             </div>
 
-                            <div id="sortDiv">
+                            <div id="sortDiv" class="hidden-xs hidden-sm">
                                  <h4>排序</h4>
                                  <ul class="shop-sorting">
                                 <li class="widget-filter-reset active-filter"><a href="#" data-sort-by="original-order">Clear</a></li>
-                                <li class="nomargin" style="max-height: 40px;"><label class="family-label" style="padding-right: 15px;">按时间</label>
-                                    <ul class="col-xs-push-1" style="display: inline-grid;">
+                                <li class="nomargin" style="max-height: 40px;"><label class="family-label" style="padding-right: 35px;">按时间</label>
+                                    <ul class="col-xs-push-2" style="display: inline-grid;">
                                         <li class="nomargin familySort">
-                                            <a href="javascript:void(0)" class="nopadding familySort" onclick="sortTime('asc')">
-                                                <i class="icon-private-arrow-up-b time asc icon-lg familySort"></i>
+                                            <a href="javascript:void(0)" class="nopadding familySort" onclick="sortData(this)">
+                                                <i class="icon-private-arrow-up-b time asc icon-lg familySort" sort-type="createTime" sort-value="1" style="padding-right: 20px;"></i>
                                             </a>
                                         </li>
                                         <li class="nomargin familySort">
-                                            <a href="javascript:void(0)" class="nopadding familySort" onclick="sortTime('desc')">
-                                                <i class="icon-private-arrow-down-b time desc icon-lg familySort active"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="nomargin" style="max-height: 40px;"><label class="family-label">按查看数</label>
-                                    <ul class="col-xs-push-1" style="display: inline-grid;">
-                                        <li class="nomargin familySort">
-                                            <a href="javascript:void(0)" class="nopadding familySort" onclick="sortTime('asc')">
-                                                <i class="icon-private-arrow-up-b time asc icon-lg familySort"></i>
-                                            </a>
-                                        </li>
-                                        <li class="nomargin familySort">
-                                            <a href="javascript:void(0)" class="nopadding familySort" onclick="sortTime('desc')">
-                                                <i class="icon-private-arrow-down-b time desc icon-lg familySort"></i>
+                                            <a href="javascript:void(0)" class="nopadding familySort" onclick="sortData(this)">
+                                                <i class="icon-private-arrow-down-b time desc icon-lg familySort active" sort-type="createTime" sort-value="-1" style="padding-right: 20px;"></i>
                                             </a>
                                         </li>
                                     </ul>
                                 </li>
-                                <li class="nomargin" style="max-height: 40px;"><label class="family-label">按点赞数</label>
-                                    <ul class="col-xs-push-1" style="display: inline-grid;">
+                                <li class="nomargin" style="max-height: 40px;"><label class="family-label" style="padding-right: 20px;">按查看数</label>
+                                    <ul class="col-xs-push-2" style="display: inline-grid;">
                                         <li class="nomargin familySort">
-                                            <a href="javascript:void(0)" class="nopadding familySort" onclick="sortTime('asc')">
-                                                <i class="icon-private-arrow-up-b time asc icon-lg familySort"></i>
+                                            <a href="javascript:void(0)" class="nopadding familySort" onclick="sortData(this)">
+                                                <i class="icon-private-arrow-up-b time asc icon-lg familySort" sort-type="viewNum" sort-group="1" sort-value="1"></i>
                                             </a>
                                         </li>
                                         <li class="nomargin familySort">
-                                            <a href="javascript:void(0)" class="nopadding familySort" onclick="sortTime('desc')">
-                                                <i class="icon-private-arrow-down-b time desc icon-lg familySort"></i>
+                                            <a href="javascript:void(0)" class="nopadding familySort" onclick="sortData(this)">
+                                                <i class="icon-private-arrow-down-b time desc icon-lg familySort" sort-type="viewNum" sort-group="1" sort-value="-1"></i>
                                             </a>
                                         </li>
                                     </ul>
                                 </li>
-                                <li class="nomargin" style="max-height: 40px;"><label class="family-label">按收藏数</label>
-                                    <ul class="col-xs-push-1" style="display: inline-grid;">
+                                <li class="nomargin" style="max-height: 40px;"><label class="family-label" style="padding-right: 20px;">按点赞数</label>
+                                    <ul class="col-xs-push-2" style="display: inline-grid;">
                                         <li class="nomargin familySort">
-                                            <a href="javascript:void(0)" class="nopadding familySort" onclick="sortTime('asc')">
-                                                <i class="icon-private-arrow-up-b time asc icon-lg familySort"></i>
+                                            <a href="javascript:void(0)" class="nopadding familySort" onclick="sortData(this)">
+                                                <i class="icon-private-arrow-up-b time asc icon-lg familySort" sort-type="likeNum" sort-group="1" sort-value="1"></i>
                                             </a>
                                         </li>
                                         <li class="nomargin familySort">
-                                            <a href="javascript:void(0)" class="nopadding familySort" onclick="sortTime('desc')">
-                                                <i class="icon-private-arrow-down-b time desc icon-lg familySort"></i>
+                                            <a href="javascript:void(0)" class="nopadding familySort" onclick="sortData(this)">
+                                                <i class="icon-private-arrow-down-b time desc icon-lg familySort" sort-type="likeNum" sort-group="1" sort-value="-1"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nomargin" style="max-height: 40px;"><label class="family-label" style="padding-right: 20px;">按收藏数</label>
+                                    <ul class="col-xs-push-2" style="display: inline-grid;">
+                                        <li class="nomargin familySort">
+                                            <a href="javascript:void(0)" class="nopadding familySort" onclick="sortData(this)">
+                                                <i class="icon-private-arrow-up-b time asc icon-lg familySort" sort-type="collectionNum" sort-group="1" sort-value="1"></i>
+                                            </a>
+                                        </li>
+                                        <li class="nomargin familySort">
+                                            <a href="javascript:void(0)" class="nopadding familySort" onclick="sortData(this)">
+                                                <i class="icon-private-arrow-down-b time desc icon-lg familySort" sort-type="collectionNum" sort-group="1" sort-value="-1"></i>
                                             </a>
                                         </li>
                                     </ul>
                                 </li>
                             </ul>
-
                             </div>
                         </div>
                     </div>
@@ -125,8 +123,8 @@
                     <div class="form-process"></div>
                     <!-- Posts
                     ============================================= -->
-                    <div id="posts" class="post-masonry clearfix"></div>
-
+                    <!--<div id="posts" class="post-masonry clearfix" hidden></div>-->
+                    <div id="family" class="col_full nobottommargin clearfix"></div>
 
                     <div class="noradius  clearfix" id="pageDiv" style="padding: 10px 0 0 0;" >
                         <p class="pull-left userPage hidden-xs">显示第 <span id="start"></span> 到第 <span id="current"></span> 条记录，总共 <span id="total"></span> 条记录</p>
@@ -157,28 +155,51 @@
 <script type="text/javascript" src="js/private/db.js"></script>
 <script type="text/javascript" src="js/private/family.js"></script>
 <script>
-    window._bd_share_config=
+    window._bd_share_config =
     {
         "common":
-    {
-        "bdSnsKey":{}
-        ,"bdText":'测试分享'
-        ,"bdUrl":'分享测试'
-        ,"bdMini":"3"
-        ,"bdMiniList":["qzone","tsina","bdysc","weixin","renren","tqq","bdxc","kaixin001","tqf","tieba","douban","bdhome","sqq","thx","ibaidu","meilishuo","mogujie","diandian","huaban","duitang","hx","fx","youdao","sdo","qingbiji","people","xinhua","mail","isohu","yaolan","wealink","ty","h163","evernotecn"]
-        ,"bdStyle":"0"
-        ,"bdSize":"16"
-        ,"bdCustomStyle":"/css/share.css"
-        ,"bdPopupOffsetLeft":0
-        ,"bdPopupOffsetTop":10
-        ,"onBeforeClick":function (cmd, config) {
-            console.log(cmd, config)
-        }
-        ,"onAfterClick":function (cmd, config) {
-             console.log(cmd, config)
-        }
-    }
-        ,"share":{}
+            {
+                "bdSnsKey": {}
+                ,
+                "bdText": 'aaaa'
+                ,
+                "bdUrl": 'www.baidu.com'
+                ,
+                "bdSign": 'normal'
+                ,
+                "bdMini": "3"
+                ,
+                "bdMiniList": ["qzone", "tsina", "bdysc", "weixin", "renren", "tqq", "bdxc", "kaixin001", "tqf", "tieba", "douban", "bdhome", "sqq", "thx", "ibaidu", "meilishuo", "mogujie", "diandian", "huaban", "duitang", "hx", "fx", "youdao", "sdo", "qingbiji", "people", "xinhua", "mail", "isohu", "yaolan", "wealink", "ty", "h163", "evernotecn"]
+                ,
+                "bdStyle": "0"
+                ,
+                "bdSize": "16"
+                ,
+                "bdCustomStyle": "/css/share.css"
+                ,
+                "bdPopupOffsetLeft": -100
+                ,
+                "bdPopupOffsetTop": 0
+                ,
+                "onBeforeClick": function (cmd, config) {
+                    console.log(cmd, config)
+                }
+                ,
+                "onAfterClick": function (cmd, config) {
+                    $.ajax({
+                        type: 'put',
+                        url: '/family/blog/share/' + $('#qid').val() + '?source=' + cmd,
+                        success: function (result) {
+                            if (result.error || result.ignore) {
+                                return
+                            } else {
+                                $('.bds_more').find('span').html(result)
+                            }
+                        }
+                    })
+                }
+            }
+        , "share": {}
     }
     with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)]
 </script>

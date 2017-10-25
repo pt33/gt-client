@@ -1,13 +1,13 @@
-let express = require('express')
-let router = express.Router()
-let column  = require('../models/column')
-let databaseProxy = require('../util/databaseProxy')
+const express = require('express')
+const router = express.Router()
+const column  = require('../models/column')
+const databaseProxy = require('../util/databaseProxy')
 
 router.get('/', async function(req, res, next) {
     try{
         let data = await databaseProxy.getColumnData(1)
-        var navTitle = ''
-        for(var i in data) {
+        let navTitle = ''
+        for(let i in data) {
             if(data[i].url === '/name') {
                 navTitle = data[i].name
                 break

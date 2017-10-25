@@ -27,11 +27,11 @@ exports.getSchema = async function (tabledId, name){
         param.status = {type: Number, default: 1}
         param.createTime = {
             type: Date,
-            default: new Date()
+            default: () => new Date()
         }
         param.updateTime = {
             type: Date,
-            default: new Date()
+            default: () => new Date()
         }
         param.sourceFrom = 'String'
         param.paths = []

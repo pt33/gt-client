@@ -18,7 +18,7 @@ var tableOptions = {
     iconSize:20,
     uniqueId: "_id",                     //每一行的唯一标识，一般为主键列
     queryParams: function (param) {
-        let query = {
+        var query = {
             page: param.offset
             , limit: param.limit
             , key: param.search || ''

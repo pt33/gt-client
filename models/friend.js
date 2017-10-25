@@ -4,14 +4,15 @@ var mongoose = require('mongoose')
 const friendSchema = new mongoose.Schema({
     friendId: mongoose.Schema.Types.ObjectId,
     userId:mongoose.Schema.Types.ObjectId,
+    removeUser:mongoose.Schema.Types.ObjectId,
     status:{type: Number, default: 1},
     createTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     },
     updateTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     }
 })
 

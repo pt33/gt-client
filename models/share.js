@@ -10,7 +10,7 @@ const shareSchema = new mongoose.Schema({
     clickNum: Number,
     createTime:{
         type: Date,
-        default: new Date()
+        default: () => new Date()
     }
 })
 

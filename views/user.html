@@ -10,7 +10,6 @@
         max-width: 100%; /* This rule is very important, please do not ignore this! */
     }
 </style>
-<link rel="stylesheet" href="css/magnific-popup.css" type="text/css"/>
 <link rel="stylesheet" href="css/datepicker.css" type="text/css"/>
 <link rel="stylesheet" href="css/cropper.min.css" type="text/css"/>
 <link rel="stylesheet" href="css/components/radio-checkbox.css" type="text/css" />
@@ -20,7 +19,7 @@
 <link rel="stylesheet" href="js/plugins/plupload/js/jquery.plupload.queue/css/jquery.plupload.queue.css" type="text/css"/>
 <link rel="stylesheet" href="js/plugins/icheck/square/square.css" rel="stylesheet" type="text/css"/>
 <!--<link rel="stylesheet" href="js/jquery-ui.min.css" rel="stylesheet" type="text/css"/>-->
-<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=true onselectstart="return true">
+<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=true onselectstart="return true" data-loader="7" data-loader-color="#9c721d;">
 <!--[if lt IE 8]>
 <p class="browserupgrade">您正在使用 <strong>版本过低的</strong> 浏览器. 请到 <a href="http://browsehappy.com/">更新您的浏览器</a></p>
 <![endif]-->
@@ -41,7 +40,7 @@
                             <li><a href="#friend" onclick="showUserContent('friend')"><i class="icon-users"></i>我的亲友<i class="icon-chevron-right"></i></a></li>
                             <li><a href="#question" onclick="showUserContent('question')"><i class="icon-question-sign"></i>我的咨询<i class="icon-chevron-right"></i></a></li>
                             <li><a href="#timeline" onclick="showUserContent('timeline')"><i class="icon-rss2"></i>我的日志<i class="icon-chevron-right"></i></a></li>
-                            <li><a href="#collection" onclick="showUserContent('collect')"><i class="icon-star3"></i>我的收藏<i class="icon-chevron-right"></i></a></li>
+                            <li><a href="#collection" onclick="showUserContent('collection')"><i class="icon-star3"></i>我的收藏<i class="icon-chevron-right"></i></a></li>
                             <li><a href="#share" onclick="showUserContent('share')"><i class="icon-share"></i>我的分享<i class="icon-chevron-right"></i></a></li>
                         </ul>
 
@@ -58,7 +57,9 @@
                         </div>
 
                         <div class="nopadding topmargin nobottommargin col_full clearfix" id="addFriendDiv" style="display: none;">
-                            <button class="nopadding nomargin button button-large btn-block button-border button-default" type="button" onclick="openAddPage(this, 'friend')"><i class="icon-users" style="position: relative;top:11px;font-size: 18px;"></i>邀请亲友</button>
+                            <a class="nopadding nomargin button button-large btn-block button-border button-default" type="button" href="#inviteUser" data-lightbox="inline" style="text-align: center;">
+                                <div><i class="icon-line2-user-follow" style="position: relative;top:14px;font-size: 14px;font-weight: 800;"></i>邀请亲友</div>
+                            </a>
                         </div>
 
                         <div class="nopadding topmargin nobottommargin col_full clearfix" id="addDonateDiv" style="display: none;">
@@ -85,33 +86,25 @@
                         <div id="share" class="post-masonry" data-animate="fadeIn" data-delay="500"></div>
 
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal1 mfp-hide" id="modifyAvatar">
-            <div class="block divcenter" style="background-color: #FFF; max-width: 600px;">
-                <div class="feature-box fbox-center fbox-effect nobottomborder nobottommargin" style="padding: 40px;">
-                    <div class="col-sm-12  style-msg errormsg" style="display: none;">
-                        <div class="sb-msg" style="font-size: 1.1em;text-align: left;"><i class="icon-remove"></i><strong id="errorMsg"></strong></div>
-                    </div>
-                    <img id="modifyUserAvatar">
-                    <br>
-                    <div class="col-sm-10 nopadding">
-                        <input id="avatarFiles" name="avatarFiles" type="file" data-show-upload="false" class="file-loading noradius"
-                               data-browse-icon="<i class='icon-picture' style='color:#555;'></i>"
-                               data-browse-label="选择图片"
-                               accept="image/*">
-                    </div>
 
-                    <div class="col-sm-2 nopadding">
-                        <button class="btn btn-default nomargin btn-md" type="button" onclick="resetAvatar()" style="padding:9px 15px;"><i class='icon-reload'></i>&nbsp;&nbsp;重置</button>
+                    <div class="modal1 mfp-hide" id="inviteUser">
+                        <div class="block divcenter" style="background-color: #FFF; max-width: 600px;">
+                            <div class="feature-box fbox-center fbox-effect nobottomborder nobottommargin" style="padding: 20px;">
+                                <div class="col-sm-12  style-msg errormsg" style="display: none;">
+                                    <div class="sb-msg" style="font-size: 1.1em;text-align: left;"><i class="icon-remove"></i><strong id="errorMsg"></strong></div>
+                                </div>
+                                <div class="col-sm-12" style="padding: 20px;">
+                                    <input class="sm-form-control" type="text" value="" onkeyup="checkValue(this,'',true)" placeholder="请输入被邀请人姓名...." id="inviteName" name="inviteName">
+                                    <br/>
+                                    <input class="sm-form-control" type="text" value="" onkeyup="checkValue(this,'phone',true)" placeholder="请输入被邀请人手机号码" id="invitePhone" name="invitePhone">
+                                </div>
+                            </div>
+                            <div class="section center" style="padding: 20px;background-color: #f5f5f5;margin: 40px 0 0 0;">
+                                <button class="button button-darkblue col-sm-5" type="button" style="margin: 0 0 0 20px;" onclick="inviteUser()" >发起邀请</button>
+                                <button class="button button-leaf col-sm-5" type="button" style="margin: 0 0 0 9.5%;" onclick="$.magnificPopup.close();return false;">关闭</button>
+                            </div>
+                        </div>
                     </div>
-
-                </div>
-                <div class="section center" style="padding: 20px;background-color: #f5f5f5;margin: 40px 0 0 0;">
-                    <button class="button button-darkblue col-sm-5" type="button" style="margin: 0 0 0 20px;" onclick="saveAvatar()" >确定</button>
-                    <button class="button button-leaf col-sm-5" type="button" style="margin: 0 0 0 9.5%;" onclick="$.magnificPopup.close();return false;">关闭</button>
-
                 </div>
             </div>
         </div>

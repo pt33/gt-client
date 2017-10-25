@@ -1,0 +1,62 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+                                                    {%include 'head.html' %}
+<style>
+    .container p {
+        font-size:1.2em;
+        text-indent: 50px;
+        letter-spacing: 0.15em;
+        font-weight: 400;
+        color: #333;
+        padding-bottom: 20px;
+    }
+</style>
+<link rel="stylesheet" href="/js/plugins/map/storymap.css" type="text/css"/>
+<link rel="stylesheet" href="/js/plugins/map/font.georgia-helvetica.css?v1" type="text/css">
+<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=false onselectstart="return false" data-loader="7" data-loader-color="#9c721d;">
+<!--[if lt IE 8]>
+<p class="browserupgrade">您正在使用 <strong>版本过低的</strong> 浏览器. 请到 <a href="http://browsehappy.com/">更新您的浏览器</a></p>
+<![endif]-->
+<div id="wrapper" class="clearfix">
+    {%include 'nav.html' %}
+    <section id="page-title" class="page-title-dark page-title-mini" style="background-color: #9C721D;">
+        <div class="container clearfix nopadding">
+            <h1>关于</h1>
+            <ol class="breadcrumb">
+                <li><a href="/">首页</a></li>
+                {% if title != '' %}
+                    <li><a href="{{current}}">{{title}}</a></li>
+                {% endif %}
+                <li class="active">详情</li>
+            </ol>
+        </div>
+    </section>
+    <section id="content">
+
+        <div class="content-wrap" style="padding: 40px 0 60px 0;">
+
+            <div class="container nopadding clearfix">
+                <h3 style="text-align: center;padding: 20px 0;letter-spacing: 0.15em;">关于中华寻根网</h3>
+                <p>“中华寻根网”是建立在广泛合作基础上的全球家谱数字化服务、教育和研究项目，以保存人类文明的共同记忆为最终目标。
+                   该项目将在互联网上实现网络寻根、家谱编纂互动、家谱专家咨询、寻根百科、家谱在线阅览、家谱目录和全文检索、家谱谱系分析等功能。</p>
+                <p>国家图书馆将组织专业队伍全面处理家谱的数据整理、软件开发及相关工作。基于“中华寻根网”工程浩大，工作将分阶段开展。
+                   项目第一期的建设目标是建立家谱数字字化综合服务系统，提供500个以上的姓氏、20000条以上的家谱书目导航数据、1000部以上的家谱文献。</p>
+                <p>
+                    澳门基金会一直致力于弘扬中华民族文化，推动澳门与内地的文化交流与合作，
+                    而国家图书馆拥有雄厚的科研实力和强大的学术基础，这次两个机构携手合作，结合彼此的优势和资源，
+                    相信有利于尽快建成这个全球华人寻根问祖的家园。
+                </p>
+            </div>
+        </div>
+
+    </section>
+
+    {% include 'miniFooter.html' %}
+</div>
+{% include 'script.html' %}
+
+</body>
+</html>

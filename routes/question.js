@@ -1,19 +1,19 @@
-let express = require('express')
-let router = express.Router()
-let column  = require('../models/column')
-let question = require('../models/question')
-let tag = require('../models/tag')
-let like = require('../models/like')
-let collection = require('../models/collection')
-let path = require('path')
-let fs = require('fs')
-let mongoose = require('mongoose')
-let CryptoJS = require("crypto-js")
-let swig = require('swig')
-let databaseProxy = require('../util/databaseProxy')
-let shareUrl = require("../models/shareUrl")
-let share = require("../models/share")
-const os = require('os')
+const express = require('express')
+const router = express.Router()
+const column  = require('../models/column')
+const question = require('../models/question')
+const tag = require('../models/tag')
+const like = require('../models/like')
+const collection = require('../models/collection')
+const path = require('path')
+const fs = require('fs')
+const mongoose = require('mongoose')
+const CryptoJS = require("crypto-js")
+//const swig = require('swig')
+const databaseProxy = require('../util/databaseProxy')
+//const shareUrl = require("../models/shareUrl")
+//const share = require("../models/share")
+// const os = require('os')
 
 router.get('/', async function(req, res, next) {
     try{
@@ -134,7 +134,6 @@ router.post('/save', async function(req, res, next) {
         , username:req.body.username
         , type:mongoose.Types.ObjectId(req.body.type)
         , email:req.body.email
-        , telphone:req.body.telphone
         , content: content
         , images:imgPaths
         , createTime: date
@@ -268,12 +267,18 @@ router.put('/like/:id',async function(req, res, next) {
 
         if (url.ok === 1) {
             if (!url.lastErrorObject.updatedExisting) {
-                let result = await question.findAndModify({_id:mongoose.Types.ObjectId(req.params.id), status: 1},{_id:-1},{ $inc: {"likeNum": 1 } },{upsert: false,
+                let result = await question.findAndModify({_id:mongoose.Types.ObjectId(req.params.id), status: 2},{_id:-1},{ $inc: {"likeNum": 1 } },{upsert: false,
                     new : true})
                 if (result.lastErrorObject.updatedExisting) {
                     return res.json(result.value.likeNum)
                 } else {
+                    await like.delete({
+                        tid:mongoose.Types.ObjectId(req.params.id),
+                        type: 'question',
+                        $or:param}
+                    )
                     return res.json({error: '记录未找到'})
+
                 }
             } else {
                 return res.json({error: '不要重复点赞'})
@@ -310,7 +315,7 @@ router.put('/collection/:id',async function(req, res, next) {
 
         if (url.ok === 1) {
             if (!url.lastErrorObject.updatedExisting) {
-                let result = await question.findAndModify({_id:mongoose.Types.ObjectId(req.params.id), status: 1},{_id:-1},{ $inc: {"collectionNum": 1 } },{upsert: false,
+                let result = await question.findAndModify({_id:mongoose.Types.ObjectId(req.params.id), status: 2},{_id:-1},{ $inc: {"collectionNum": 1 } },{upsert: false,
                     new : true})
                 if (result.lastErrorObject.updatedExisting) {
                     return res.json(result.value.collectionNum)
@@ -348,7 +353,7 @@ router.delete('/collection/:id',async function(req, res, next) {
 
         if (url.ok === 1) {
             if (url.lastErrorObject.updatedExisting) {
-                let result = await question.findAndModify({_id:mongoose.Types.ObjectId(req.params.id), status: 1},{_id:-1},{ $inc: {"collectionNum": -1 } },{upsert: false,
+                let result = await question.findAndModify({_id:mongoose.Types.ObjectId(req.params.id), status: 2},{_id:-1},{ $inc: {"collectionNum": -1 } },{upsert: false,
                     new : true})
                 if (result.lastErrorObject.updatedExisting) {
                     return res.json(result.value.collectionNum)
@@ -367,18 +372,22 @@ router.delete('/collection/:id',async function(req, res, next) {
 
 router.get('/detail',async function(req, res, next) {
     try{
-        let data = await databaseProxy.getColumnData(1)
-        var navTitle = ''
-        for(var i in data) {
-            if(data[i].url === '/question') {
-                navTitle = data[i].name
-                break
-            }
-        }
-        var tmp = req.query.param.replace(/\ /g,'+')
+        let tmp = req.query.param.replace(/\ /g,'+')
         let bytes  = CryptoJS.AES.decrypt(tmp, '_SALT_G(T#*)')
         let param = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
-        let info
+        let info, data
+
+        // if(param.isDetail === undefined) {
+            data = await databaseProxy.getColumnData(1)
+            let navTitle = ''
+            for(let i in data) {
+                if(data[i].url === '/question') {
+                    navTitle = data[i].name
+                    break
+                }
+            }
+        // }
+
         if (param.key !== undefined && param.key !== '') {
             param.key._id = {$ne:mongoose.Types.ObjectId(param.id)}
             info = await databaseProxy.getQuestionList(
@@ -418,7 +427,7 @@ router.get('/detail',async function(req, res, next) {
         // )shortUrl: '192.168.1.102/question' + '/' + url.value._id.toString()
 
         res.render('question/detail' ,{current: '/question',columns: data
-            , navTitle:navTitle,info:info.length > 0 ? info[0] : {},title:param.title, url: param.url, userId: userId})
+            , navTitle:navTitle,info:info.length > 0 ? info[0] : {},title:param.title, url: param.url, userId: userId, isDetail: param.isDetail||false})
     } catch (e) {
         res.render('error',{error: e.message})
     }
@@ -434,19 +443,19 @@ router.get('/getTitles',async function(req, res, next) {
     }
 })
 
-router.get('/:id', async function(req, res, next) {
-    try{
-        let url = await shareUrl.findOne({_id: mongoose.Types.ObjectId(req.params.id),status:1})
-
-        if (url) {
-            res.redirect(url.url)
-        } else {
-            res.redirect('/')
-        }
-    } catch (e) {
-        res.render('error',{error: e.message})
-    }
-})
+// router.get('/:id', async function(req, res, next) {
+//     try{
+//         let url = await shareUrl.findOne({_id: mongoose.Types.ObjectId(req.params.id),status:1})
+//
+//         if (url) {
+//             res.redirect(url.url)
+//         } else {
+//             res.redirect('/')
+//         }
+//     } catch (e) {
+//         res.render('error',{error: e.message})
+//     }
+// })
 
 router.get('/detail/:id', async function(req, res, next) {
     try{

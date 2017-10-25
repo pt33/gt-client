@@ -1,9 +1,9 @@
-var express = require('express');
-var router = express.Router();
-var admin = require('../models/admin')
-var role = require('../models/role')
-var security = require('../util/security')
-var mongoose = require('mongoose')
+const express = require('express');
+const router = express.Router();
+const admin = require('../models/admin')
+const role = require('../models/role')
+const security = require('../util/security')
+const mongoose = require('mongoose')
 
 router.get('/', async function(req, res, next) {
     try{

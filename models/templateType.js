@@ -8,11 +8,11 @@ const templateTypeSchema = new mongoose.Schema({
     type: String,
     createTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     },
     updateTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     }
 })
 

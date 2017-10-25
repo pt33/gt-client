@@ -10,21 +10,26 @@
                              {%include '../head.html' %}
 <link rel="stylesheet" href="/css/magnific-popup.css" type="text/css"/>
 <link rel="stylesheet" href="/css/nivo-slider.css" type="text/css"/>
-<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=true onselectstart="return true" data-animation-in="fadeIn"
-      data-speed-in="1500" data-animation-out="fadeOut" data-speed-out="800">
+<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=true onselectstart="return true"
+      data-animation-in="fadeIn"
+      data-speed-in="1500" data-animation-out="fadeOut" data-speed-out="800" data-loader="7"
+      data-loader-color="#9c721d;">
 <!--[if lt IE 8]>
 <p class="browserupgrade">您正在使用 <strong>版本过低的</strong> 浏览器. 请到 <a href="http://browsehappy.com/">更新您的浏览器</a></p>
 <![endif]-->
 <div id="wrapper" class="clearfix">
     {%include '../nav.html' %}
+
     <section id="page-title" class="page-title-dark page-title-mini" style="background-color: #9C721D;">
         <div class="container clearfix nopadding">
             <h1>详情查看</h1>
+            {% if !isDetail %}
             <ol class="breadcrumb">
                 <li><a href="/">首页</a></li>
                 <li><a href="{{url}}">{{title}}</a></li>
                 <li class="active">详情</li>
             </ol>
+            {% endif %}
         </div>
     </section>
 
@@ -36,10 +41,11 @@
 
                 <div class="single-post nobottommargin">
 
+                    {% if !isDetail %}
                     <input type="hidden" value="{{info._id.toString()}}" id="qid">
                     <input type="hidden" value="{{title}}" id="qtitle">
                     <input type="hidden" value="{{url}}" id="url">
-
+                    {% endif %}
                     <!-- Single Post
                     ============================================= -->
                     <div class="entry clearfix nomargin nobottompadding">
@@ -49,27 +55,32 @@
                             <h2>{{info.title}}</h2>
                         </div>
                         <ul class="entry-meta clearfix">
-                            <li style="font-style:inherit;"><i class="icon-check"></i> 回复状态: {% if info.reply == 0 %}
+                            <li style="font-style:inherit;" data-toggle="tooltip" title="回复状态" data-placement="bottom"><i class="icon-check"></i> {% if info.reply == 0 %}
                                                                                        未回复 {% else %} 已回复 {%endif%}
                             </li>
-                            <li style="font-style:inherit;"><i class="{{info.icon}}"></i> 咨询类型: {{info.tag}}</li>
-                            <li style="font-style:inherit;"><i class="icon-private-calendar-4"></i> 提问时间:
-                                                                                                    {{info.createStr}}
+                            <li style="font-style:inherit;" data-toggle="tooltip" title="咨询类型" data-placement="bottom"><i class="{{info.icon}}"></i> {{info.tag}}</li>
+                            <li style="font-style:inherit;" data-toggle="tooltip" title="咨询时间" data-placement="bottom"><i class="icon-private-calendar-4"></i> {{info.createStr}}
                             </li>
-                            <li style="font-style:inherit;"><i class="icon-private-user"></i> 提问人: {{info.username}}
+                            <li style="font-style:inherit;" data-toggle="tooltip" title="咨询人" data-placement="bottom"><i class="icon-private-user"></i> {{info.username}}
                             </li>
-                            <li style="font-style:inherit;"><i class="icon-private-eye-1"></i> 当前浏览量: {{info.viewNum}}
+                            <li style="font-style:inherit;" data-toggle="tooltip" title="当前浏览量" data-placement="bottom"><i class="icon-private-eye-1"></i> {{info.viewNum}}
                             </li>
 
-
-                            <div class="pull-right userShare">
-                                <a href="javascript:void(0)" onclick="likeQuestion('{{info._id.toString()}}', this)"><i class="icon-like"></i> 点赞 <span>{{info.likeNum||0}}</span></a>&nbsp;
-                                <a href="javascript:void(0)" onclick="collectionQuestion('{{info._id.toString()}}',this)">
-                                    <i class="{% if info.collection == 1 %}icon-star3{%else%}icon-star2{%endif%}"></i> 收藏 <span>{{info.collectionNum||0}}</span></a>&nbsp
-                                <a href="{{url}}"><i class="icon-arrow-left2"></i> 返回</a>
-                                <!--<div class="bdsharebuttonbox pull-right">-->
-                                    <!--<a href="#" class="bds_more" data-cmd="more"><i class="icon-share"></i> 分享</a>-->
-                                <!--</div>-->
+                            <div class="pull-right userShare" style="margin-right: 10px;">
+                                <a href="javascript:void(0)" onclick="likeQuestion('{{info._id.toString()}}', this)"><i
+                                    class="icon-like"></i> 点赞 <span>{{info.likeNum||0}}</span>
+                                </a>&nbsp;
+                                <a href="javascript:void(0)"
+                                   onclick="collectionQuestion('{{info._id.toString()}}',this)">
+                                    <i class="{% if info.collection == 1 %}icon-star3{%else%}icon-star2{%endif%}"></i>
+                                    收藏 <span>{{info.collectionNum||0}}</span>
+                                </a>&nbsp;
+                                  <div class="bdsharebuttonbox pull-right">
+                                      <a href="#" class="bds_more" data-cmd="more"><i class="icon-share"></i> 分享</a>
+                                      {% if !isDetail %}
+                                        <a href="{{url}}"><i class="icon-arrow-left2"></i> 返回</a>
+                                      {% endif %}
+                                  </div>
                             </div>
 
                         </ul>
@@ -80,8 +91,8 @@
                                     <div class="nivoSlider" data-lightbox="gallery">
                                         {% for image in info.images %}
                                         <a href="{{image}}" data-lightbox="gallery-item"><img class="image_fade"
-                                                                                                src="{{image}}"
-                                                                                                alt="图片查看"></a>
+                                                                                              src="{{image}}"
+                                                                                              alt="图片查看"></a>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -92,9 +103,9 @@
 
                         <div class="entry-content well notopmargin">
                             {% if info.content.longContent != undefined && info.content.longContent != '' %}
-                                {% autoescape false %}{{ info.content.longContent|url_decode }}{% endautoescape %}
+                            {% autoescape false %}{{ info.content.longContent|url_decode }}{% endautoescape %}
                             {% else %}
-                                {% autoescape false %}{{ info.content.shortContent|url_decode }}{% endautoescape %}
+                            {% autoescape false %}{{ info.content.shortContent|url_decode }}{% endautoescape %}
                             {% endif %}
                         </div>
 
@@ -117,7 +128,8 @@
                                             <div class="comment-author vcard">
 
                                             <span class="comment-avatar clearfix">
-                                            <img src="/img/logo@2x.png" class="avatar avatar-60 photo avatar-default" height="60"
+                                            <img src="/img/logo@2x.png" class="avatar avatar-60 photo avatar-default"
+                                                 height="60"
                                                  width="43"/></span>
 
                                             </div>
@@ -129,7 +141,8 @@
                                             <div class="comment-author">
                                                 回复时间<span>{{comment.replytime}}</span></div>
 
-                                            <p>{% autoescape false %}{{ comment.content|url_decode }}{% endautoescape %}</p>
+                                            <p>{% autoescape false %}{{ comment.content|url_decode }}{% endautoescape
+                                               %}</p>
 
                                         </div>
                                         <div class="clear"></div>
@@ -144,8 +157,8 @@
                         <!--<i class="icon-edit"></i> 我要提问-->
                         <!--</a></li>-->
 
-                            <!--<li class="previous"><a href="#">&larr; 后退</a></li>-->
-                            <!--<li class="next"><a href="#">前进 &rarr;</a></li>-->
+                        <!--<li class="previous"><a href="#">&larr; 后退</a></li>-->
+                        <!--<li class="next"><a href="#">前进 &rarr;</a></li>-->
                         <!--</ul>-->
                     </div>
                 </div><!-- #posts end -->
@@ -155,38 +168,50 @@
             </div>
         </div>
     </section>
-
     {% include '../miniFooter.html' %}
 </div>
 <div id="gotoTop" class="icon-angle-up"></div>
 {% include '../script.html' %}
 <script src="/js/jquery.nivo.js"></script>
 <script src="/js/private/question.js"></script>
-<!--<script>-->
-    <!--window._bd_share_config=-->
-        <!--{-->
-            <!--"common":-->
-                <!--{-->
-                    <!--"bdSnsKey":{}-->
-                    <!--,"bdText":$('#shareText').val()-->
-                    <!--,"bdUrl":$('#shortUrl').val()-->
-                    <!--,"bdMini":"3"-->
-                    <!--,"bdMiniList":["qzone","tsina","bdysc","weixin","renren","tqq","bdxc","kaixin001","tqf","tieba","douban","bdhome","sqq","thx","ibaidu","meilishuo","mogujie","diandian","huaban","duitang","hx","fx","youdao","sdo","qingbiji","people","xinhua","mail","isohu","yaolan","wealink","ty","h163","evernotecn"]-->
-                    <!--,"bdStyle":"0"-->
-                    <!--,"bdSize":"16"-->
-                    <!--,"bdCustomStyle":"/css/share.css"-->
-                    <!--,"bdPopupOffsetLeft":-100-->
-                    <!--,"bdPopupOffsetTop":10-->
-                    <!--,"onBeforeClick":function (cmd, config) {-->
-                        <!--console.log(cmd, config)-->
-                    <!--}-->
-                    <!--,"onAfterClick":function (cmd, config) {-->
-                        <!--console.log(cmd, config)-->
-                    <!--}-->
-                <!--}-->
-                <!--,"share":{}-->
-        <!--};-->
-    <!--with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];-->
-<!--</script>-->
+{% if !isShare %}
+<script>
+    window._bd_share_config=
+        {
+            "common":
+                {
+                    "bdSnsKey":{}
+                    ,"bdText":$('#shareText').val()
+                    ,"bdUrl":$('#shortUrl').val()
+                    ,"bdSign":'normal'
+                    ,"bdMini":"3"
+                    ,"bdMiniList":["qzone","tsina","bdysc","weixin","renren","tqq","bdxc","kaixin001","tqf","tieba","douban","bdhome","sqq","thx","ibaidu","meilishuo","mogujie","diandian","huaban","duitang","hx","fx","youdao","sdo","qingbiji","people","xinhua","mail","isohu","yaolan","wealink","ty","h163","evernotecn"]
+                    ,"bdStyle":"0"
+                    ,"bdSize":"16"
+                    ,"bdCustomStyle":"/css/share.css"
+                    ,"bdPopupOffsetLeft":-100
+                    ,"bdPopupOffsetTop":0
+                    ,"onBeforeClick":function (cmd, config) {
+                    console.log(cmd, config)
+                }
+                    ,"onAfterClick":function (cmd, config) {
+                    $.ajax({
+                        type: 'put',
+                        url: '/family/book/share/' + $('#qid').val() + '?source=' + cmd,
+                        success: function (result) {
+                            if (result.error || result.ignore) {
+                                return
+                            } else {
+                                $('.bds_more').find('span').html(result)
+                            }
+                        }
+                    })
+                }
+                }
+            ,"share":{}
+        }
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+{% endif %}
 </body>
 </html>

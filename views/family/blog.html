@@ -1,8 +1,9 @@
 <input type="hidden" value="{{current}}" id="pageCurrent">
 <input type="hidden" value="{{total}}" id="pagetotal">
 {% if list.length == 0 %}
-<div class="panel-group nobottommargin well" id="nodata" align="center" style="height: 492px"><h3 style="padding: 9.5em 0;color: #9CA0A9;font-size: 1.6em;font-style: italic;">无家族日志记录，赶紧去创建吧！</h3></div>
+<div class="panel-group nobottommargin col_full well" id="nodata" align="center" style="height: 492px"><h3 style="padding: 9.5em 0;color: #9CA0A9;font-size: 1.6em;font-style: italic;">无家族日志记录，赶紧去创建吧！</h3></div>
 {% else %}
+<div id="posts" class="post-masonry clearfix">
 {% for blog in list %}
 <div class="entry clearfix">
     {% if blog.imgPaths.length > 0 %}
@@ -28,12 +29,12 @@
         </div>
         <ul class="entry-meta clearfix">
             <li><a href="#"><i class="icon-user"></i>{% if blog.user.nickname != '' %} {{blog.user.nickname}} {% else %} {{blog.user.username}} {% endif %}</a></li>
-            <li><i class="icon-comments"></i> {{blog.reply}} 评论</li>
+            <li><i class="icon-comments"></i> {{blog.commentNum||0}} 评论</li>
             <li><i class="icon-private-eye-1"></i> {{blog.viewNum}} 浏览</li>
         </ul>
         <div class="entry-content">
             <blockquote><p class="short">{{ blog.shortContent|url_decode }}</p></blockquote>
-            <a href="javascript:void(0)" class="more-link" onclick="showMoreInfo('{{blog._id.toString()}}')">查看详情</a>
+            <a href="javascript:void(0)" class="more-link" onclick="showMoreInfo('{{blog._id.toString()}}','blog')">查看详情</a>
             <div class="pull-right userShare">
                 <a href="javascript:void(0)" onclick="likeBlog('{{blog._id.toString()}}', this)"><i class="icon-like"></i> 点赞 <span>{{blog.likeNum||0}}</span></a>&nbsp;
                 <a href="javascript:void(0)" onclick="collectionBlog('{{blog._id.toString()}}',this)">
@@ -41,7 +42,7 @@
                 </a>
                  {% if blog.canShare == 1 %}
                     <div class="bdsharebuttonbox pull-right">
-                        <a href="#" class="bds_more" data-cmd="more">&nbsp;&nbsp;<i class="icon-share"></i> 分享 <span>{{blog.collectionNum||0}}</span></a>
+                        <a href="#" class="bds_more" data-cmd="more">&nbsp;&nbsp;<i class="icon-share"></i> 分享 <span>{{blog.shareNum||0}}</span></a>
                     </div>
                 {% endif %}
             </div>
@@ -49,4 +50,5 @@
     </div>
 </div>
 {% endfor %}
+</div>
 {% endif %}

@@ -1,0 +1,63 @@
+<div class="postcontent nomargin col_full clearfix" style="min-height: 418px;">
+
+    <input type="hidden" value="{{current}}" id="pageCurrent">
+    <input type="hidden" value="{{total}}" id="pagetotal">
+    <input type="hidden" value="{{param}}" id="param">
+
+    {% if list.length == 0 %}
+        <div class="panel-group nobottommargin well" id="nodata" align="center" style="height: 463px"><h3 style="padding: 9.5em 0;color: #9CA0A9;font-size: 1.6em;font-style: italic;">暂无数据显示</h3></div>
+    {% else %}
+        {% for news in list %}
+            <div class="entry clearfix">
+            {% if news.images.length > 0 %}
+                <div class="portfolio-image">
+                    {% if news.images.length > 1 %}
+                    <div class="fslider" data-arrows="true" data-lightbox="gallery">
+                        <div class="flexslider">
+                            <div class="slider-wrap">
+                                {% for image in news.images %}
+                                <div class="slide"><a href="{{image}}" data-lightbox="gallery-item"><img class="image_fade" src="{{image}}" alt="封面图片"></a></div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                        <a href="{{news.images[0]}}" data-lightbox="image"><img class="image_fade" src="{{news.images[0]}}" alt="封面图片"></a>
+                    {% endif %}
+                </div>
+            {% endif %}
+                <ul class="entry-meta clearfix">
+                    <li><i class="icon-calendar3"></i>{{news.createStr}}</li>
+                    <li>
+                        {% if news.type == 'news' %}
+                        <i class="icon-news"></i>资讯
+                        {% elseif news.type == 'exhibition' %}
+                        <i class="icon-display"></i>展览
+                        {% elseif news.type == 'entry' %}
+                        <i class="icon-globe"></i>百科
+                        {% endif %}
+                    </li>
+                    <li><i class="icon-comments"></i>{{news.commentNum||0}} 评论</li>
+                    <li><i class="icon-private-eye-1"></i>{{news.viewNum||0}} 浏览</li>
+                </ul>
+                <div class="entry-content">
+                    <blockquote><p class="short">{{news.title}}</p></blockquote>
+                    <a href="javascript:void(0)" class="more-link" onclick="showMoreInfo('{{news._id.toString()}}')">查看详情</a>
+                    <div class="pull-right userShare">
+                        <a href="javascript:void(0)" onclick="likeNews('{{news._id.toString()}}', this)"><i class="icon-like"></i> 点赞 <span>{{news.likeNum||0}}</span></a>&nbsp;
+                        <a href="javascript:void(0)" onclick="collectionNews('{{news._id.toString()}}',this)">
+                            <i class="{% if news.collection == 1 %}icon-star3{%else%}icon-star2{%endif%}"></i> 收藏 <span>{{news.collectionNum||0}}</span>
+                        </a>
+                        <div class="bdsharebuttonbox pull-right">
+                            <a href="#" class="bds_more" data-cmd="more">&nbsp;&nbsp;<i class="icon-share"></i> 分享 <span>{{news.shareNum||0}}</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+<div class="noradius clearfix pageInfo" id="pageDiv" style="padding: 10px 0 0 0;" >
+    <p class="pull-left userPage hidden-xs">显示第 <span id="start"></span> 到第 <span id="current"></span> 条记录，总共 <span id="total"></span> 条记录</p>
+    <div id="pageInfo" class="pull-right pageInfo"></div>
+</div>

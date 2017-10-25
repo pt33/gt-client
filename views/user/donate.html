@@ -1,73 +1,69 @@
-<!--<div class="postcontent nomargin col_full clearfix" s    <ul id="portfolio-filter" class="portfolio-filter clearfix" data-container="#portfolio">
-<!-- #portfolio-filter end -->
-
-<div id="portfolio" class="portfolio grid-container clearfix" style="min-height: 328px;">
+<div id="portfolio" class="portfolio clearfix" style="min-height: 429px;">
     <input type="hidden" value="{{current}}" id="pageCurrent">
     <input type="hidden" value="{{total}}" id="pagetotal">
 
     {% if list.length == 0 %}
-        <div class="panel-group nobottommargin well" id="nodata" align="center" style="height: 463px"><h3 style="padding: 9.5em 0;color: #9CA0A9;font-size: 1.6em;font-style: italic;">您还没有添加任何捐赠信息，赶紧去创建吧！</h3></div>
+        <div class="panel-group nobottommargin well" id="nodata" align="center" style="height: 465px"><h3 style="padding: 9.5em 0;color: #9CA0A9;font-size: 1.6em;font-style: italic;">您还没有添加任何捐赠信息，赶紧去创建吧！</h3></div>
     {% else %}
-    <article class="portfolio-item pf-uielements pf-media">
-        <div class="portfolio-image" style="max-height: 270px;">
-            <a href="portfolio-single.html">
-                <img src="img/full-thumbs/14.jpg" alt="Console Activity">
-            </a>
-            <div class="portfolio-overlay">
-                <a href="img/full-thumbs/14.jpg" class="left-icon" data-lightbox="image"><i class="icon-line-plus"></i></a>
-                <a href="portfolio-single.html" class="right-icon"><i class="icon-line-ellipsis"></i></a>
+        {% for donate in list %}
+            <article class="portfolio-item" style="width: 205px;margin: 0 15px 15px 0;">
+            {% if donate.images.length != 0 %}
+                <div class="portfolio-image">
+                {% if donate.images.length > 1 %}
+                <div class="fslider" data-arrows="false" data-lightbox="gallery">
+                    <div class="flexslider">
+                        <div class="slider-wrap">
+                            {% for image in donate.images %}
+                                <div class="slide">
+                                    <a href="{{image}}" data-lightbox="gallery-item">
+                                        <img class="image_fade preloader2 clipImage" src="{{image}}" alt="图片预览" onload="clipImage(this)">
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% elseif donate.images.length == 1%}
+                    <a href="{{donate.images[0]}}" data-lightbox="image"><img class="image_fade preloader2 clipImage" src="{{donate.images[0]}}" alt="图片预览" onload="clipImage(this)"></a>
+                {% endif %}
+                <div class="portfolio-overlay">
+                    <a href="javascript:void(0)" class="left-icon" onclick="showBigImage(this)" title ='查看大图' data-toggle="tooltip" data-placement="bottom"><i class="icon-zoom-in"></i></a>
+                    <a href="javascript:void(0)" onclick="showMoreInfo('{{donate._id.toString()}}')" class="right-icon" title="查看明细" data-toggle="tooltip" data-placement="bottom"><i class="icon-line-ellipsis"></i></a>
+                </div>
             </div>
-        </div>
-        <div class="portfolio-desc">
-            <h3><a href="portfolio-single.html">Console Activity</a></h3>
-        </div>
-    </article>
+            {% else %}
+                <div class="portfolio-image">
+                    <a style="width: 225px;height: 135px;"><img class="image_fade clipImage" src="/img/cover.jpg" alt="默认图片" onload="clipImage(this)"></a>
+                    <div class="portfolio-overlay">
+                        <a href="javascript:void(0)" onclick="showMoreInfo('{{donate._id.toString()}}')" class="center-icon" title="查看明细" data-toggle="tooltip" data-placement="bottom"><i class="icon-line-ellipsis"></i></a>
+                    </div>
+                </div>
+            {% endif %}
+                <div class="portfolio-desc" style="padding: 15px 5px 0 5px;">
+                    <h3>{{donate.title}}</h3>
 
-
-    <article class="portfolio-item pf-uielements pf-media">
-        <div class="portfolio-image" style="max-height: 270px;">
-            <a href="portfolio-single.html">
-                <img src="img/full-thumbs/14.jpg" alt="Console Activity">
-            </a>
-            <div class="portfolio-overlay">
-                <a href="img/full-thumbs/14.jpg" class="left-icon" data-lightbox="image"><i class="icon-line-plus"></i></a>
-                <a href="portfolio-single.html" class="right-icon"><i class="icon-line-ellipsis"></i></a>
-            </div>
-        </div>
-        <div class="portfolio-desc">
-            <h3><a href="portfolio-single.html">Console Activity</a></h3>
-        </div>
-    </article>
-
-    <article class="portfolio-item pf-uielements pf-media">
-        <div class="portfolio-image" style="max-height: 270px;">
-            <a href="portfolio-single.html">
-                <img src="img/full-thumbs/14.jpg" alt="Console Activity">
-            </a>
-            <div class="portfolio-overlay">
-                <a href="img/full-thumbs/14.jpg" class="left-icon" data-lightbox="image"><i class="icon-line-plus"></i></a>
-                <a href="portfolio-single.html" class="right-icon"><i class="icon-line-ellipsis"></i></a>
-            </div>
-        </div>
-        <div class="portfolio-desc">
-            <h3><a href="portfolio-single.html">Console Activity</a></h3>
-        </div>
-    </article>
-
-    <article class="portfolio-item pf-uielements pf-media">
-        <div class="portfolio-image" style="max-height: 270px;">
-            <a href="portfolio-single.html">
-                <img src="img/full-thumbs/14.jpg" alt="Console Activity">
-            </a>
-            <div class="portfolio-overlay">
-                <a href="img/full-thumbs/14.jpg" class="left-icon" data-lightbox="image"><i class="icon-line-plus"></i></a>
-                <a href="portfolio-single.html" class="right-icon"><i class="icon-line-ellipsis"></i></a>
-            </div>
-        </div>
-        <div class="portfolio-desc">
-            <h3><a href="portfolio-single.html">ConsoleActivityConsole ActivityConsole Activity</a></h3>
-        </div>
-    </article>
+                    <ul class="entry-meta clearfix">
+                        <li style="margin: 0 20px 20px 0;"><a href="#"><i class="icon-private-calendar-4"></i></a>{{donate.createStr}}</li>
+                    </ul>
+                    <ul class="entry-meta clearfix" style="position: relative;top:-10px;">
+                        <li style="margin: 0 20px 5px 0;">{% if donate.isPrivate == 1 %}<i class="icon-line2-lock" style="font-weight: 800;"></i>不可公开{%else%}<i class="icon-unlocked2" style="font-weight: 500;font-size: 15px;"></i>可以公开{%endif%}</li>
+                        <li style="margin: 0 20px 20px 0;">
+                            {% if donate.status == 0 %}
+                            <span class="label label-info">未审核</span>
+                            {% elseif donate.status == 1 %}
+                            <span class="label label-success">已通过</span>
+                            {% elseif donate.status == -1 %}
+                            <span class="label label-warning">未通过</span>
+                            {% elseif donate.status == -2 %}
+                            <span class="label label-danger">已删除</span>
+                            {% elseif donate.status == -3 %}
+                            <span class="label label-default">已撤消</span>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+            </article>
+        {% endfor %}
     {% endif %}
 </div>
 

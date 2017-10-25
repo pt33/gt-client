@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="/css/magnific-popup.css" type="text/css"/>
 <link rel="stylesheet" href="/css/nivo-slider.css" type="text/css"/>
 <body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=true onselectstart="return true" data-animation-in="fadeIn"
-      onload="initSlider()">
+      onload="initSlider(true)" data-loader="7" data-loader-color="#9c721d;">
 <!--[if lt IE 8]>
 <p class="browserupgrade">您正在使用 <strong>版本过低的</strong> 浏览器. 请到 <a href="http://browsehappy.com/">更新您的浏览器</a></p>
 <![endif]-->
@@ -21,11 +21,13 @@
         <section id="page-title" class="page-title-dark page-title-mini" style="background-color: #9C721D;">
             <div class="container clearfix nopadding">
                 <h1>详情查看</h1>
-                <ol class="breadcrumb">
-                    <li><a href="/">首页</a></li>
-                    <li><a href="{{url}}">{{title}}</a></li>
-                    <li class="active">详情</li>
-                </ol>
+                {% if !isDetail %}
+                    <ol class="breadcrumb">
+                        <li><a href="/">首页</a></li>
+                        <li><a href="{{url}}">{{title}}</a></li>
+                        <li class="active">详情</li>
+                    </ol>
+                {% endif %}
             </div>
         </section>
     {% endif %}
@@ -38,11 +40,14 @@
 
                 <div class="single-post">
                     {% if !isShare %}
-
-                        <input type="hidden" value="{{title}}" id="qtitle">
-                        <input type="hidden" value="{{url}}" id="url">
-                        <input type="hidden" value="{{shortUrl}}" id="shortUrl">
-                        <input type="hidden" value="{{info.title}}" id="shareText">
+                    <!--<form id="blogDetail" method="post" action="/family">-->
+                        <input type="hidden" value="{{title}}" id="qtitle" name="qtitle">
+                        <input type="hidden" value="{{sortBy}}" id="sortBy" name="sortBy">
+                        <input type="hidden" value="{{current}}" id="currentPage" name="currentPage">
+                        <input type="hidden" value="{{node}}" id="node" name="node">
+                        <input type="hidden" value="{{shortUrl}}" id="shortUrl" name="shortUrl">
+                        <input type="hidden" value="{{info.title}}" id="shareText" name="shareText">
+                    <!--</form>-->
                     {% endif %}
                     <!-- Single Post
                     ============================================= -->
@@ -54,25 +59,25 @@
                         </div>
                         <ul class="entry-meta clearfix">
                             <li><a href="#"><i class="icon-user"></i>{% if info.user.nickname != '' %}{{info.user.nickname}}{% else %}{{info.user.username}}{% endif %}</a></li>
-                            <li><i class="icon-comments"></i>{{info.reply}} 评论</li>
-                            <li><i class="icon-private-eye-1"></i>{{info.viewNum}} 浏览</li>
+                            <li><i class="icon-comments"></i><span id="commentNumMini">{{info.commentNum||0}}</span> 评论</li>
+                            <li><i class="icon-private-eye-1"></i>{{info.viewNum||0}} 浏览</li>
                             {% if isShare %}
                                 <li><i class="icon-like"></i>{{info.likeNum||0}} 点赞</li>
                                 <li><i class="icon-star2"></i>{{info.collectionNum||0}} 收藏</li>
                                 <li><i class="icon-share"></i>{{info.shareNum||0}} 分享</li>
                             {% endif %}
                             {% if !isShare %}
-                                <div class="pull-right userShare">
+                                <div class="pull-right familyShare">
                                     <a href="javascript:void(0)" onclick="likeBlog('{{info._id.toString()}}', this)"><i class="icon-like"></i> 点赞 <span>{{info.likeNum||0}}</span></a>
                                        &nbsp;<a href="javascript:void(0)" onclick="collectionBlog('{{info._id.toString()}}',this)">
                                         <i class="{% if info.collection == 1 %}icon-star3{%else%}icon-star2{%endif%}"></i> 收藏 <span>{{info.collectionNum||0}}</span></a>
                                        {% if info.canShare == 1 %}
                                             <div class="bdsharebuttonbox pull-right">
                                                 &nbsp;<a href="#" class="bds_more" data-cmd="more">&nbsp;<i class="icon-share"></i> 分享 <span>{{info.shareNum||0}}</span></a>
-                                                &nbsp;<a href="{{url}}" style="padding-right: 10px;"><i class="icon-arrow-left2"></i> 返回</a>
+                                                {% if !isDetail %}&nbsp;<a href="{{url}}" style="padding-right: 10px;"><i class="icon-arrow-left2"></i> 返回</a>{% endif %}
                                             </div>
                                                {% else %}
-                                               &nbsp;<a href="{{url}}" style="padding-right: 10px;"><i class="icon-arrow-left2"></i> 返回</a>
+                                                {% if !isDetail %}&nbsp;<a href="{{url}}" style="padding-right: 10px;"><i class="icon-arrow-left2"></i> 返回</a>{% endif %}
                                        {% endif %}
                                 </div>
                             {% endif %}
@@ -80,7 +85,7 @@
                         {% if info.imgPaths.length != 0 %}
                         <div class="line topmargin bottommargin"></div>
                         <div class="entry-image">
-                            <section id="slider" class="boxed-slider nopadding" data-autoplay="false">
+                            <section id="slider" class="boxed-slider nopadding" data-autoplay="false" >
                                 <div class="container nopadding clearfix">
                                     <div class="nivoSlider" data-lightbox="gallery">
                                         {% for image in info.imgPaths %}
@@ -102,48 +107,23 @@
 
                         <div id="comments" class="clearfix">
 
-                            <h3 id="comments-title"><span id="commentNum">{{info.reply}}</span> 评论</h3>
+                            <h3 id="comments-title"><span id="commentNum">{{info.commentNum||0}}</span> 条评论</h3>
 
                             <!-- Comments List
                             ============================================= -->
 
-                            <ol class="commentlist clearfix" id="commentlist">
-                                {% for comment in info.comments %}
-
-                                <li class="comment even thread-even depth-1" id="li-comment-{{loop.index}}">
-
-                                    <div id="comment-{{loop.index}}" class="comment-wrap clearfix">
-
-                                        <div class="comment-meta">
-
-                                            <div class="comment-author vcard">
-
-                                            <span class="comment-avatar clearfix">
-                                            <img src="/img/logo@2x.png" class="avatar avatar-60 photo avatar-default" height="60"
-                                                 width="43"/></span>
-
-                                            </div>
-
-                                        </div>
-
-                                        <div class="comment-content clearfix">
-
-                                            <div class="comment-author">
-                                                评论时间<span>{{comment.replytime}}</span></div>
-
-                                            <p>{% autoescape false %}{{ comment.content|url_decode }}{% endautoescape %}</p>
-
-                                        </div>
-                                        <div class="clear"></div>
-                                    </div>
-                                </li>
-                                <!-- .commentlist end -->
-                                {% endfor %}
+                            <ol class="commentlist noborder clearfix" id="commentlist" >
                             </ol>
+
+                            <div class="noradius clearfix" id="pageDiv" style="padding: 10px 0 0 0;" >
+                                <p class="pull-left userPage hidden-xs">显示第 <span id="start"></span> 到第 <span id="current"></span> 条记录，总共 <span id="total"></span> 条记录</p>
+                                <div id="pageInfo" class="pull-right"></div>
+                            </div>
 
 
                             {% if !isShare %}
 
+                                <div class="line"></div>
                                 <div class="clear"></div>
 
                                 <!-- Comment Form
@@ -164,15 +144,7 @@
                                     </form>
                                 </div>
                             {% endif %}
-
                         </div>
-                        <!--<ul class="pager nomargin">-->
-                        <!--<i class="icon-edit"></i> 我要提问-->
-                        <!--</a></li>-->
-
-                        <!--<li class="previous"><a href="#">&larr; 后退</a></li>-->
-                        <!--<li class="next"><a href="#">前进 &rarr;</a></li>-->
-                        <!--</ul>-->
                     </div>
                 </div>
             </div>
@@ -202,7 +174,7 @@ window._bd_share_config=
         ,"bdSize":"16"
         ,"bdCustomStyle":"/css/share.css"
         ,"bdPopupOffsetLeft":-100
-        ,"bdPopupOffsetTop":290
+        ,"bdPopupOffsetTop":0
         ,"onBeforeClick":function (cmd, config) {
             console.log(cmd, config)
         }

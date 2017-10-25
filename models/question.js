@@ -19,11 +19,11 @@ const questionSchema = new mongoose.Schema({
     images:[],
     createTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     },
     updateTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     },
     status: {
         type: Number,       //0:提交未审核 1：审核通过 2：已指派 -1：审核未通过 -2：管理员删除 -3：用户删除 -4：用户撤消
@@ -38,6 +38,10 @@ const questionSchema = new mongoose.Schema({
         default: 0
     },
     collectionNum:{
+        type: Number,
+        default: 0
+    },
+    shareNum:{
         type: Number,
         default: 0
     },

@@ -24,37 +24,39 @@ jQuery(window).load(function(){
             $validate.focusInvalid()
             return
         }
+        $('.form-process').fadeIn()
         $.ajax({
             type: 'post',
             data: {username: $('#username').val(), password: $('#password').val()},
             url: '/signIn',
             success: function (result) {
+                $('.form-process').fadeOut()
                 if (result.error) {
                     $('#errorMsg').html(result.error)
                     $('.errormsg').show()
                     setTimeout(function() {
                         $('.errormsg').fadeOut()
                     }, 1500)
-                    return false;
+                    return false
                 } else {
-                    let user = JSON.parse(result.user)
+                    var user = JSON.parse(result.user)
                     storage['token'] = result.token
                     storage['userId'] = user._id.toString()
                     storage['username'] = $('#username').val()
-                    let encrypted = CryptoJS.AES.encrypt(storage['token'], '_SALT_G(T#*)')
+                    var encrypted = CryptoJS.AES.encrypt(storage['token'], '_SALT_G(T#*)')
                     encrypted = encrypted.toString()
                     storage['aesToken'] = encrypted
 
-                    var exp = new Date();
-                    exp.setTime(exp.getTime() - 1);
-                    var cval=getCookie('token');
+                    var exp = new Date()
+                    exp.setTime(exp.getTime() - 1)
+                    var cval=getCookie('token')
                     if(cval!=null)
-                        document.cookie= "token="+cval+";expires="+exp.toGMTString();
+                        document.cookie= "token="+cval+";expires="+exp.toGMTString()
 
-                    var Days = 30;
-                    exp = new Date();
-                    exp.setTime(exp.getTime() + Days*24*60*60*1000);
-                    document.cookie = "token="+ encrypted + ";expires=" + exp.toGMTString();
+//                     var Days = 30
+                    exp = new Date()
+                    exp.setTime(exp.getTime() + 24*60*60*1000)
+                    document.cookie = "token="+ encrypted + ";expires=" + exp.toGMTString()
 
                     showMessage('登录成功','success',1000)
                     setTimeout(function() {
@@ -63,17 +65,6 @@ jQuery(window).load(function(){
                 }
             }
         })
-    }
-
-    function getCookie(name)
-    {
-        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
-
-        if(arr=document.cookie.match(reg))
-
-            return (arr[2]);
-        else
-            return null;
     }
 })
 

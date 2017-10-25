@@ -3,6 +3,12 @@ var isUploading = false
 
 jQuery(document).ready(function() {
 
+    var chooseTagBtn = $('#chooseTagBtn')
+
+    $(document).on('input propertychange', 'textarea', function() {
+        $('#wordNumInfo').html(Math.max(3000 - this.value.length,0))
+    })
+
     if ($("#questionFiles").length>0) {
         $("#questionFiles").fileinput({
             rtl: true,
@@ -23,52 +29,52 @@ jQuery(document).ready(function() {
             showDrag:true
         })
 
-        $('#questionContent').summernote({
-            lang: 'zh-CN',
-            placeholder: '请输入您想要咨询的详细内容,最多3000个字...',
-            minHeight: 250,
-            maxHeight: 800,
-            focus: true,
-            autoLink :false,
-            height: 320,
-            toolbar: false,
-            disableDragAndDrop:true,
-            isSkipPaddingBlankHTML:true,
-            callbacks: {
-                onChange: function(contents, $editable) {
-                    if (window.event &&((window.event.type === 'paste' && window.event.currentTarget.isContentEditable !== undefined) || window.event.type === 'click')) {
-                        return
-                    }
-                    var contentsContainer = $('<div></div>').html(contents)
-                    var txt = contentsContainer[0].innerText
-                    if(txt.trim() === '') {
-                        // $('.note-editor.note-frame').css('borderColor', '#d43f3a')
-                        // $('.note-editor.note-frame .note-placeholder').css('color','#d43f3a')
-                        $('.note-editor.note-frame .note-placeholder').show()
-                    } else if (txt.trim().length > 3000) {
-                        contentsContainer[0].innerText = contentsContainer[0].innerText.trim().substring(0,3000)
-                        $('#questionContent').summernote('code', contentsContainer.html())
-                    } else {
-                        // $('.note-editor.note-frame .note-placeholder').css('color', 'gray')
-                        // $('.note-editor.note-frame .note-placeholder').hide()
-                        $('.note-editor.note-frame').css('borderColor', '#ddd')
-                    }
-                    $('#wordNumInfo').html( Math.max(3000-txt.length,0))
-                },
-                onInsertImagesOrCallback:function (contents) {
-                    alert('1111')
-                },
-                onPaste:function (e) {
-                    var s1 = replaceStr(e.currentTarget.innerText)
-                    if (s1.length > 3000) {
-                        e.preventDefault()
-                        e.stopPropagation()
-                    }
-                }, onImageUpload: function(files) {
-
-                }
-            }
-        })
+        // $('#questionContent').summernote({
+        //     lang: 'zh-CN',
+        //     placeholder: '请输入您想要咨询的详细内容,最多3000个字...',
+        //     minHeight: 250,
+        //     maxHeight: 800,
+        //     focus: true,
+        //     autoLink :false,
+        //     height: 320,
+        //     toolbar: false,
+        //     disableDragAndDrop:true,
+        //     isSkipPaddingBlankHTML:true,
+        //     callbacks: {
+        //         onChange: function(contents, $editable) {
+        //             if (window.event &&((window.event.type === 'paste' && window.event.currentTarget.isContentEditable !== undefined) || window.event.type === 'click')) {
+        //                 return
+        //             }
+        //             var contentsContainer = $('<div></div>').html(contents)
+        //             var txt = contentsContainer[0].innerText
+        //             if(txt.trim() === '') {
+        //                 // $('.note-editor.note-frame').css('borderColor', '#d43f3a')
+        //                 // $('.note-editor.note-frame .note-placeholder').css('color','#d43f3a')
+        //                 $('.note-editor.note-frame .note-placeholder').show()
+        //             } else if (txt.trim().length > 3000) {
+        //                 contentsContainer[0].innerText = contentsContainer[0].innerText.trim().substring(0,3000)
+        //                 $('#questionContent').summernote('code', contentsContainer.html())
+        //             } else {
+        //                 // $('.note-editor.note-frame .note-placeholder').css('color', 'gray')
+        //                 // $('.note-editor.note-frame .note-placeholder').hide()
+        //                 $('.note-editor.note-frame').css('borderColor', '#ddd')
+        //             }
+        //             $('#wordNumInfo').html( Math.max(3000-txt.length,0))
+        //         },
+        //         onInsertImagesOrCallback:function (contents) {
+        //             alert('1111')
+        //         },
+        //         onPaste:function (e) {
+        //             var s1 = replaceStr(e.currentTarget.innerText)
+        //             if (s1.length > 3000) {
+        //                 e.preventDefault()
+        //                 e.stopPropagation()
+        //             }
+        //         }, onImageUpload: function(files) {
+        //
+        //         }
+        //     }
+        // })
 
         $validator = $("#addQuestionForm").validate({
             rules: {
@@ -91,6 +97,9 @@ jQuery(document).ready(function() {
                     }
                 },
                 title: {
+                    required: true
+                },
+                questionContent: {
                     required: true
                 }
             }
@@ -253,9 +262,10 @@ function collapsePanel(id, obj) {
 }
 
 function chooseTag(id,obj) {
-    $('#chooseTagBtn').css('color', '#555')
+    // .css('color', '#555')
     $('#typeId').val(id)
     $('#chooseTagBtn').html(obj.innerHTML)
+    $('.type-error').html('')
 }
 
 function sortTime(sortby) {
@@ -282,8 +292,7 @@ function initTableView(query) {
         url: '/question/subList?param=' + JSON.stringify(query),
         success: function (result) {
             if (result.error) {
-                $('#wrapper').attr('data-notify-msg',result.error)
-                SEMICOLON.widget.notifications($('#wrapper'))
+                showMessage(result.error, '', 2000)
             } else {
                 var param = []
                 if (result.total === 0) {
@@ -343,39 +352,21 @@ function initTableView(query) {
 
 function addQuestion(obj) {
     if (isUploading) return
-    var check = 0
-    var checkType = ($('#typeId').val() === undefined || $('#typeId').val() === '')
-    var checkNote = $('#questionContent').summernote('isEmpty')
-    if(checkType) {
-        check = 1
-        $('#chooseTagBtn').css('color','#d43f3a')
-    }
-    if(checkNote) {
-        check = 1
-        $('.note-editor.note-frame .note-placeholder').css('color','#d43f3a')
-        $('.note-editor.note-frame .note-placeholder').show()
-        $('.note-editor.note-frame').css('borderColor', '#d43f3a')
-    }
+
     var $valid = $("#addQuestionForm").valid()
     if(!$valid) {
-        check = 1
         $validator.focusInvalid()
         return
-    } else {
-        if (checkType) {
-            SEMICOLON.initialize.goToTop()
-            return
-        } else if(checkNote) {
-            $('#questionContent').summernote('focus')
-            return
-        }
     }
 
-    if (check === 1) return
-    $('#chooseTagBtn').css('color', '#555')
-    $('.note-editor.note-frame .note-placeholder').css('color','gray')
-    $('.note-editor.note-frame .note-placeholder').hide()
-    $('.note-editor.note-frame').css('borderColor', '#ddd')
+    var checkType = ($('#typeId').val() === undefined || $('#typeId').val() === '')
+
+    if(checkType) {
+        $('.type-error').html('请选择问题类型')
+        return
+    } else {
+        $('.type-error').html('')
+    }
 
     var images = $('.kv-file-content img:visible')
     var file64 = []
@@ -390,20 +381,14 @@ function addQuestion(obj) {
     }
 
     isUploading = true
-    $(obj).addClass('disabled')
-    $('#uploadingTag').css('display','')
-    // $('#questionContent').summernote('reset')
-    $('#uploadingTag').addClass('icon-spin')
+    $('.form-process').fadeIn()
 
-    $('#uploadinTitle').html('&nbsp;提交中...')
-    var str = $('#questionContent').summernote('code')
-    var contentsContainer = $('<div></div>').html(str)
     $.ajax({
         type: 'post',
         data: {title: $('#title').val()
             , telphone: $('#telphone').val()
             ,username:$('#username').val()
-            ,content:encodeURI(contentsContainer[0].innerText)
+            ,content:$('#questionContent').val()
             ,type:$('#typeId').val()
             ,email:$('#email').val()
             ,images:file64
@@ -411,38 +396,23 @@ function addQuestion(obj) {
         url: '/question/save',
         success: function (result) {
             isUploading = false
-            $('#uploadingTag').css('display','none')
-            $('#uploadingTag').removeClass('icon-spin')
-            $(obj).removeClass('disabled')
-            $('#uploadinTitle').html('提交失败')
-            $(obj).addClass('button-red')
+            $('#questionContent').val('')
+
             if (result.error) {
-                setTimeout(function () {
-                    $(obj).removeClass('button-red')
-                    $('#uploadinTitle').html('提交')
-                },2000)
-                $('#questionContent').attr('data-notify-msg',result.error)
-                SEMICOLON.widget.notifications($('#questionContent'))
+                showMessage(result.error, '', 2000)
             } else {
-                $('#questionContent').attr('data-notify-msg','咨询提交成功，审核通过后，我们将尽快回复您的问题，请您耐心等待！')
-                $('#questionContent').attr('data-notify-type','success')
-                $('#uploadinTitle').html('提交成功')
+                showMessage('咨询提交成功，审核通过后，我们将尽快回复您的问题，请您耐心等待！', '', 2000)
                 $("#questionFiles").fileinput('clear')
-                $(obj).addClass('button-green')
-                SEMICOLON.widget.notifications($('#questionContent'))
+                $('#')
                 SEMICOLON.initialize.goToTop()
                 setTimeout(function() {
-                    $(obj).removeClass('button-green')
-                    $('#uploadinTitle').html('提交')
                     $('.tooltip').tooltip('hide')
-                    $('#questionContent').summernote('reset')
                     $('#title').val('')
                     // $('#telphone').val('')
                     // $('#username').val('')
                     // $('#typeId').val('')
                     // $('#email').val('')
                     $('#wordNumInfo').html( 3000 )
-                    // $('#chooseTagBtn').html("<i class=\"icon-private-tags\" style=\"color: #095D85\"></i>&nbsp;&nbsp;请选择问题类型</span>")
                 }, 1500)
             }
         }
@@ -593,134 +563,134 @@ getSortBy = function () {
     return sort
 }
 
-initPage = function (totalRows, pageNumber, pageSize) {
-
-    var html = [],
-        i, from, to,
-        $first, $pre,
-        $next, $last,
-        $number
-
-    pageNumber = Number(pageNumber)
-    var totalPages = 0
-    if (totalRows) {
-        totalPages = Math.ceil(totalRows / pageSize)
-    }
-    if (totalPages > 0 && pageNumber > totalPages) {
-        pageNumber =totalPages;
-    }
-
-    pageFrom = (pageNumber - 1) * pageSize + 1;
-    pageTo = pageNumber * pageSize;
-    if (pageTo > totalRows) {
-        pageTo = totalRows;
-    }
-
-    $('#total').html(totalRows)
-    $('#current').html(Math.min(pageNumber * Number(pageSize),totalRows))
-    $('#start').html(Math.max((pageNumber - 1) * Number(pageSize) + 1,1))
-
-        html.push('<div class="pull-right pagination nomargin">',
-        '<ul class="pagination pagination-normal label-primbreadcrumbary pagination-lg">',
-        '<li class="page-pre"><a href="javascript:void(0)" class="pageInfo"  onclick="pageList(1)"><i class="icon-angle-left icon-lg"></i></a></li>');
-
-        if (totalPages < 5) {
-            from = 1;
-            to = totalPages;
-        } else {
-            from = pageNumber - 2;
-            to = from + 4;
-            if (from < 1) {
-                from = 1;
-                to = 5;
-            }
-            if (to > totalPages) {
-                to = totalPages;
-                from = to - 4;
-            }
-        }
-
-        if (totalPages >= 6) {
-            if (pageNumber >= 3) {
-                html.push('<li class="page-first' + (1 === pageNumber ? ' active' : '') + '">',
-                    '<a href="javascript:void(0)" class="pageInfo"  pageList(1)>', 1, '</a>',
-                    '</li>');
-
-                from++;
-            }
-
-            if (pageNumber >= 4) {
-                if (pageNumber == 4 || totalPages == 6 || totalPages == 7) {
-                    from--;
-                } else {
-                    html.push('<li class="page-first-separator disabled">',
-                        '<a href="javascript:void(0)" class="pageInfo">...</a>',
-                        '</li>');
-                }
-
-                to--;
-            }
-        }
-
-        if (totalPages >= 7) {
-            if (pageNumber >= (totalPages - 2)) {
-                from--;
-            }
-        }
-
-        if (totalPages == 6) {
-            if (pageNumber >= (totalPages - 2)) {
-                to++;
-            }
-        } else if (totalPages >= 7) {
-            if (totalPages == 7 || pageNumber >= (totalPages - 3)) {
-                to++;
-            }
-        }
-
-        for (i = from; i <= to; i++) {
-            html.push('<li class="page-number' + (i === pageNumber ? ' active' : '') + '">',
-                '<a href="javascript:void(0)" class="pageInfo" onclick="pageList(\''+ i +'\')">', i, '</a>',
-                '</li>');
-        }
-
-        if (totalPages >= 8) {
-            if (pageNumber <= (totalPages - 4)) {
-                html.push('<li class="page-last-separator disabled">',
-                    '<a href="javascript:void(0)" class="pageInfo">...</a>',
-                    '</li>');
-            }
-        }
-
-        if (totalPages >= 6) {
-            if (pageNumber <= (totalPages - 3)) {
-                html.push('<li class="page-last' + (totalPages === pageNumber ? ' active' : '') + '">',
-                    '<a href="javascript:void(0)" class="pageInfo" onclick="pageList(\''+ totalPages +'\')">', totalPages, '</a>',
-                    '</li>');
-            }
-        }
-
-        // var lastPage = Math.max()
-        html.push(
-            '<li class=""><a href="javascript:void(0)" class="pageInfo" onclick="pageList(\'' + to + '\')"><i class="icon-angle-right icon-lg"></i></a></li>',
-            '</ul>',
-            '</div>');
-
-        $('#pageInfo').html(html.join(''))
-
-        $first = $('#pagination').find('.page-first');
-        $pre = $('#pagination').find('.page-pre');
-        $next = $('#pagination').find('.page-next');
-        $last = $('#pagination').find('.page-last');
-        $number = $('#pagination').find('.page-number');
-
-        if (pageNumber === 1) {
-            $pre.addClass('disabled');
-        }
-        if (pageNumber === totalPages) {
-            $next.addClass('disabled');
-        }
-};
+// initPage = function (totalRows, pageNumber, pageSize) {
+//
+//     var html = [],
+//         i, from, to,
+//         $first, $pre,
+//         $next, $last,
+//         $number
+//
+//     pageNumber = Number(pageNumber)
+//     var totalPages = 0
+//     if (totalRows) {
+//         totalPages = Math.ceil(totalRows / pageSize)
+//     }
+//     if (totalPages > 0 && pageNumber > totalPages) {
+//         pageNumber =totalPages;
+//     }
+//
+//     pageFrom = (pageNumber - 1) * pageSize + 1;
+//     pageTo = pageNumber * pageSize;
+//     if (pageTo > totalRows) {
+//         pageTo = totalRows;
+//     }
+//
+//     $('#total').html(totalRows)
+//     $('#current').html(Math.min(pageNumber * Number(pageSize),totalRows))
+//     $('#start').html(Math.max((pageNumber - 1) * Number(pageSize) + 1,1))
+//
+//         html.push('<div class="pull-right pagination nomargin">',
+//         '<ul class="pagination pagination-normal label-primbreadcrumbary pagination-lg">',
+//         '<li class="page-pre"><a href="javascript:void(0)" class="pageInfo"  onclick="pageList(1)"><i class="icon-angle-left icon-lg"></i></a></li>');
+//
+//         if (totalPages < 5) {
+//             from = 1;
+//             to = totalPages;
+//         } else {
+//             from = pageNumber - 2;
+//             to = from + 4;
+//             if (from < 1) {
+//                 from = 1;
+//                 to = 5;
+//             }
+//             if (to > totalPages) {
+//                 to = totalPages;
+//                 from = to - 4;
+//             }
+//         }
+//
+//         if (totalPages >= 6) {
+//             if (pageNumber >= 3) {
+//                 html.push('<li class="page-first' + (1 === pageNumber ? ' active' : '') + '">',
+//                     '<a href="javascript:void(0)" class="pageInfo"  pageList(1)>', 1, '</a>',
+//                     '</li>');
+//
+//                 from++;
+//             }
+//
+//             if (pageNumber >= 4) {
+//                 if (pageNumber == 4 || totalPages == 6 || totalPages == 7) {
+//                     from--;
+//                 } else {
+//                     html.push('<li class="page-first-separator disabled">',
+//                         '<a href="javascript:void(0)" class="pageInfo">...</a>',
+//                         '</li>');
+//                 }
+//
+//                 to--;
+//             }
+//         }
+//
+//         if (totalPages >= 7) {
+//             if (pageNumber >= (totalPages - 2)) {
+//                 from--;
+//             }
+//         }
+//
+//         if (totalPages == 6) {
+//             if (pageNumber >= (totalPages - 2)) {
+//                 to++;
+//             }
+//         } else if (totalPages >= 7) {
+//             if (totalPages == 7 || pageNumber >= (totalPages - 3)) {
+//                 to++;
+//             }
+//         }
+//
+//         for (i = from; i <= to; i++) {
+//             html.push('<li class="page-number' + (i === pageNumber ? ' active' : '') + '">',
+//                 '<a href="javascript:void(0)" class="pageInfo" onclick="pageList(\''+ i +'\')">', i, '</a>',
+//                 '</li>');
+//         }
+//
+//         if (totalPages >= 8) {
+//             if (pageNumber <= (totalPages - 4)) {
+//                 html.push('<li class="page-last-separator disabled">',
+//                     '<a href="javascript:void(0)" class="pageInfo">...</a>',
+//                     '</li>');
+//             }
+//         }
+//
+//         if (totalPages >= 6) {
+//             if (pageNumber <= (totalPages - 3)) {
+//                 html.push('<li class="page-last' + (totalPages === pageNumber ? ' active' : '') + '">',
+//                     '<a href="javascript:void(0)" class="pageInfo" onclick="pageList(\''+ totalPages +'\')">', totalPages, '</a>',
+//                     '</li>');
+//             }
+//         }
+//
+//         // var lastPage = Math.max()
+//         html.push(
+//             '<li class=""><a href="javascript:void(0)" class="pageInfo" onclick="pageList(\'' + to + '\')"><i class="icon-angle-right icon-lg"></i></a></li>',
+//             '</ul>',
+//             '</div>');
+//
+//         $('#pageInfo').html(html.join(''))
+//
+//         $first = $('#pagination').find('.page-first');
+//         $pre = $('#pagination').find('.page-pre');
+//         $next = $('#pagination').find('.page-next');
+//         $last = $('#pagination').find('.page-last');
+//         $number = $('#pagination').find('.page-number');
+//
+//         if (pageNumber === 1) {
+//             $pre.addClass('disabled');
+//         }
+//         if (pageNumber === totalPages) {
+//             $next.addClass('disabled');
+//         }
+// };
 
 pageList = function (page){
 

@@ -1,147 +1,145 @@
-<div>
+<div id="familyAddBook">
     <div class="form-process"></div>
 
     <div class="postcontent nomargin col_full clearfix" style="min-height: 466px;border-bottom: 2px dotted #ddd;margin-bottom:0!important;padding-bottom: 0!important;">
-    <input type="hidden" id="bookId" value="{{book._id.toString()}}">
-    <input type="hidden" id="canShare" value="{% if book.canShare %}{{book.canShare}}{% else %}1{% endif %}">
-    <input type="hidden" id="viewRange" value="{% if book.viewRange %}{{book.viewRange}}{% else %}1{% endif %}">
-    <div class="col_one_fourth nobottommargin">
-        <a href="#modifyCover" data-lightbox="inline" class="coverLightbox">
-            {% if book.cover != '' %}
-            <img id="bookCover" data-toggle="tooltip" data-placement="bottom" title="修改封面" class="nomargin" alt="家谱封面" src="{{book.cover}}" style="width: 200px;height: 310px;">
-            <i class="icon-line-image" style="display: none;"></i><span style="display: none;"> 上传封面</span>
-            {% else %}
-            <img id="bookCover" data-toggle="tooltip" data-placement="bottom" title="修改封面" class="nomargin" alt="家谱封面" style="width: 200px;height: 310px;display: none;">
-            <i class="icon-line-image"></i><span> 上传封面</span>
-            {% endif %}
-        </a>
-        <div class="input-group-btn xxs-show hidden" style="width: auto;padding-top: 20px;">
-            {% if book && book.status == 0 %}
+        <input type="hidden" id="bookId" value="{{book._id.toString()}}">
+        <div class="col_one_fourth nobottommargin">
+            <a href="#modifyCover" data-lightbox="inline" class="coverLightbox">
+                {% if book.cover != '' %}
+                <img id="bookCover" data-toggle="tooltip" data-placement="bottom" title="修改封面" class="nomargin" alt="家谱封面" src="{{book.cover}}" style="width: 200px;height: 310px;">
+                <i class="icon-line-image" style="display: none;"></i><span style="display: none;"> 上传封面</span>
+                {% else %}
+                <img id="bookCover" data-toggle="tooltip" data-placement="bottom" title="修改封面" class="nomargin" alt="家谱封面" style="width: 200px;height: 310px;display: none;">
+                <i class="icon-line-image"></i><span> 上传封面</span>
+                {% endif %}
+            </a>
+            <div class="input-group-btn xxs-show hidden" style="width: auto;padding-top: 20px;">
+                {% if book && book.status == 0 %}
                 <a href="javascript:void(0)" onclick="saveBook(this)" class="bookModify"><i class="icon-edit" style="position: relative;top:1px;"></i><span>&nbsp;修改</span></a>
                 <a href="#confirmUndo" data-lightbox="inline" class="bookModify"><i class="icon-undo" style="position: relative;top:1px;"></i><span>&nbsp;撤回</span></a>
                 <a href="javascript:void(0)" onclick="goBack('book','{{current}}',8)" class="bookModify"><i class="icon-arrow-left2" style="position: relative;top:1px;"></i><span>&nbsp;返回</span></a>
-            {% elseif (book && book.status == -1) || book.status == undefined %}
+                {% elseif (book && book.status == -1) || book.status == undefined %}
                 <a href="javascript:void(0)" onclick="saveBook(this)" class="bookModify" style="padding: 6px 20px;margin-right: 20px;"><i class="icon-upload" style="position: relative;top:1px;"></i><span>&nbsp;提交</span></a>
                 <a href="javascript:void(0)" onclick="goBack('book','{{current}}',8)" class="bookModify" style="padding: 6px 20px;"><i class="icon-arrow-left2" style="position: relative;top:1px;"></i><span>&nbsp;返回</span></a>
-            {% endif %}
-        </div>
-        <div class="input-group-btn xxs-hide" style="width: auto;padding-top: 8.7em;display: inline-flex;">
-            {% if book && book.status == 0 %}
+                {% endif %}
+            </div>
+            <div class="input-group-btn xxs-hide" style="width: auto;padding-top: 8.7em;display: inline-flex;">
+                {% if book && book.status == 0 %}
                 <span class="input-group-addon visible-xs" style="height: 40px;width: 20px;opacity: 0;"></span>
                 <a href="javascript:void(0)" onclick="saveBook(this)" class="bookModify"><i class="icon-edit" style="position: relative;top:1px;"></i><span class="">&nbsp;修改</span></a>
                 <a href="#confirmUndo" data-lightbox="inline" class="bookModify"><i class="icon-undo" style="position: relative;top:1px;"></i><span class="">&nbsp;撤回</span></a>
                 <a href="javascript:void(0)" onclick="goBack('book','{{current}}', 8)" class="bookModify"><i class="icon-arrow-left2" style="position: relative;top:1px;"></i><span class="">&nbsp;返回</span></a>
-            {% elseif book.status == -1 || book.status == -3 || book.status == undefined %}
+                {% elseif book.status == -1 || book.status == -3 || book.status == undefined %}
                 <a href="javascript:void(0)" onclick="saveBook(this)" class="bookModify" style="padding: 6px 20px;margin-right: 20px;"><i class="icon-upload" style="position: relative;top:1px;"></i><span class="">&nbsp;提交</span></a>
                 <a href="javascript:void(0)" onclick="goBack('book','{{current}}', 8)" class="bookModify" style="padding: 6px 20px;"><i class="icon-arrow-left2" style="position: relative;top:1px;"></i><span class="">&nbsp;返回</span></a>
-            {% endif %}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col_three_fourth nobottommargin col_last">
+
+            <div class="input-group bottommargin-xs">
+                <span class="input-group-addon" style="height: 40px;border-left: 1px solid #ddd;">家谱名称</span>
+                <input type="text" id="bookname" name="bookname" value="{{book.name}}" class="sm-form-control" placeholder="请输入家谱名称，最多50个字" maxlength="50" onkeyup="checkValue(this,'',true)">
+            </div>
+
+            <div class="input-group bottommargin-xs hidden-xs hidden-md hidden-sm" style="border:1px solid #ddd;">
+                <span class="input-group-addon noborder" style="height: 40px;">可见范围</span>
+                <div class="input-group-btn pull-left col_full nomargin noborder" style="height: 40px;">
+                    <input id="range-0" class="radio-style" name="range-group" type="radio" {% if book.viewRange == 0 %} checked {%endif%}> 全网
+                    <input id="range-1" class="radio-style" name="range-group" type="radio" {% if book.viewRange == 1 || !book%} checked {%endif%}> 本人
+                    <input id="range-2" class="radio-style" name="range-group" type="radio" {% if book.viewRange == 2 %} checked {%endif%}> 亲友
+                    <input id="range-3" class="radio-style" name="range-group" type="radio" {% if book.viewRange == 3 %} checked {%endif%}> 姓氏
+                </div>
+
+                <span class="input-group-addon noborder">&nbsp;可被分享&nbsp;</span>
+                <div class="input-group-btn pull-left col_full col_last nomargin" style="height: 40px;">
+                    <input type="radio" name="canShare1" class="radio-style" id="canShare0" {% if book.canShare == 0 %} checked {%endif%}>&nbsp;否&nbsp;
+                    <input type="radio" name="canShare1" class="radio-style" id="canShare1" {% if book.canShare == 1 || !book %} checked {%endif%}>&nbsp;是
+                </div>
+            </div>
+
+            <div class="input-group bottommargin-xs visible-md-inline-block visible-sm-inline-block visible-xs-inline-block" style="border:1px solid #ddd;">
+                <span class="input-group-addon noborder" style="height: 40px;">可见范围</span>
+                <div class="input-group-btn pull-left col_full nomargin noborder" style="height: 40px;">
+                    <input id="range-0" class="radio-style" name="range-group1" type="radio" {% if book.viewRange == 0 %} checked {%endif%}> 全网
+                    <input id="range-1" class="radio-style" name="range-group1" type="radio" {% if book.viewRange == 1 || !book %} checked {%endif%}> 本人
+                    <input id="range-2" class="radio-style" name="range-group1" type="radio" {% if book.viewRange == 2 %} checked {%endif%}> 亲友
+                    <input id="range-3" class="radio-style" name="range-group1" type="radio" {% if book.viewRange == 3 %} checked {%endif%}> 姓氏
+                </div>
+
+                <span class="input-group-addon">&nbsp;可被分享&nbsp;</span>
+                <div class="input-group-btn pull-left col_full col_last nomargin" style="height: 40px;">
+                    <input type="radio" name="canShare2" class="radio-style" id="canShare0" {% if book.canShare == 0 %} checked {%endif%}>&nbsp;否&nbsp;
+                    <input type="radio" name="canShare2" class="radio-style" id="canShare1" {% if book.canShare == 1 || !book %} checked {%endif%}>&nbsp;是
+                </div>
+            </div>
+
+            <div class="input-group col_full col_last nobottommargin" style="padding-top:10px;" id="bookUploader"></div>
         </div>
     </div>
-
-    <div class="col_three_fourth nobottommargin col_last">
-
-        <div class="input-group bottommargin-xs">
-            <span class="input-group-addon" style="height: 40px;border-left: 1px solid #ddd;">家谱名称</span>
-            <input type="text" id="bookname" name="bookname" value="{{book.name}}" class="sm-form-control" placeholder="请输入家谱名称，最多50个字" maxlength="50" onkeyup="checkValue(this,'',true)">
-        </div>
-
-        <div class="input-group bottommargin-xs hidden-xs hidden-md hidden-sm" style="border:1px solid #ddd;">
-            <span class="input-group-addon noborder" style="height: 40px;">可见范围</span>
-            <div class="input-group-btn pull-left col_full nomargin noborder" style="height: 40px;">
-                <input id="range-0" class="radio-style" name="range-group" type="radio" {% if book.viewRange == 0 %} checked {%endif%}> 全网
-                <input id="range-1" class="radio-style" name="range-group" type="radio" {% if book.viewRange == 1 || !book%} checked {%endif%}> 本人
-                <input id="range-2" class="radio-style" name="range-group" type="radio" {% if book.viewRange == 2 %} checked {%endif%}> 亲友
-                <input id="range-3" class="radio-style" name="range-group" type="radio" {% if book.viewRange == 3 %} checked {%endif%}> 姓氏
-            </div>
-
-            <span class="input-group-addon noborder">&nbsp;可被分享&nbsp;</span>
-            <div class="input-group-btn pull-left col_full col_last nomargin" style="height: 40px;">
-                <input type="radio" name="canShare1" class="radio-style" id="canShare0" {% if book.canShare == 0 %} checked {%endif%}>&nbsp;否&nbsp;
-                <input type="radio" name="canShare1" class="radio-style" id="canShare1" {% if book.canShare == 1 || !book %} checked {%endif%}>&nbsp;是
-            </div>
-        </div>
-
-        <div class="input-group bottommargin-xs visible-md-inline-block visible-sm-inline-block visible-xs-inline-block" style="border:1px solid #ddd;">
-            <span class="input-group-addon noborder" style="height: 40px;">可见范围</span>
-            <div class="input-group-btn pull-left col_full nomargin noborder" style="height: 40px;">
-                <input id="range-0" class="radio-style" name="range-group1" type="radio" {% if book.viewRange == 0 %} checked {%endif%}> 全网
-                <input id="range-1" class="radio-style" name="range-group1" type="radio" {% if book.viewRange == 1 || !book %} checked {%endif%}> 本人
-                <input id="range-2" class="radio-style" name="range-group1" type="radio" {% if book.viewRange == 2 %} checked {%endif%}> 亲友
-                <input id="range-3" class="radio-style" name="range-group1" type="radio" {% if book.viewRange == 3 %} checked {%endif%}> 姓氏
-            </div>
-
-            <span class="input-group-addon">&nbsp;可被分享&nbsp;</span>
-            <div class="input-group-btn pull-left col_full col_last nomargin" style="height: 40px;">
-                <input type="radio" name="canShare2" class="radio-style" id="canShare0" {% if book.canShare == 0 %} checked {%endif%}>&nbsp;否&nbsp;
-                <input type="radio" name="canShare2" class="radio-style" id="canShare1" {% if book.canShare == 1 || !book %} checked {%endif%}>&nbsp;是
-            </div>
-        </div>
-
-        <div class="input-group col_full col_last nobottommargin" style="padding-top:10px;" id="bookUploader"></div>
-    </div>
-</div>
     <div id="portfolio" class="portfolio grid-container nopadding col_full" style="margin:30px 0 0 0;" align="center">
         {% if book && book.files && book.files.length != 0 %}
-            {% for file in book.files %}
-                {% if file.type == 'image' %}
-                <article class="portfolio-item pf-uielements" style="width: 282px;">
-                    <div class="portlet-header portfolio-desc nopadding">
-                        <h5 class='file-name'>{{file.name}}</h5>
-                        <h5 class='file-size'>{{file.size}}</h5>
-                    </div>
-                    <div class="portfolio-image">
-                        <img class="preloader2 gallery-item" id="{{file.name}}" src="{{file.src}}" style="height: 170px;" onload="resetImageView(this)">
-                        <div class="portfolio-overlay">
-                            <a href="javascript:void(0)" onclick="$(this).parents('article').first().remove();" title="删除" class="left-icon"><i class="icon-trash2"></i></a>
-                            <a href="javascript:void(0)" onclick="viewFiles('{{file.name}}')" title="查看大图" class="right-icon"><i class="icon-zoom-in"></i></a>
-                        </div>
-                    </div>
-                </article>
-                {% elseif file.type == 'text' %}
-                    <article class="portfolio-item pf-uielements loaded" style="width: 282px;">
-                        <div class="portlet-header portfolio-desc nopadding">
-                            <h5 class='file-name'>{{file.name}}</h5>
-                            <h5 class='file-size'>{{file.size}}</h5>
-                        </div>
-                        <div class="portfolio-image">
-                            <div class="gallery-item" id="{{file.name}}" style="height: 170px;width: 272px;">{{file.src}}</div>
-                            <div class="portfolio-overlay">
-                                <a href="javascript:void(0)" onclick="$(this).parents('article').first().remove();" title="删除" class="left-icon"><i class="icon-trash2"></i></a>
-                                <a href="javascript:void(0)" onclick="viewFiles('{{file.name}}')" title="查看大图" class="right-icon"><i class="icon-zoom-in"></i></a>
-                            </div>
-                        </div>
-                    </article>
-                {% endif %}
-            {% endfor %}
+        {% for file in book.files %}
+        {% if file.type == 'image' %}
+        <article class="portfolio-item pf-uielements" style="width: 282px;">
+            <div class="portlet-header portfolio-desc nopadding">
+                <h5 class='file-name'>{{file.name}}</h5>
+                <h5 class='file-size'>{{file.size}}</h5>
+            </div>
+            <div class="portfolio-image">
+                <img class="preloader2 gallery-item" id="{{file.name}}" src="{{file.src}}" style="height: 170px;" onload="resetImageView(this)">
+                <div class="portfolio-overlay">
+                    <a href="javascript:void(0)" onclick="$(this).parents('article').first().remove();" title="删除" class="left-icon"><i class="icon-trash2"></i></a>
+                    <a href="javascript:void(0)" onclick="viewFiles('{{file.name}}')" title="查看大图" class="right-icon"><i class="icon-zoom-in"></i></a>
+                </div>
+            </div>
+        </article>
+        {% elseif file.type == 'text' %}
+        <article class="portfolio-item pf-uielements loaded" style="width: 282px;">
+            <div class="portlet-header portfolio-desc nopadding">
+                <h5 class='file-name'>{{file.name}}</h5>
+                <h5 class='file-size'>{{file.size}}</h5>
+            </div>
+            <div class="portfolio-image">
+                <div class="gallery-item" id="{{file.name}}" style="height: 170px;width: 272px;">{{file.src}}</div>
+                <div class="portfolio-overlay">
+                    <a href="javascript:void(0)" onclick="$(this).parents('article').first().remove();" title="删除" class="left-icon"><i class="icon-trash2"></i></a>
+                    <a href="javascript:void(0)" onclick="viewFiles('{{file.name}}')" title="查看大图" class="right-icon"><i class="icon-zoom-in"></i></a>
+                </div>
+            </div>
+        </article>
+        {% endif %}
+        {% endfor %}
         {% endif %}
     </div>
 
     <div class="modal1 mfp-hide" id="modifyCover">
-    <div class="block divcenter" style="background-color: #FFF; max-width: 600px;">
-        <div class="feature-box fbox-center fbox-effect nobottomborder nobottommargin" style="padding: 40px;">
-            <div class="col-sm-12  style-msg errormsg" style="display: none;">
-                <div class="sb-msg" style="font-size: 1.1em;text-align: left;"><i class="icon-remove"></i><strong id="errorMsg"></strong></div>
-            </div>
-            <img id="bookCoverImg">
-            <br>
-            <div class="col-sm-10 nopadding">
-                <input id="coverFiles" name="coverFiles" type="file" data-show-upload="false" class="file-loading noradius"
-                       data-browse-icon="<i class='icon-picture' style='color:#555;'></i>"
-                       data-browse-label="选择图片"
-                       accept="image/*">
-            </div>
+        <div class="block divcenter" style="background-color: #FFF; max-width: 600px;">
+            <div class="feature-box fbox-center fbox-effect nobottomborder nobottommargin" style="padding: 40px;">
+                <div class="col-sm-12  style-msg errormsg" style="display: none;">
+                    <div class="sb-msg" style="font-size: 1.1em;text-align: left;"><i class="icon-remove"></i><strong id="errorMsg"></strong></div>
+                </div>
+                <img id="bookCoverImg">
+                <br>
+                <div class="col-sm-10 nopadding">
+                    <input id="coverFiles" name="coverFiles" type="file" data-show-upload="false" class="file-loading noradius"
+                           data-browse-icon="<i class='icon-picture' style='color:#555;'></i>"
+                           data-browse-label="选择图片"
+                           accept="image/*">
+                </div>
 
-            <div class="col-sm-2 nopadding">
-                <button class="btn btn-default nomargin btn-md" type="button" onclick="resetCover()" style="padding:9px 15px;"><i class='icon-reload'></i>&nbsp;&nbsp;重置</button>
-            </div>
+                <div class="col-sm-2 nopadding">
+                    <button class="btn btn-default nomargin btn-md" type="button" onclick="resetCover()" style="padding:9px 15px;"><i class='icon-reload'></i>&nbsp;&nbsp;重置</button>
+                </div>
 
-        </div>
-        <div class="section center" style="padding: 20px;background-color: #f5f5f5;margin: 40px 0 0 0;">
-            <button class="button button-darkblue col-sm-5" type="button" style="margin: 0 0 0 20px;" onclick="saveCover()" >确定</button>
-            <button class="button button-leaf col-sm-5" type="button" style="margin: 0 0 0 9.5%;" onclick="$.magnificPopup.close();return false;">关闭</button>
+            </div>
+            <div class="section center" style="padding: 20px;background-color: #f5f5f5;margin: 40px 0 0 0;">
+                <button class="button button-darkblue col-sm-5" type="button" style="margin: 0 0 0 20px;" onclick="saveCover()" >确定</button>
+                <button class="button button-leaf col-sm-5" type="button" style="margin: 0 0 0 9.5%;" onclick="$.magnificPopup.close();return false;">关闭</button>
+            </div>
         </div>
     </div>
-</div>
 
     <div class="modal1 mfp-hide" id="confirmUndo">
         <div class="block divcenter" style="background-color: #FFF; max-width: 600px;">

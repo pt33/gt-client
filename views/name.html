@@ -6,13 +6,12 @@
  {%include 'head.html' %}
 <link rel="stylesheet" href="/js/plugins/map/storymap.css" type="text/css"/>
 <link rel="stylesheet" href="/js/plugins/map/font.georgia-helvetica.css?v1" type="text/css">
-<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=false onselectstart="return false">
+<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=false onselectstart="return false" data-loader="7" data-loader-color="#9c721d;">
 <!--[if lt IE 8]>
 <p class="browserupgrade">您正在使用 <strong>版本过低的</strong> 浏览器. 请到 <a href="http://browsehappy.com/">更新您的浏览器</a></p>
 <![endif]-->
 <div id="wrapper" class="clearfix">
     {%include 'nav.html' %}
-
     <section id="content">
         <input type="hidden" value="{{navTitle}}" id="navTitle">
         <div class="content-wrap" style="padding: 30px 0px;">
@@ -21,13 +20,12 @@
                     <h3 align="center">廖氏家族迁徙记录</h3>
                     <div id="map_karina" style="height: 800px; margin: 20px;"></div>
                 </div>
-                <div id="sochi" class="small-thumbs" hidden data-animate="slideInLeft">
-                    <h3 align="center">廖氏家族迁徙记录</h3>
-                    <div id="map_sochi" style="height: 800px; margin: 20px;"></div>
-                </div>
-                <div id="slider-arrow-left" style="margin: 0px -40px;"><i class="icon-angle-left" onclick="changeMapStory('prev')"></i></div>
-                <div id="slider-arrow-right" style="margin: 0px -80px;"><i class="icon-angle-right" onclick="changeMapStory('next')"></i></div>
-
+                <!--<div id="sochi" class="small-thumbs" hidden data-animate="slideInLeft">-->
+                    <!--<h3 align="center">廖氏家族迁徙记录</h3>-->
+                    <!--<div id="map_sochi" style="height: 800px; margin: 20px;"></div>-->
+                <!--</div>-->
+                <!--<div id="slider-arrow-left" style="margin: 0px -40px;"><i class="icon-angle-left" onclick="changeMapStory('prev')"></i></div>-->
+                <!--<div id="slider-arrow-right" style="margin: 0px -80px;"><i class="icon-angle-right" onclick="changeMapStory('next')"></i></div>-->
             </div>
         </div>
     </section>

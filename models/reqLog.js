@@ -6,7 +6,7 @@ const reqLogSchema = new mongoose.Schema({
     url: String,
     createTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     }// 状态：1：正常，-1：冻结, -2: 删除
 })
 

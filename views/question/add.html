@@ -9,8 +9,7 @@
 <html class="no-js lt-ie9" lang=""> <![endif]-->
 <!--[if gt IE 8]><!-->
 <html class="no-js" lang=""> <!--<![endif]-->
-                             {%include '../head.html' %}
-<link href="/js/plugins/summernote/summernote.css" rel="stylesheet">
+{%include '../head.html' %}
 <link href="/js/plugins/bootstrap-fileinput/css/fileinput.css" rel="stylesheet"/>
 <link href="/js/plugins/bootstrap-fileinput/css/fileinput-rtl.css" rel="stylesheet"/>
 <style type="text/css">
@@ -18,7 +17,7 @@
     .typeError { background-color: red }
 
 </style>
-<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=true onselectstart="return true" data-animation-in="fadeIn" data-speed-in="1500" data-animation-out="fadeOut" data-speed-out="800">
+<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=true onselectstart="return true" data-animation-in="fadeIn" data-speed-in="1500" data-animation-out="fadeOut" data-speed-out="800" data-loader="7" data-loader-color="#9c721d;">
 <!--[if lt IE 8]>
 <p class="browserupgrade">您正在使用 <strong>版本过低的</strong> 浏览器. 请到 <a href="http://browsehappy.com/">更新您的浏览器</a></p>
 <![endif]-->
@@ -43,29 +42,32 @@
 
                 <div class="postcontent norightmargin nobottommargin clearfix" style="width: 100%!important;">
                     <form id="addQuestionForm">
+                        <div class="form-process"></div>
                         <input type="hidden" id="typeId" name="typeId"/>
                         <div class="input-group bottommargin-sm">
-                            <span class="input-group-addon"><i class="icon-user" style="color: #095D85"></i></span>
+                            <span class="input-group-addon"><i class="icon-user"></i></span>
                             <input class="sm-form-control" type="text" placeholder="请输入姓名，最多10个字" maxlength="10" id="username" name="username" value="{% if user && user.surname!= '' && user.realname != '' %}{{user.surname}}{{user.realname}}{% elseif user && user.nickname!= ''%}{{user.nickname}}{% elseif user %}{{user.username}}{% endif %}">
-                            <span class="input-group-addon"><i class="icon-envelope-alt" style="color: #095D85"></i></span>
+                            <span class="input-group-addon"><i class="icon-envelope-alt"></i></span>
                             <input type="text" id="email" name="email" class="sm-form-control" placeholder="请输入邮箱地址" value="{% if user && user.email!= ''%}{{user.email}}{% endif %}">
-                            <span class="input-group-addon"><i class="icon-phone3" style="color: #095D85"></i></span>
+                            <span class="input-group-addon"><i class="icon-phone3"></i></span>
                             <input class="sm-form-control" type="text" placeholder="请输入联系电话" id="telphone" name="telphone" value="{% if user && user.phone!= ''%}{{user.phone}}{% endif %}">
                         </div>
 
-                        <div class="input-group bottommargin-sm">
-                            <span class="input-group-addon" id="chooseTagBtn" style="font-weight: 600;"><i class="icon-private-tags" style="color: #095D85"></i>&nbsp;&nbsp;请选择问题类型</span>
+                        <div class="input-group nomargin">
+                            <span class="input-group-addon" id="chooseTagBtn" style="font-weight: 600;"><i class="icon-private-tags"></i>&nbsp;&nbsp;请选择问题类型</span>
                             <div class="input-group-btn">
                                 <button type="button" style="height: 40px;" class="btn btn-default dropdown-toggle t500" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
                                 <ul class="dropdown-menu">
                                     {% for tag in tags %}
-                                    <li><a href="javascript:void(0)" onclick="chooseTag('{{tag._id.toString()}}',this)"><i class="{{tag.icon}}" style="color: #095D85"></i>&nbsp;&nbsp;{{tag.name}}</a></li>
+                                    <li><a href="javascript:void(0)" onclick="chooseTag('{{tag._id.toString()}}',this)"><i class="{{tag.icon}}"></i>&nbsp;&nbsp;{{tag.name}}</a></li>
                                     {% endfor %}
                                 </ul>
                             </div>
                             <input class="sm-form-control" type="text" placeholder="请输入标题，最多100个字" maxlength="100" id="title" name="title" autocomplete="false">
                         </div>
-
+                        <div class="input-group bottommargin-sm col_full">
+                            <p class="nopadding nomargin type-error" style="font-weight: 500;text-align: left;color: red;"></p>
+                        </div>
                         <div class="col_full bottommargin-sm noradius">
                             <div class="col_full file-loading" dir=rtl>
                             <input id="questionFiles" name="questionFiles[]" type="file" multiple data-show-upload="false"
@@ -76,10 +78,10 @@
                         </div>
                     </form>
                     <div class="input-group nobottommargin col_full">
-                        <div id="questionContent" style="font-size: 15px;" data-notify-position="top-full-width" data-notify-type="error" data-notify-timeout="3000"></div>
+                        <textarea id="questionContent" required dirname="咨询内容不能为空" placeholder='请输入您想要咨询的详细内容,最多3000个字...' maxlength="3000" rows="6" tabindex="4" style="padding: 10px;margin:0;width: 100%;resize: none;border:1px solid #ddd;font-size: 1.1em;color:#666;"></textarea>
                     </div>
                     <div class="input-group bottommargin-sm col_full">
-                        <p class="nopadding nomargin" style="font-style: italic;font-weight: 500;color: #095D85;text-align: right;">请在文本框中详细描述您需要咨询的内容，最多3000个字，还可以输入<span id="wordNumInfo">3000</span>个字。</p>
+                        <p class="nopadding nomargin" style="font-style: italic;font-weight: 500;text-align: right;color: #999;">请在文本框中详细描述您需要咨询的内容，最多3000个字，还可以输入<span id="wordNumInfo">3000</span>个字。</p>
                     </div>
 
                     <div class="input-group nopadding  topmargin  col_full clearfix" style="margin-bottom:10px;">
@@ -99,8 +101,6 @@
 <script src="/js/plugins/bootstrap-fileinput/js/fileinput.js"></script>
 <script src="/js/plugins/bootstrap-fileinput/js/locales/LANG.js"></script>
 <script src="/js/plugins/bootstrap-fileinput/js/locales/zh.js"></script>
-<script src="/js/plugins/summernote/summernote.js"></script>
-<script src="/js/plugins/summernote/summernote-zh-CN.js"></script>
 <script src="/js/private/question.js"></script>
 </body>
 </html>

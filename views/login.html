@@ -8,14 +8,24 @@
 <style>
     .homePage {
         color:#fff!important;
-        font-size: 2.4em;
+        font-size: 3em;
         font-family: beatyFont;
-        font-weight: 600;
+        letter-spacing: 0.15em;
+        font-weight: 800;
         text-shadow: 6px 4px 5px rgba(0, 0, 0, 0.5);
+        opacity: 1;
     }
 
     .homePage:hover {
-        color:#9c721d!important;
+        opacity: 0.5;
+    }
+
+    .homefoot {
+        color:#fff!important;
+        font-size: 1.3em;
+        font-weight: 500;
+        text-shadow: 6px 4px 5px rgba(0, 0, 0, 0.5);
+        opacity: 1;
     }
 
 </style>
@@ -41,6 +51,7 @@
                     </div>
 
                     <div class="panel panel-default divcenter noradius noborder" style="max-width: 400px; background-color: rgba(255,255,255,0.93);">
+                        <div class="form-process"></div>
                         <div class="panel-body" style="padding: 40px;">
                             <form id="loginForm" name="loginForm" class="nobottommargin">
                                 <h3>账号登录</h3>
@@ -59,13 +70,24 @@
 
                                 <div class="col_full nobottommargin">
                                     <button class="button button-3d button-black nomargin" type="button" onclick="signIn()">登录</button>
-                                    <a href="javascript:void(0)" class="fright">忘记密码?</a>
+
+                                    <div class="pull-right" style="font-weight: 500;"><a href="http://sso1.nlc.cn/sso/login/findpwd" target="_blank" class="fright" style="color: darkred;" >忘记密码?</a><br/><a href="http://sso1.nlc.cn/sso/login/register" target="_blank" class="fright" style="line-height: 30px;color:#333;">还没有账号? 立即注册</a></div>
                                 </div>
                             </form>
+                            <div class="line line-sm" style="border-color:#ccc;"></div>
+                            <div class="center">
+                                <h4 style="margin-bottom: 15px;">或 通过以下方式登录:</h4>
+                                <a href="#"><img src="img/qq.png" alt="QQ"></a>
+                                <span class="hidden-xs">&nbsp;或&nbsp;</span>
+                                <a href="#"><img src="img/weixin.png" alt="微信"></a>
+                                <span class="hidden-xs">&nbsp;或&nbsp;</span>
+                                <a href="#"><img src="img/weibo.png" alt="微博"></a>
+                            </div>
+
                         </div>
                     </div>
 
-                    <div class="row center dark"><small>© Copyright</span>&nbsp;&nbsp;&nbsp;&nbsp;中华寻根网.&nbsp;&nbsp;&nbsp;&nbsp;All Rights Reserved.</small></div>
+                    <div class="row center dark homefoot"><small>© Copyright</span>&nbsp;&nbsp;&nbsp;&nbsp;中华寻根网.&nbsp;&nbsp;&nbsp;&nbsp;All Rights Reserved.</small></div>
 
                 </div>
             </div>

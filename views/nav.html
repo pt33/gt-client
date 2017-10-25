@@ -18,9 +18,9 @@
                     <ul>
                         <li><a href="/user"><i class="icon-user"></i></a>
                             <ul class="top-link-section">
-                                <li><a href="#">个人中心</a></li>
+                                <li><a href="/user">个人中心</a></li>
                                 <li><a href="#">消息中心 <span class="badge pull-right">5</span></a></li>
-                                <li><a href="#">退出登录 <i class="icon-signout pull-right"></i></a></li>
+                                <li><a href="#confirmLogin" data-lightbox="inline">退出登录 <i class="icon-signout pull-right"></i></a></li>
                             </ul>
                         </li>
                     </ul>
@@ -30,9 +30,9 @@
                     <ul style="margin-right: -90px;">
                         <li><a href="/user"><i class="icon-user"></i></a>
                             <ul class="top-link-section">
-                                <li><a href="#">个人中心</a></li>
+                                <li><a href="/user">个人中心</a></li>
                                 <li><a href="#">消息中心 <span class="badge pull-right">5</span></a></li>
-                                <li><a href="#">退出登录 <i class="icon-signout pull-right"></i></a></li>
+                                <li><a href="#confirmLogin" data-lightbox="inline">退出登录 <i class="icon-signout pull-right"></i></a></li>
                             </ul>
                         </li>
                     </ul>
@@ -82,5 +82,20 @@
                 </ul>
             </nav>
         </div>
+        {% if userId != '' %}
+            <div class="modal1 mfp-hide" id="confirmLogin">
+                <input type="hidden" id="inviteId">
+                <input type="hidden" id="inviteStatus">
+                <div class="block divcenter" style="background-color: #FFF; max-width: 600px;">
+                    <div class="feature-box fbox-center fbox-effect nobottomborder nobottommargin" style="padding: 20px;">
+                        <h4 class="nomargin" id="inviteTitle">是否确认退出系统？</h4>
+                    </div>
+                    <div class="section center" style="padding: 20px;background-color: #f5f5f5;margin: 0;">
+                        <button class="button button-darkblue col-sm-5" type="button" style="margin: 0 0 0 20px;" onclick="confirmOP('','logout','','','',0)">是</button>
+                        <button class="button button-leaf col-sm-5" type="button" style="margin: 0 0 0 9.5%;" onclick="$.magnificPopup.close();return false;">否</button>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     </div>
 </header>

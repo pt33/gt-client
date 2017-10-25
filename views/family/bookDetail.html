@@ -1,10 +1,178 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<!doctype html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang=""> <!--<![endif]-->
+{%include '../head.html' %}
+<link rel="stylesheet" href="/css/magnific-popup.css" type="text/css"/>
+<body class="stretched sticky-footer" oncontextmenu=self.event.returnValue=true onselectstart="return true" data-animation-in="fadeIn"
+      onload="" data-loader="7" data-loader-color="#9c721d;">
+<!--[if lt IE 8]>
+<p class="browserupgrade">您正在使用 <strong>版本过低的</strong> 浏览器. 请到 <a href="http://browsehappy.com/">更新您的浏览器</a></p>
+<![endif]-->
+<div id="wrapper" class="clearfix">
+    {% if !isShare %}
+    {%include '../nav.html' %}
+    <section id="page-title" class="page-title-dark page-title-mini" style="background-color: #9C721D;">
+        <div class="container clearfix nopadding">
+            <h1>详情查看</h1>
+            {% if !isDetail %}
+            <ol class="breadcrumb">
+                <li><a href="/">首页</a></li>
+                <li><a href="{{url}}">{{title}}</a></li>
+                <li class="active">详情</li>
+            </ol>
+            {% endif %}
+        </div>
+    </section>
+    {% endif %}
 
+    <section id="content">
+
+        <div class="content-wrap nopadding topmargin bottommargin">
+
+            <div class="container nopadding clearfix">
+
+                <div class="single-post">
+                    {% if !isShare %}
+                    <!--<form id="blogDetail" method="post" action="/family">-->
+                        <input type="hidden" value="{{title}}" id="qtitle" name="qtitle">
+                        <input type="hidden" value="{{sortBy}}" id="sortBy" name="sortBy">
+                        <input type="hidden" value="{{current}}" id="currentPage" name="currentPage">
+                        <input type="hidden" value="{{node}}" id="node" name="node">
+                        <input type="hidden" value="{{shortUrl}}" id="shortUrl" name="shortUrl">
+                        <input type="hidden" value="{{info.name}}" id="shareText" name="shareText">
+                        <input type="hidden" value="{{info._id.toString()}}" id="qid">
+                    <!--</form>-->
+                    {% endif %}
+                    <!-- Single Post
+                    ============================================= -->
+                    <div class="entry clearfix nomargin nobottompadding noborder">
+                        <!-- Posts
+                        ============================================= -->
+                        <div class="entry-image pull-left nomargin" style="padding-right: 40px;width: auto;">
+                            <img src="{% if info.cover %}{{info.cover}}{%else%}img/cover.jpg{%endif%}" alt="家谱封面" data-lightbox="image" title="查看封面大图" style="width: 300px;height: 465px;">
+                        </div>
+
+                        <div class="entry-title" style="font-size: 2em;position: relative;top:-3px;height: 15.9em;">
+                            <h2>{{info.name}}</h2>
+                        </div>
+                        <ul class="entry-meta nomargin clearfix">
+                            <li style="font-size: 1.15em;font-weight: 500"><a href="#"><i class="icon-user" style="font-size: 1em;"></i>{% if info.user.nickname != '' %}{{info.user.nickname}}{% else %}{{info.user.username}}{% endif %}</a></li>
+                            <li style="font-size: 1.15em;font-weight: 500"><i class="icon-private-eye-1" style="font-size: 1em;"></i>{{info.viewNum||0}} 浏览</li>
+                            {% if isShare %}
+                            <li style="font-size: 1.15em;font-weight: 500"><i class="icon-like" style="font-size: 1em;"></i>{{info.likeNum||0}} 点赞</li>
+                            <li style="font-size: 1.15em;font-weight: 500"><i class="icon-star2" style="font-size: 1em;"></i>{{info.collectionNum||0}} 收藏</li>
+                            <!--<li><i class="icon-share"></i>{{info.shareNum||0}} 分享</li>-->
+                            {% endif %}
+                            {% if !isShare %}
+                            <div class="pull-right familyShare" style="font-size: 1.15em;font-weight: 500;">
+                                <a href="javascript:void(0)" onclick="likeBook('{{info._id.toString()}}', this)"><i class="icon-like"></i> 点赞 <span>{{info.likeNum||0}}</span></a>
+                                &nbsp;<a href="javascript:void(0)" onclick="collectionBook('{{info._id.toString()}}',this)">
+                                <i class="{% if info.collection == 1 %}icon-star3{%else%}icon-star2{%endif%}"></i> 收藏 <span>{{info.collectionNum||0}}</span></a>
+                                {% if info.canShare == 1 %}
+                                <div class="bdsharebuttonbox pull-right">
+                                    &nbsp;<a href="#" class="bds_more" data-cmd="more">&nbsp;<i class="icon-share"></i> 分享 <span>{{info.shareNum||0}}</span></a>
+                                    {% if !isDetail %}&nbsp;<a href="{{url}}" style="padding-right: 10px;"><i class="icon-arrow-left2"></i> 返回</a>{% endif %}
+                                </div>
+                                {% else %}
+                                {% if !isDetail %}&nbsp;<a href="{{url}}" style="padding-right: 10px;"><i class="icon-arrow-left2"></i> 返回</a>{% endif %}
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </ul>
+
+                        <div class="line"></div>
+
+                        <div class="clear"></div>
+
+                        <div id="portfolio" class="portfolio grid-container portfolio-2 portfolio-masonry clearfix">
+                            {% for book in info.files %}
+                                {% if book.type == 'image' %}
+                                    <article class="portfolio-item" id="{{book.name}}">
+                                        <div class="portfolio-image">
+                                            <a href="javascript:void(0)">
+                                                <img class="preloader2 gallery-item" src="{{book.src}}" alt="家谱图像">
+                                            </a>
+                                            <div class="portfolio-overlay">
+                                                <a href="javascript:void(0)" class="center-icon" title="查看大图" onclick="viewFiles('{{book.name}}')"><i class="icon-zoom-in"></i></a>
+                                            </div>
+                                        </div>
+                                        <div class="portfolio-desc">
+                                            <h3>{{book.name}}</h3>
+                                            <span>{{book.size}}</span>
+                                        </div>
+                                    </article>
+                                {% elseif book.type == 'text' %}
+                                    <article class="portfolio-item" id="{{book.name}}">
+                                        <div class="portfolio-image">
+                                            <div class="gallery-item">{{book.src}}</div>
+                                            <div class="portfolio-overlay">
+                                               <a href="javascript:void(0)" onclick="viewFiles('{{book.name}}')" title="查看大图" class="center-icon"><i class="icon-zoom-in"></i></a>
+                                            </div>
+                                        </div>
+                                        <div class="portfolio-desc">
+                                            <h3>{{book.name}}</h3>
+                                            <span>{{book.size}}</span>
+                                        </div>
+                                    </article>
+                                {% endif %}
+                            {% endfor %}
+                        </div><!-- #portfolio end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% if !isShare %}
+        {% include '../miniFooter.html' %}
+    {% endif %}
+</div>
+<div id="gotoTop" class="icon-angle-up"></div>
+{% include '../script.html' %}
+<script src="/js/private/family.js"></script>
+{% if !isShare %}
+<script>
+    window._bd_share_config=
+        {
+            "common":
+                {
+                    "bdSnsKey":{}
+                    ,"bdText":$('#shareText').val()
+                    ,"bdUrl":$('#shortUrl').val()
+                    ,"bdSign":'normal'
+                    ,"bdMini":"3"
+                    ,"bdMiniList":["qzone","tsina","bdysc","weixin","renren","tqq","bdxc","kaixin001","tqf","tieba","douban","bdhome","sqq","thx","ibaidu","meilishuo","mogujie","diandian","huaban","duitang","hx","fx","youdao","sdo","qingbiji","people","xinhua","mail","isohu","yaolan","wealink","ty","h163","evernotecn"]
+                    ,"bdStyle":"0"
+                    ,"bdSize":"16"
+                    ,"bdCustomStyle":"/css/share.css"
+                    ,"bdPopupOffsetLeft":-100
+                    ,"bdPopupOffsetTop":0
+                    ,"onBeforeClick":function (cmd, config) {
+                    console.log(cmd, config)
+                }
+                    ,"onAfterClick":function (cmd, config) {
+                    $.ajax({
+                        type: 'put',
+                        url: '/family/book/share/' + $('#qid').val() + '?source=' + cmd,
+                        success: function (result) {
+                            if (result.error || result.ignore) {
+                                return
+                            } else {
+                                $('.bds_more').find('span').html(result)
+                            }
+                        }
+                    })
+                }
+                }
+            ,"share":{}
+        }
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+{% endif %}
 </body>
 </html>

@@ -15,11 +15,11 @@ const indexSchema = new mongoose.Schema({
     status:{type: Number, default: 1},
     createTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     },
     updateTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     }
 })
 

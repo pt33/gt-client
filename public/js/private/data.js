@@ -1,12 +1,15 @@
-var queryParam = {}
-var checkSurnames = {}
-var checkAreas = []
-var refTables = []
-var hasFiles = []
-var map, cluster, tileLayer
-var markers = []
-jQuery(window).load(function(){
+var queryParam = {},
+    checkSurnames = {},
+    checkAreas = [],
+    refTables = [],
+    hasFiles = [],
+    map,
+    cluster,
+    tileLayer,
+    tileLayer1,
+    markers = []
 
+jQuery(window).load(function(){
     $('.daterange1').daterangepicker({
         "showDropdowns": true,
         "buttonClasses": "button button-rounded button-mini nomargin",
@@ -698,24 +701,31 @@ function initMap(groupname,field) {
         map = L.map('map_'+groupname, {
             zoomControl: false,
             doubleClickZoom: true,
-            maxBounds: L.latLngBounds(L.latLng(14.774882,70.3125), L.latLng(54.9776, 139.5703125))
-        }).setView([39.929986,116.395645], 5);
+            maxBounds: L.latLngBounds(L.latLng(3.086385,70.644154), L.latLng(54.9776, 139.5703125))
+        }).setView([32.866601,105.564924], 3.9);
 
         new L.Control.ZoomBar({position: 'topright'}).addTo(map);
 
-        tileLayer = L.tileLayer(
-            'https://api.mapbox.com/styles/v1/pt0106/cj74pffvc3qdc2rpgphuj7ju3/tiles/{z}/{x}/{y}?access_token=' + L.mapbox.accessToken, {
-                tileSize: 512,
+        // // var imageURL = "http://t0.tianditu.cn/vec_w/wmts?" +
+        //     "SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" +
+        //     "&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}";
+        //
+        // var imageURL1 = "http://t0.tianditu.cn/cta_c/wmts?" +
+        //     "SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cta&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" +
+        //     "&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}";
+
+        var styleLayer = L.mapbox.styleLayer(
+            'mapbox://styles/pt0106/cj74pffvc3qdc2rpgphuj7ju3',{
                 zoomOffset: -1,
-                minZoom: 4,
-                maxZoom: 18,
+                minZoom: 3.9,
+                maxZoom: 22,
                 attribution: '© <a href="">国家图书馆</a>'
-            }).addTo(map);
+            }).addTo(map)
 
         cluster = new L.MarkerClusterGroup();
         var bounds_array = []
         var markerIcon = new L.icon({iconUrl: '../img/history.svg'
-            ,iconSize: [65,50]})
+            ,iconSize: [50,35]})
         var ary = groupname.split('_')
         $('#groupdiv'+field).find('input[id*=location_]').each(function (j, o) {
             var tmp = o.id.split('_')

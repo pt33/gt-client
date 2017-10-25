@@ -27,10 +27,10 @@
         <div class="input-group bottommargin-xs visible-xs-inline-block">
             <span class="input-group-addon" style="height: 40px;border-left: 1px solid #ddd;">可见范围</span>
             <div class="input-group-btn pull-left col_full nomargin" style="border:1px solid #ddd; height: 40px;margin-bottom: 0!important;">
-                <input id="range-0" class="radio-style" name="range-group" onchange="chooseRange(this)" type="radio"  {% if blog.viewRange == 0 %} checked {%endif%}> 全网
-                <input id="range-1" class="radio-style" name="range-group" onchange="chooseRange(this)" type="radio"  {% if blog.viewRange == 1 %} checked {%endif%}> 本人
-                <input id="range-2" class="radio-style" name="range-group" onchange="chooseRange(this)" type="radio"  {% if blog.viewRange == 2 %} checked {%endif%}> 亲友
-                <input id="range-3" class="radio-style" name="range-group" onchange="chooseRange(this)" type="radio"  {% if blog.viewRange == 3 %} checked {%endif%}> 姓氏
+                <input id="range-0" class="radio-style" name="range-group" onchange="chooseRange(this)" type="radio" {% if blog.viewRange == 0 %} checked {%endif%}> 全网
+                <input id="range-1" class="radio-style" name="range-group" onchange="chooseRange(this)" type="radio" {% if blog.viewRange == 1 %} checked {%endif%}> 本人
+                <input id="range-2" class="radio-style" name="range-group" onchange="chooseRange(this)" type="radio" {% if blog.viewRange == 2 %} checked {%endif%}> 亲友
+                <input id="range-3" class="radio-style" name="range-group" onchange="chooseRange(this)" type="radio" {% if blog.viewRange == 3 %} checked {%endif%}> 姓氏
             </div>
         </div>
 
@@ -53,8 +53,8 @@
         <div class="input-group bottommargin-xs hidden-lg hidden-md hidden-xs">
             <span class="input-group-addon">可被分享</span>
             <div class="input-group-btn pull-left col_full col_last nomargin" style="border:1px solid #ddd;height: 40px;">
-                <input type="radio" name="canShare2" id="share-0"  onchange="chooseShare(this)" {% if blog.canShare == 0 %} checked {%endif%}>&nbsp;否&nbsp;&nbsp;&nbsp;
-                <input type="radio" name="canShare2" id="share-1" onchange="chooseShare(this)" {% if blog.canShare == 1 %} checked {%endif%}>&nbsp;是
+                <input type="radio" name="share-group2" id="share-0"  onchange="chooseShare(this)" {% if blog.canShare == 0 %} checked {%endif%}>&nbsp;否&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="share-group2" id="share-1" onchange="chooseShare(this)" {% if blog.canShare == 1 %} checked {%endif%}>&nbsp;是
             </div>
         </div>
 
@@ -81,7 +81,11 @@
         <p class="nopadding nomargin" style="font-style: italic;font-weight: 500;color: #9C721D;text-align: right;">请在文本框中输入日志详细内容，最多5000个字，还可以输入<span id="wordNumInfo">5000</span>个字。</p>
     </div>
     <div id="contentDiv" hidden>
+        {% if blog.content != undefined && blog.content != '' %}
         {% autoescape false %}{{ blog.content|url_decode }}{% endautoescape %}
+        {% else %}
+        {% autoescape false %}{{ blog.shortContent|url_decode }}{% endautoescape %}
+        {% endif %}
     </div>
 
     <div class="modal1 mfp-hide" id="confirmDelete">

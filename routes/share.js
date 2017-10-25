@@ -1,9 +1,11 @@
-let express = require('express')
-let router = express.Router()
-let share = require('../models/share')
-let mongoose = require('mongoose')
-let databaseProxy = require('../util/databaseProxy')
-let blog = require('../models/blog')
+const express = require('express')
+const router = express.Router()
+const share = require('../models/share')
+const mongoose = require('mongoose')
+const databaseProxy = require('../util/databaseProxy')
+const blog = require('../models/blog')
+const book = require('../models/book')
+const news = require('../models/news')
 
 router.get('/:type/:id', async function(req, res, next) {
     try{
@@ -26,6 +28,19 @@ router.get('/:type/:id', async function(req, res, next) {
                 await blog.update({_id:info[0]._id},{ $inc: {"viewNum": 1 } })
             }
             res.render('family/blogDetail', {isShare:true, info:info.length > 0 ? info[0] : {}})
+        } else if (type === 1) {
+            let info = await databaseProxy.getBookList(
+                1
+                ,{_id: mongoose.Types.ObjectId(req.params.id),status: 1}
+                ,{createTime: -1}
+                ,1
+                ,false
+                ,''
+            )
+            if (info.length > 0) {
+                await book.update({_id:info[0]._id},{ $inc: {"viewNum": 1 } })
+            }
+            res.render('family/bookDetail', {isShare:true, info:info.length > 0 ? info[0] : {}})
         }
 
     } catch (e) {

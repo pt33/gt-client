@@ -9,11 +9,11 @@ const shareUrlSchema = new mongoose.Schema({
     },                     //是否可编辑
     createTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     },
     updateTime: {
         type: Date,
-        default: new Date()
+        default: () => new Date()
     }
 })
 

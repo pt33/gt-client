@@ -1,10 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="postcontent norightmargin nobottommargin clearfix" style="width: 100%!important;">
+    <input type="hidden" value="{{donate.images.join(',')}}" id="imgPaths">
+    <input type="hidden" id="deletePaths">
+    <input type="hidden" id="pageCurrent" value="{{current}}">
+    <input type="hidden" id="donateId" name="donateId" value="{{donate._id.toString()}}"/>
+    <div id="imageDiv" hidden>
+        {% if donate.images.length > 0 %}
+        {% for imagePath in donate.images %}
+        <img src="{{imagePath}}" width="200px" height="auto">
+        {% endfor %}
+        {% endif %}
+    </div>
+    <div class="form-process"></div>
+    <div class="input-group bottommargin-xs">
+        <input class="sm-form-control" type="text" placeholder="请输入家谱名称，最多50个字" onkeyup="checkValue(this,'',true)" maxlength="50" id="title" name="title" value="{% if donate %}{{donate.title}}{%endif%}">
+        {% if donate %}
+            <div class="input-group-btn">
+                <a href="javascript:void(0)" onclick="saveDonate(this)" style="margin: 0 0 0 5px;" class="userModify"><i class="icon-edit" style="position: relative;top:1px;"></i><i class="icon-line-loader" style="display: none;"></i><span class="hidden-xs"> 修改</span></a>
+                <a href="#donateConfirm" data-lightbox="inline" class="userModify" onclick="$('#donate #donateTitle').html('是否确认撤销该条捐赠信息？');$('#donate #donateStatus').val('-3');"><i class="icon-undo"></i><span class="hidden-xs"> 撤销</span></a>
+                <a href="#donateConfirm" data-lightbox="inline" class="userModify" onclick="$('#donate #donateTitle').html('是否确认删除该条捐赠信息？');$('#donate #donateStatus').val('-2');"><i class="icon-trash"></i><span class="hidden-xs"> 删除</span></a>
+                <a href="javascript:void(0)" onclick="goBack('donate','{{current}}', 8)" class="userModify"><i class="icon-arrow-left2" style="position: relative;top:1px;"></i><span class="hidden-xs"> 返回</span></a>
+            </div>
+        {% else %}
+            <div class="input-group-btn">
+                <a href="javascript:void(0)" onclick="saveDonate(this)" class="userModify" style="margin: 0 10px;"><i class="icon-upload" style="position: relative;top:1px;"></i><i class="icon-line-loader" style="display: none;"></i><span class="hidden-xs"> 提交</span></a>
+                <a href="javascript:void(0)" onclick="goBack('donate','{{current}}', 8)" class="userModify"><i class="icon-arrow-left2" style="position: relative;top:1px;"></i><span class="hidden-xs"> 返回</span></a>
+            </div>
+        {% endif %}
+    </div>
+    <div class="input-group bottommargin-xs" style="display: flex;">
+        <input type="text" id="surname" name="surname" class="sm-form-control" placeholder="请输入家谱姓氏" maxlength="4" onkeyup="checkValue(this,'surname',true)" value="{% if donate %}{{donate.surname}}{%endif%}" style="margin-right: 5px;">
+        <input class="sm-form-control" type="text" placeholder="请输入家谱所在地" id="place" name="place" maxlength="50" value="{% if donate %}{{donate.place}}{%endif%}" style="margin-left: 5px;">
+    </div>
+    <div class="input-group bottommargin-xs hidden-xs" style="display: flex;">
+        <input type="text" id="tanghao" name="tanghao" class="sm-form-control" placeholder="请输入堂号" maxlength="20" onchange="$('#donate #tanghao:hidden').val(this.value)" value="{% if donate %}{{donate.tanghao}}{%endif%}" style="margin-right: 5px;">
+        <input class="sm-form-control" type="text" placeholder="请输入家谱编修者" id="writer" maxlength="50" name="writer" onchange="$('#donate #writer:hidden').val(this.value)" value="{% if donate %}{{donate.writer}}{%endif%}" style="margin:0 5px;">
+        <div class="input-group-btn pull-left col_full" style="border:1px solid #ddd; height: 40px;padding-right: 25px;margin: 0 0 0 5px;">
+            <input id="private-0" class="radio-style" name="private-group" type="radio"> 可被公开
+            <input id="private-1" class="radio-style" name="private-group" type="radio" checked> 不能公开
+        </div>
+    </div>
 
-</body>
-</html>
+    <div class="input-group bottommargin-xs visible-xs" style="display: block;">
+        <input type="text" id="tanghao" name="tanghao" class="sm-form-control" placeholder="请输入堂号" onchange="$('#donate #tanghao:hidden').val(this.value)" maxlength="20" value="{% if donate %}{{donate.tanghao}}{%endif%}" style="margin-bottom: 12px;">
+        <input class="sm-form-control" type="text" placeholder="请输入家谱编修者" id="writer" name="writer" onchange="$('#donate #writer:hidden').val(this.value)" maxlength="50" value="{% if donate %}{{donate.writer}}{%endif%}" style="margin-bottom:12px;">
+        <div class="input-group-btn pull-left col_full" style="border:1px solid #ddd; height: 40px;padding: 0 5px;margin-bottom:12px;">
+            <input id="private-0" class="radio-style" name="private-group1" type="radio"> 可被公开
+            <input id="private-1" class="radio-style" name="private-group1" type="radio" checked> 不能公开
+        </div>
+    </div>
+
+    <div class="input-group bottommargin-xs visible-xs" style="display: block;">
+        <input type="text" id="username" name="username" class="sm-form-control" placeholder="捐赠人姓名" maxlength="10"  onkeyup="checkValue(this,'',true)" onchange="$('#donate #username:hidden').val(this.value)" value="{% if donate %}{{donate.username}}{%endif%}" style="margin-bottom: 12px;">
+        <input type="text" id="email" name="email" class="sm-form-control" placeholder="捐赠人邮箱" onkeyup="checkValue(this,'email',true)" onchange="$('#donate #email:hidden').val(this.value)" value="{% if donate %}{{donate.email}}{%endif%}" style="margin-bottom:12px;">
+        <input class="sm-form-control" type="text" placeholder="捐赠人手机" id="phone" name="phone" onkeyup="checkValue(this,'phone',true)" onchange="$('#donate #phone:hidden').val(this.value)" value="{% if donate %}{{donate.phone}}{%endif%}" style="margin-bottom: 12px;">
+    </div>
+
+    <div class="input-group bottommargin-xs hidden-xs" style="display: flex;">
+        <input type="text" id="username" name="username" class="sm-form-control" placeholder="捐赠人姓名" maxlength="10" onkeyup="checkValue(this,'',true)" onchange="$('#donate #username:hidden').val(this.value)" value="{% if donate %}{{donate.username}}{%endif%}" style="margin-right: 5px;">
+        <input type="text" id="email" name="email" class="sm-form-control" placeholder="捐赠人邮箱" onkeyup="checkValue(this,'email',true)" onchange="$('#donate #email:hidden').val(this.value)" value="{% if donate %}{{donate.email}}{%endif%}" style="margin:0 5px;">
+        <input class="sm-form-control" type="text" placeholder="捐赠人手机" id="phone" name="phone" onkeyup="checkValue(this,'phone',true)" onchange="$('#donate #phone:hidden').val(this.value)" value="{% if donate %}{{donate.phone}}{%endif%}" style="margin-left: 5px;">
+    </div>
+
+    <div class="input-group bottommargin-xs" style="width: 100%;">
+        <input type="text" id="userPlace" name="userPlace" class="sm-form-control" placeholder="捐赠人所在地址" maxlength="50" onkeyup="checkValue(this,'',true)" value="{% if donate %}{{donate.userPlace}}{%endif%}">
+    </div>
+
+    <div class="input-group bottommargin-xs" style="width: 100%;">
+        <textarea  placeholder='请输入备注信息，最多1000个字。。。' maxlength="1000" rows="6" tabindex="4" style="padding: 8px 14px;width: 100%;resize: none;border:1px solid #ddd;font-size: 15px;color:#333;" id="remark">{% if donate %}{{donate.remark|url_decode}}{%endif%}</textarea>
+    </div>
+
+    <div class="col_full bottommargin-xs noradius">
+        <div class="col_full file-loading" dir=rtl>
+            <input id="donateFiles" name="donateFiles[]" type="file" multiple data-show-upload="false"
+                   data-browse-icon="<i class='icon-picture' style='color:#555;'></i>"
+                   data-browse-label="请选择要上传的图片 (最多5张)"
+                   accept="image/*">
+        </div>
+    </div>
+
+    <div class="modal1 mfp-hide" id="donateConfirm">
+        <input type="hidden" id="donateStatus">
+        <div class="block divcenter" style="background-color: #FFF; max-width: 600px;">
+            <div class="feature-box fbox-center fbox-effect nobottomborder nobottommargin" style="padding: 20px;">
+                <h4 class="nomargin" id="donateTitle">是否确认撤销该捐赠信息？</h4>
+            </div>
+            <div class="section center" style="padding: 20px;background-color: #f5f5f5;margin: 0;">
+                <button class="button button-darkblue col-sm-5" type="button" style="margin: 0 0 0 20px;" onclick="confirmOP('{{donate._id.toString()}}','donate','delete',JSON.stringify({status:Number($('#donateConfirm #donateStatus').val())}),'{{current}}', 8)">是</button>
+                <button class="button button-leaf col-sm-5" type="button" style="margin: 0 0 0 9.5%;" onclick="$.magnificPopup.close();return false;">否</button>
+            </div>
+        </div>
+    </div>
+</div>

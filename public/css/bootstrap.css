@@ -672,7 +672,7 @@ abbr[data-original-title] {
 {
   padding: 0.05em 20px 20px 20px;
   margin: 0 0 15px 0;
-  font-size: 1.06em;
+  font-size: 1.04em;
   border-left: 5px solid #f0f0f0;
 }
 
@@ -3202,11 +3202,14 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav > li {
   position: relative;
   display: block;
+  /* margin-right: 20px; */
+  /* color: #666; */
 }
 .nav > li > a {
   position: relative;
   display: block;
   padding: 10px 15px;
+  /* color: #333; */
 }
 .nav > li > a:hover,
 .nav > li > a:focus {
@@ -3311,8 +3314,19 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   float: left;
 }
 .nav-pills > li > a {
-  border-radius: 4px;
+  opacity:1;
+  /* border-radius: 4px; */
+  color: #555;
+  font-size: 1.06em;
+  font-weight: 500;
 }
+
+.nav-pills > li > a > i {
+  font-weight:500;
+  font-size:1.1em;
+  padding-right:2px;
+}
+
 .nav-pills > li + li {
   margin-left: 2px;
 }
@@ -4066,13 +4080,14 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   cursor: not-allowed;
 }
 .label {
+  /* font-size: 12px; */
   display: inline;
-  padding: 1em .6em .3em;
-  font-size: 75%;
+  padding: .6em .6em .6em;
+  /* font-size: 75%; */
   font-weight: bold;
   /* line-height: 10em; */
   color: #ffffff;
-  text-align: center;
+  /* text-align: center; */
   white-space: nowrap;
   vertical-align: baseline;
   /*border-radius: .25em;*/

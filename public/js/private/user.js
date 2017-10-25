@@ -1,54 +1,10 @@
-jQuery(window).load(function(){
+// jQuery(window).load(function(){
 
     var isUploading = false
     var filesize = 0
     showUserContent('profile')
-    initCheckBox()
 
-    $("#avatarFiles").fileinput({
-        maxFileCount: 1,
-        maxSize:1024*5,
-        allowedFileTypes: ["image"],
-        browseClass: "btn btn-default",
-        removeClass: "btn btn-danger",
-        mainClass: "input-group",
-        removeIcon: "<i class=\"icon-trash\"></i>",
-        language:'zh',
-        showRemove: false,
-        showCancel:false,
-        showUpload: true,
-        showDownload: false,
-        showZoom: false,
-        showDrag:true,
-        showPreview:false
-    }).on('fileloaded', function (event, file, i, reader) {
-        var reader = new FileReader()
-        reader.onloadend = function (e) {
-            var arrayBuffer = e.target.result
-            $('#modifyUserAvatar').cropper('replace',arrayBuffer)
-        }
-        reader.readAsDataURL(file)
-    })
-
-    $('#modifyUserAvatar').cropper({
-        aspectRatio: 1,
-        minContainerWidth:520,
-        minContainerHeight:520,
-        minCropBoxWidth:200,
-        minCropBoxHeight:200,
-        viewMode:2,
-        crop: function(e) {
-//             console.log(e.x);
-//             console.log(e.y);
-//             console.log(e.width);
-//             console.log(e.height);
-//             console.log(e.rotate);
-//             console.log(e.scaleX);
-//             console.log(e.scaleY);
-        }
-    })
-
-    saveAvatar = function () {
+    function saveAvatar() {
         if($('#avatarFiles')[0].files.length === 0) {
             $('#profile #errorMsg').html('请选择要上传的图片')
             $('#profile .errormsg').show()
@@ -63,7 +19,7 @@ jQuery(window).load(function(){
         $.magnificPopup.close()
     }
 
-    saveCover = function () {
+    function saveCover() {
         if($('#coverFiles')[0].files.length === 0) {
             $('#book #errorMsg').html('请选择要上传的图片')
             $('#book .errormsg').show()
@@ -80,7 +36,7 @@ jQuery(window).load(function(){
         $.magnificPopup.close()
     }
 
-    resetCover = function () {
+    function resetCover() {
         $('#bookCoverImg').cropper('destroy')
         $('#bookCoverImg').attr('src','')
         $("#coverFiles").fileinput('clear')
@@ -100,7 +56,48 @@ jQuery(window).load(function(){
         })
     }
 
-    resetAvatar = function () {
+    function inviteUser() {
+        if($('#inviteUser .error').length > 0) {
+            return
+        }
+
+        var check = 0
+        $('#inviteUser input[type="text"]:visible').each(function (i, e) {
+            if ($(e).trigger('keyup').hasClass('error')) {
+                check = 1
+                e.focus()
+                return false
+            }
+        })
+        if (check === 1) return
+        $.ajax({
+            type: 'post',
+            data: {
+                name: $('#inviteUser #inviteName').val(),
+                phone: $('#inviteUser #invitePhone').val()
+            },
+            url: '/user/inviteUser',
+            success: function (result) {
+                if(result.error){
+                    showMessage(result.error,'',2000)
+                } else {
+                    showMessage('用户邀请成功！','success',2000)
+                    $('#inviteUser #invitePhone').val('')
+                    $('#inviteUser #inviteName').val('')
+                    $.magnificPopup.close()
+                    reloadData(1, 9)
+                }
+            }
+        })
+    }
+
+    function reloadData(current, limit) {
+        $('#friend .form-process').fadeIn()
+        $('#friend').load('/user/friend?current='+current+'&limit='+limit,function () {
+            $('#friend .form-process').fadeIn()
+        })
+    }
+    function resetAvatar() {
         $('#modifyUserAvatar').cropper('destroy')
         $('#modifyUserAvatar').attr('src','')
         $('#profile #userAvatar').attr('src','img/avatar.jpg')
@@ -115,10 +112,29 @@ jQuery(window).load(function(){
         })
     }
 
-    saveProfile = function () {
+    function saveProfile() {
         if($('#profile .error').length > 0) {
             return
         }
+
+        var check = 0
+        $('#profile input[type="text"]:visible').each(function (i, e) {
+            if ($(e).trigger('keyup').hasClass('error')) {
+                check = 1
+                e.focus()
+                return false
+            }
+        })
+
+        if (check === 1) return
+        var sex = ''
+        $('#profile').find('input[type=radio]:visible').each(function (e, obj) {
+            if (obj.checked && obj.name.indexOf('canShare') >= 0) {
+                sex = obj.id.replace('canShare','')
+                return false
+            }
+        })
+
         $.ajax({
             type: 'post',
             data: {
@@ -128,7 +144,7 @@ jQuery(window).load(function(){
                 birthday: $('#birthday').val(),
                 email: $('#email').val(),
                 phone: $('#phone').val(),
-                sex: $('#userSex').val(),
+                sex: sex,
                 avatar:$('#userAvatar').attr('src') !== 'img/avatar.jpg' ? $('#userAvatar').attr('src') : ''
             },
             url: '/user/saveProfile',
@@ -142,7 +158,7 @@ jQuery(window).load(function(){
         })
     }
 
-    saveBook = function () {
+    function saveBook() {
         if (isUploading) return
         var check = 0
         if($('#book .error').length > 0) {
@@ -151,7 +167,7 @@ jQuery(window).load(function(){
             $('#book input[type="text"]:visible').each(function (i,e) {
                 if($(e).trigger('keyup').hasClass('error')) {
                     check = 1
-                    $(e).focus()
+                    e.focus()
                     return false
                 }
             })
@@ -220,7 +236,7 @@ jQuery(window).load(function(){
         })
     }
 
-    checkValue = function (obj, type, require) {
+    function checkValue(obj, type, require) {
         if (require && obj.value == '') {
             $(obj).addClass('error')
             return false
@@ -257,15 +273,22 @@ jQuery(window).load(function(){
             } else {
                 $(obj).removeClass('error')
             }
+        } else if (type === 'surname') {
+            if (obj.value !== '' && !checkSurname(obj.value)) {
+                $(obj).addClass('error')
+                return false
+            } else {
+                $(obj).removeClass('error')
+            }
         }
         return true
     }
 
-    chooseSex = function (obj) {
+    function chooseSex(obj) {
         $('#userSex').val(obj.id.replace('radio-',''))
     }
 
-    showPopUp = function (obj) {
+    function showPopUp(obj) {
         $('#'+obj).magnificPopup({
             type: 'inline',
             src: '#'+obj,
@@ -276,7 +299,7 @@ jQuery(window).load(function(){
         }).magnificPopup('open')
     }
 
-    initUpload = function (node) {
+    function initUpload(node) {
         $('#'+node+'Files').fileinput({
             maxFileCount: 5,
             maxFileSize:1024*3,
@@ -314,7 +337,7 @@ jQuery(window).load(function(){
         })
     }
 
-    initSummerNote = function (node) {
+    function initSummerNote(node) {
         if (node === 'blog') {
             $('#blogContent').summernote({
                 lang: 'zh-CN',
@@ -344,19 +367,6 @@ jQuery(window).load(function(){
                     onChange: function(contents, $editable) {
                         var contentsContainer = $('<div></div>').html(contents)
                         filesize = contentsContainer.find('img').length
-                        // contentsContainer.find('img').each(function (i,e) {
-                        //     var str = e.src
-                        //     str = str.substring(23)
-                        //     var equalIndex= str.indexOf('=');
-                        //     if(str.indexOf('=')>0)
-                        //     {
-                        //         str=str.substring(0, equalIndex);
-                        //
-                        //     }
-                        //     var strLength = str.length
-                        //     var fileLength=parseInt(strLength-(strLength/8)*2)
-                        //     console.log(fileLength/1024*1024)
-                        // })
                         var txt = contentsContainer[0].innerText
                         if(txt.trim() === '') {
                             $('#timeline .note-editor.note-frame .note-placeholder').show()
@@ -570,13 +580,13 @@ jQuery(window).load(function(){
         }
     }
 
-    changeTitle = function () {
+    function changeTitle() {
         if ($('#title').val() !== '') {
             $('#title').removeClass('error')
         }
     }
 
-    saveBlog = function (obj) {
+    function saveBlog(obj) {
         if (isUploading) return
         var checkTitle = ($('#timeline #title').val() === undefined || $('#title').val() === '')
         var checkNote = $('#blogContent').summernote('isEmpty')
@@ -655,7 +665,7 @@ jQuery(window).load(function(){
         })
     }
 
-    deleteBlog = function (id) {
+    function deleteBlog(id) {
         $.ajax({
             type: 'delete',
             url: '/user/blog/' + id,
@@ -670,13 +680,13 @@ jQuery(window).load(function(){
         })
     }
 
-    chooseTag = function(id,obj) {
+    function chooseTag(id,obj) {
         $('#typeId').val(id)
         $('#chooseTagBtn').html(obj.innerHTML)
         $('#chooseTagBtn').css('color','#555')
     }
 
-    updateBlog = function (obj) {
+    function updateBlog(obj) {
         if (isUploading) return
         var checkTitle = ($('#timeline #title').val() === undefined || $('#timeline #title').val() === '')
         var checkNote = $('#blogContent').summernote('isEmpty')
@@ -714,6 +724,16 @@ jQuery(window).load(function(){
             content = encodeURI(content)
         }
 
+        var range, canShare
+        $('#timeline').find('input[type=radio]:visible').each(function (e, obj) {
+            if (obj.checked && obj.name.indexOf('range') >= 0) {
+                range = obj.id.replace('range-','')
+            }
+            if (obj.checked && obj.name.indexOf('share') >= 0) {
+                canShare = obj.id.replace('share-','')
+            }
+        })
+
         isUploading = true
         $('#addBlogForm .form-process').fadeIn();
         setTimeout(500)
@@ -722,8 +742,8 @@ jQuery(window).load(function(){
             data: {
                 blogId:$('#timeline #blogId').val()
                 ,title: $('#timeline #title').val()
-                ,viewRange: $('#timeline #viewRange').val()
-                ,canShare:$('#timeline #canShare').val()
+                ,viewRange: range
+                ,canShare:canShare
                 ,shortContent:str
                 ,content:content
                 ,images:file64
@@ -748,7 +768,7 @@ jQuery(window).load(function(){
         })
     }
 
-    updateQuestion = function (id, obj) {
+    function updateQuestion(id, obj) {
         if($('#question .error').length > 0) {
             $('#question .error').focus()
             return
@@ -829,7 +849,100 @@ jQuery(window).load(function(){
         })
     }
 
-    saveQuestion = function (obj) {
+    function saveDonate(obj) {
+        if (isUploading) return
+        var check = 0
+        if($('#donate .error').length > 0) {
+            $('#donate .error').first().focus()
+            return
+        } else {
+            $('#donate input[type="text"]:visible').each(function (i,e) {
+                if($(e).trigger('keyup').hasClass('error')) {
+                    check = 1
+                    e.focus()
+                    return false
+                }
+            })
+            if (check === 1) return
+        }
+
+        var images = $('#donate .kv-file-content img:visible')
+        var file64 = []
+
+        if (images.length > 0) {
+            for (var i in images) {
+                var image = images[i]
+                if (image.src!== undefined) {
+                    file64.push(image.src)
+                }
+            }
+        }
+
+        var isPrivate = ''
+        $('#donate').find('input[type=radio]:visible').each(function (e, obj) {
+            if (obj.checked && obj.name.indexOf('private') >= 0) {
+                isPrivate = obj.id.replace('private-','')
+                return false
+            }
+        })
+
+        isUploading = true
+        var url = $('#donate #donateId').val() !== '' && $('#donate #donateId').val() !== undefined ? '/user/donate/update' : '/user/donate/add'
+        $('#donate .form-process').fadeIn()
+
+        $.ajax({
+            type: 'post',
+            data: {
+                title: $('#donate #title').val()||''
+                ,surname: $('#donate #surname').val()||''
+                ,place: $('#donate #place').val()||''
+                ,username:$('#donate #username:visible').val()||''
+                ,tanghao:$('#donate #tanghao:visible').val()||''
+                ,writer:$('#donate #writer:visible').val()||''
+                ,phone:$('#donate #phone:visible').val()||''
+                ,email:$('#donate #email:visible').val()||''
+                ,userPlace:$('#donate #userPlace').val()||''
+                ,remark:encodeURI($('#donate #remark').val())||''
+                ,imagePaths: $('#donate #imgPaths').length > 0 ? $('#donate #imgPaths').val() : ''
+                ,deletePaths:$('#donate #deletePaths').length > 0 ? $('#donate #deletePaths').val() : ''
+                ,images:file64
+                ,isPrivate:isPrivate
+                ,donateId:$('#donate #donateId').val()||''
+            },
+            url: url,
+            success: function (result) {
+                isUploading = false
+                $('#donate .form-process').fadeOut()
+                if (result.error) {
+                    showMessage(result.error,'',2000)
+                } else {
+
+                    if ($('#donate #donateId').val() === '' || $('#donate #donateId').val() === undefined) {
+                        showMessage('提交成功','success',2000)
+                        $("#donate #donateFiles").fileinput('clear')
+                        $('#donate #title').val('')
+                        $('#donate #surname').val('')
+                        $('#donate #place').val('')
+                        $('#donate #username').val('')
+                        $('#donate #tanghao').val('')
+                        $('#donate #writer').val('')
+                        $('#donate #phone').val('')
+                        $('#donate #email').val('')
+                        $('#donate #userPlace').val('')
+                        $('#donate #remark').val('')
+                    } else {
+                        showMessage('修改成功','success',2000)
+                        $('#donate #deletePaths').val('')
+                        if (result.imgPaths && result.imgPaths.length > 0) {
+                            $('#donate #imgPaths').val(result.imgPaths.join(','))
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    function saveQuestion(obj) {
         var check = 0
         if($('#question .error').length > 0) {
             $('#question .error').first().focus()
@@ -838,7 +951,7 @@ jQuery(window).load(function(){
             $('#question input[type="text"]:visible').each(function (i,e) {
                 if($(e).trigger('keyup').hasClass('error')) {
                     check = 1
-                    $(e).focus()
+                    e.focus()
                     return false
                 }
             })
@@ -916,25 +1029,42 @@ jQuery(window).load(function(){
         })
     }
 
-    confirmOP = function (id, name, type,value, page, limit) {
-        $.ajax({
-            type: type,
-            url: '/user/'+name+'/'+id+'?value='+encodeURI(value),
-            success: function (result) {
-                $.magnificPopup.close()
-                if (result.error) {
-                    showMessage(result.error,'',2000)
-                } else {
-                    showMessage('操作成功','success', 2000)
-                    setTimeout(function () {
-                        goBack(name, page, limit)
-                    },2000)
-                }
+    function confirmOP(id, name, type,value, page, limit) {
+        if (name === 'logout') {
+            storage.clear()
+            var exp = new Date()
+            exp.setTime(exp.getTime() - 1)
+            var cval=getCookie('token')
+            if(cval!=null) {
+                document.cookie="token="+cval+";expires="+exp.toGMTString()
             }
-        })
+            showMessage('退出系统成功', 'success', 2000)
+            window.location.href = '/'
+        } else {
+            $.ajax({
+                type: type,
+                url: '/user/'+name+'/'+id+'?value='+encodeURI(value),
+                success: function (result) {
+                    $.magnificPopup.close()
+                    if (result.error) {
+                        showMessage(result.error,'',2000)
+                    } else {
+                        showMessage('操作成功','success', 2000)
+                        if (name === 'friend' || name === 'invite') {
+                            $('#confirmInvite #inviteType').val('invite');
+                            reloadData(page, limit)
+                        } else {
+                            setTimeout(function () {
+                                goBack(name, page, limit)
+                            },2000)
+                        }
+                    }
+                }
+            })
+        }
     }
 
-    viewDetail = function () {
+    function viewDetail() {
 
         var images = $('#timeline .kv-file-content img:visible')
         var images1 =  $('#timeline #imgPaths').length > 0 ? $('#timeline #imgPaths').val() : ''
@@ -972,9 +1102,10 @@ jQuery(window).load(function(){
 
         window.open('/user/timeline/view?title='+encodeURI($('#timeline #title').val()),'_blank')
     }
-})
+// })
 
-showUserContent = function (id) {
+
+function showUserContent(id) {
     $('.main .form-process').fadeIn()
     $('.col_one_fifth div[id*=add]').hide()
     $('.col_one_fifth div[id*=add] button').removeClass('current')
@@ -1000,8 +1131,55 @@ showUserContent = function (id) {
                 todayHighlight: true,
                 endDate: "today"
             })
+
+            $("#avatarFiles").fileinput({
+                maxFileCount: 1,
+                maxSize:1024*5,
+                allowedFileTypes: ["image"],
+                browseClass: "btn btn-default",
+                removeClass: "btn btn-danger",
+                mainClass: "input-group",
+                removeIcon: "<i class=\"icon-trash\"></i>",
+                language:'zh',
+                showRemove: false,
+                showCancel:false,
+                showUpload: true,
+                showDownload: false,
+                showZoom: false,
+                showDrag:true,
+                showPreview:false
+            }).on('fileloaded', function (event, file, i, reader) {
+                var reader = new FileReader()
+                reader.onloadend = function (e) {
+                    var arrayBuffer = e.target.result
+                    $('#modifyUserAvatar').cropper('replace',arrayBuffer)
+                }
+                reader.readAsDataURL(file)
+            })
+
+            $('#modifyUserAvatar').cropper({
+                aspectRatio: 1,
+                minContainerWidth:520,
+                minContainerHeight:520,
+                minCropBoxWidth:200,
+                minCropBoxHeight:200,
+                viewMode:2,
+                crop: function(e) {
+                }
+            })
+
             initCheckBox()
-            initUpload('avatar')
+
+            $lightboxInlineEl = $('[data-lightbox="inline"]')
+            if( $lightboxInlineEl.length > 0 ) {
+                $lightboxInlineEl.magnificPopup({
+                    type: 'inline',
+                    mainClass: 'mfp-no-margins mfp-fade',
+                    closeBtnInside: false,
+                    fixedContentPos: true,
+                    overflowY: 'scroll'
+                });
+            }
         } else if (id === 'timeline') {
             initPage($('#' + id + ' #pagetotal').val(), $('#' + id + ' #pageCurrent').val(), 2, id)
             $('#addBlogDiv').show()
@@ -1013,15 +1191,79 @@ showUserContent = function (id) {
             initPage($('#' + id + ' #pagetotal').val(), $('#' + id + ' #pageCurrent').val(), 8, id)
             $('#addBookDiv').show()
         } else if (id === 'friend') {
-            initPage($('#' + id + ' #pagetotal').val(), $('#' + id + ' #pageCurrent').val(), 8, id)
+            initPage($('#' + id + ' #pagetotal').val(), $('#' + id + ' #pageCurrent').val(), 9, id)
             $('#addFriendDiv').show()
+            initFliter()
+            setTimeout(function(){
+                $('#portfolio').isotope('layout')
+            },500)
         } else if (id === 'donate') {
             initPage($('#' + id + ' #pagetotal').val(), $('#' + id + ' #pageCurrent').val(), 8, id)
+            SEMICOLON.widget.loadFlexSlider()
             $('#addDonateDiv').show()
+        } else if (id === 'collection') {
+            initPage($('#' + id + ' #pagetotal').val(), $('#' + id + ' #pageCurrent').val(), 10, id)
+            initFliter()
+            setTimeout(function(){
+                $('#portfolio').isotope('layout')
+            },500)
+            // SEMICOLON.portfolio.filterInit()
+        } else if (id === 'share') {
+            initPage($('#' + id + ' #pagetotal').val(), $('#' + id + ' #pageCurrent').val(), 10, id)
+            initFliter()
+            setTimeout(function(){
+                $('#portfolio').isotope('layout')
+            },500)
         }
     })
 
-    initBookUploader = function (){
+
+    function initFliter() {
+        var $container = $('#portfolio');
+
+        $container.isotope({ transitionDuration: '0.65s' });
+
+        $('#portfolio-filter a').click(function(){
+            $('#portfolio-filter li').removeClass('activeFilter');
+            $(this).parent('li').addClass('activeFilter');
+            var selector = $(this).attr('data-filter');
+            $container.isotope({ filter: selector });
+            return false;
+        });
+
+        $('#portfolio-shuffle').click(function(){
+            $container.isotope('updateSortData').isotope({
+                sortBy: 'random'
+            });
+        });
+
+        $(window).resize(function() {
+            $container.isotope('layout');
+        });
+
+        $container.infinitescroll({
+                loading: {
+                    finishedMsg: '<i class="icon-line-check"></i>',
+                    msgText: '<i class="icon-line-loader icon-spin"></i>',
+                    img: "../img/preloader-dark.gif",
+                    speed: 'normal'
+                },
+                state: {
+                    isDone: false
+                },
+                nextSelector: "#load-next-posts a",
+                navSelector: "#load-next-posts",
+                itemSelector: "article.portfolio-item"
+            },
+            function( newElements ) {
+                $container.isotope( 'appended', $( newElements ) );
+                var t = setTimeout( function(){ $container.isotope('layout'); }, 2000 );
+                SEMICOLON.widget.loadFlexSlider();
+                SEMICOLON.portfolio.arrange();
+            });
+    }
+
+    function initBookUploader(){
         if ($("#book #bookUploader").length === 0) return
         if ($("#book #bookUploader").pluploadQueue()) {
             $("#book #bookUploader").pluploadQueue().destroy()
@@ -1068,7 +1310,7 @@ showUserContent = function (id) {
         $('#book #bookUploader .plupload_buttons .plupload_add').html('<i class="icon-line-file-add" style=""></i><span class="hidden-xs"> 选择</span>')
     }
 
-    FilesAdded = function(uploader, files){
+    function FilesAdded(uploader, files){
         var total = uploader.total.size
         console.log(total)
         if (total > (1024 * 1024 * 50)) {
@@ -1090,13 +1332,13 @@ showUserContent = function (id) {
         }
     }
 
-    FilesRemoved = function (uploader, files) {
+    function FilesRemoved(uploader, files) {
         for(var i in files) {
             $('#'+files[i].id).remove()
         }
     }
 
-    showImagePreview = function( file ) {
+    function showImagePreview( file ) {
         var i = Math.floor(Math.log(file.size) / Math.log(1024));
         var sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         var out = (file.size / Math.pow(1024, i)).toFixed(2) * 1 + '' + sizes[i];
@@ -1137,12 +1379,44 @@ showUserContent = function (id) {
         }
     }
 
-    delFile = function (file, obj) {
+    function clipImage(obj) {
+        var w = obj.naturalWidth, h = obj.naturalHeight
+        if(h>w){
+            $(obj).css('width','225px')
+            $(obj).removeAttr('height')
+        } else {
+            // $(obj).css('width','225px')
+            // $(obj).removeAttr('height')
+        }
+    }
+
+    function clipDonateImage(obj) {
+        // var w = obj.naturalWidth, h = obj.naturalHeight
+        // if (h > w) {
+        //     var tmp = Math.ceil((w / h) * 270)
+        //     $(obj).css('height','270px')
+        //     $(obj).css('width',tmp+'px')
+        // } else {
+        //     var tmp = Math.ceil((w / h) * 270)
+        //     $(obj).css('height','270px')
+        //     $(obj).css('width',tmp+'px')
+        // }
+    }
+
+    function showBigImage(obj) {
+        if ($(obj).closest('div.portfolio-image').find('div.flex-active-slide a').length > 0) {
+             $(obj).closest('div.portfolio-image').find('div.flex-active-slide a').first().trigger('click')
+        } else {
+            $(obj).closest('div.portfolio-image').find('a').first().trigger('click')
+        }
+    }
+
+    function delFile(file, obj) {
         $('#'+obj).remove()
         $('#book #bookUploader').pluploadQueue().removeFile(file)
     }
 
-    viewFiles = function (id) {
+    function viewFiles(id) {
         var items = []
         var current = 0
         $('#book .gallery-item').each(function (i, e) {
@@ -1170,7 +1444,7 @@ showUserContent = function (id) {
         $.magnificPopup.proto.goTo(current)
     }
 
-    showMoreInfo = function (id) {
+    function showMoreInfo(id) {
         $('.main .form-process').show()
         var node = $('.ui-tabs-active.ui-state-active')[0].attributes['aria-controls'].nodeValue
         if (node === 'timeline') {
@@ -1195,22 +1469,40 @@ showUserContent = function (id) {
             initUpload(node)
             initSummerNote(node)
             initCheckBox()
-
+            SEMICOLON.initialize.lightbox()
             SEMICOLON.widget.loadFlexSlider()
 
             $('#'+node+'Content').summernote('code', $('#contentDiv').html())
-
         })
     }
 
-    pageList = function (page, id, limit){
+    function showDetailInfo(obj, type, id) {
+        var param = {
+            isDetail: true
+        }
+
+        var encrypted = CryptoJS.AES.encrypt(JSON.stringify(param), '_SALT_G(T#*)')
+        encrypted = encrypted.toString()
+
+        if(type === 'question') {
+            var encrypted = CryptoJS.AES.encrypt(JSON.stringify({id:id, isDetail:true}), '_SALT_G(T#*)')
+            encrypted = encrypted.toString()
+            window.open('/question/detail?param='+ encrypted,'_blank')
+        } else if (type === 'book') {
+            window.open('/family/book/' + id + '?param=' + encrypted, '_blank')
+        } else if (type === 'blog') {
+            window.open('/family/blog/' + id + '?param=' + encrypted, '_blank')
+        }
+    }
+
+    function pageList(page, id, limit){
         $('#'+id).load('/user/'+id+'?current='+page+'&limit='+limit, function () {
             initPage($('#' + id + ' #pagetotal').val(), $('#' + id + ' #pageCurrent').val(), limit, id)
             $('#gotoTop').trigger('click')
         })
     }
 
-    initEditBookView = function () {
+    function initEditBookView() {
         initBookUploader()
         initCheckBox()
         $( "#book #portfolio" ).sortable({handle:'.portlet-header:not(.nomove)'})
@@ -1268,7 +1560,7 @@ showUserContent = function (id) {
         })
     }
 
-    openAddPage = function (obj, id) {
+    function openAddPage(obj, id) {
         if($(obj).hasClass('current')) return
         $('.ui-tabs-active').removeClass('ui-tabs-active')
         $(obj).addClass('current')
@@ -1280,13 +1572,15 @@ showUserContent = function (id) {
             if (id === 'blog') {
                 initCheckBox()
                 openDB()
+            } else if (id === 'donate') {
+                initCheckBox()
             } else if (id === 'book') {
                 initEditBookView()
             }
         })
     }
 
-    goBack = function (id, page, limit) {
+    function goBack(id, page, limit) {
         if (page === undefined || page === 'undefined') {
             page = 1
         }
@@ -1295,13 +1589,18 @@ showUserContent = function (id) {
         }
         $('div[id*=add] button').removeClass('current')
         $('ul li a[href="#'+id+'"]').parents('li').first().addClass('ui-tabs-active')
+        $('.main .form-process').fadeIn()
         $('#'+id).load('/user/'+id+'?current='+page+'&limit='+limit, function () {
+            $('.main .form-process').fadeOut()
             initPage($('#' + id + ' #pagetotal').val(), page, limit, id)
+            if(id === 'donate') {
+                SEMICOLON.widget.loadFlexSlider()
+            }
             $('#gotoTop').trigger('click')
         })
     }
 
-    resetImageView = function (obj) {
+    function resetImageView(obj) {
         var w = obj.naturalWidth, h = obj.naturalHeight
         if (h > w) {
             var tmp = Math.ceil((w / h) * 170)
@@ -1318,7 +1617,7 @@ showUserContent = function (id) {
     }
 }
 
-initCheckBox = function () {
+function initCheckBox() {
     $('input').iCheck({
         radioClass: 'iradio_square',
         checkboxClass: 'icheckbox_square',

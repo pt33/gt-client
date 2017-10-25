@@ -1,0 +1,25 @@
+<div class="modal1">
+    <div class="block divcenter" style="background-color: #FFF; max-width: 500px;">
+        <div class="feature-box fbox-center fbox-effect nobottomborder nobottommargin" style="padding: 20px;">
+            <div class="pull-left bottommargin-xs">
+                <img style="max-width: 80px;margin-bottom: 10px;" class="alignleft img-circle img-thumbnail notopmargin nobottommargin" src="{% if user.avatar != '' && user.avatar != undefined && user.avatarStatus == 1 %}{{user.avatar}}{% else %}img/avatar.jpg{% endif %}">
+            </div>
+            <div class="pull-left bottommargin-xs">
+                <h4 class="nomargin" style="font-size: 1.1em;color: #777;font-weight: 500;line-height: 30px;padding-top: 10px;text-align: left;">{{user.surname}}{{user.realname}}</h4>
+                <h4 class="nomargin" style="font-size: 1.06em;color: #999;font-style: italic;line-height: 30px;padding-bottom: 10px;">{{user.nickname}}</h4>
+            </div>
+            <div class="line nomargin"></div>
+            <div class="col_half nomargin" align="left">
+                <h4 class="nomargin" style="font-size: 1.1em;color: #777;font-weight: 500;line-height: 30px;padding-top: 10px;">性别: {% if user.sex == 0 %}男{% elseif user.sex == 1 %}女{% endif %}</h4>
+                <h4 class="nomargin" style="font-size: 1.1em;color: #777;line-height: 30px;padding-bottom: 10px;">生日: {{user.birthday}}</h4>
+            </div>
+            <div class="col_half nomargin col_last" align="left">
+                <h4 class="nomargin" style="font-size: 1.1em;color: #777;font-weight: 500;line-height: 30px;padding-top: 10px;">邮箱: {{user.email}}</h4>
+                <h4 class="nomargin" style="font-size: 1.1em;color: #777;line-height: 30px;padding-bottom: 10px;">电话: {{user.phone}}</h4>
+            </div>
+        </div>
+        <div class="section center col_full" style="padding: 20px;background-color: #f5f5f5;margin: 0;display: inline-flex;">
+            <button class="button button-leaf col_half" type="button" style="margin: 0 0 0 25%;" onclick="$.magnificPopup.close();return false;">关闭</button>
+        </div>
+    </div>
+</div>
